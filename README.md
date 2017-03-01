@@ -11,8 +11,8 @@ _This summarizes steps from [DFP docs](https://developers.google.com/doubleclick
   * Go to the [Google Developers Console Credentials page](https://console.developers.google.com/apis/credentials).
   * On the **Credentials** page, select **Create credentials**, then select **Service account key**.
   * Select **New service account**, and select P12 key type.
-  * Click **Create** to download a file containing a private key.
-2. Enable API access to DFP
+  * Click **Create** to download a file containing a private key. Take note of the password (probably Google's default, "notasecret").
+3. Enable API access to DFP
   * Sign into your DFP account in the DFP user interface. You must have admin rights.
   * Select the **Admin** tab.
   * Ensure that API access is enabled.
@@ -23,4 +23,9 @@ _This summarizes steps from [DFP docs](https://developers.google.com/doubleclick
 ### Setting Up
 1. Clone this repository.
 2. Run `pip install -r requirements.txt`.
-3. ... more to come.
+3. Convert the PKCS12 key format to PEM
+  * Rename the `.p12` key from your developer credentials to `key.p12` and move it to the root of the repository
+  * Run `openssl pkcs12 -in key.p12 -nodes -nocerts > key.pem`. Enter your password.
+  * Delete `key.p12`.
+
+... more to come.
