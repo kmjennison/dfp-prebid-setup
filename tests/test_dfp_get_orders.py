@@ -2,12 +2,12 @@
 from unittest import TestCase
 from mock import MagicMock, Mock, patch
 
-import dfp.service
+import dfp.get_orders
 
 
+@patch('googleads.dfp.DfpClient.LoadFromStorage')
 class DFPServiceTests(TestCase):
 
-  @patch('dfp.service.get_client')
   def test_get_all_orders(self, mock_dfp_client):
     """
     Ensure `get_all_orders` makes one call to DFP.
@@ -19,7 +19,7 @@ class DFPServiceTests(TestCase):
       .GetService.return_value
       .getOrdersByStatement) = MagicMock()
 
-    dfp.service.get_all_orders()
+    dfp.get_orders.main()
 
     # Confirm that it loaded the mock DFP client.
     mock_dfp_client.assert_called_once()

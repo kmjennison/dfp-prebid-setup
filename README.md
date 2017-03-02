@@ -41,7 +41,7 @@ _You will need credentials to access your DFP account programmatically. This sum
 ### Verifying Setup
 Let's try it out! From the top level directory, run
 
-`python -m scripts.get_all_orders`
+`python -m dfp.get_orders`
 
 and you should see all of the orders in your DFP account.
 

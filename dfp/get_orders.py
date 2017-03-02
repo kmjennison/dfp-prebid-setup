@@ -1,13 +1,10 @@
 
 from googleads import dfp
 
-from settings import GOOGLEADS_YAML_FILE
+from dfp.client import get_client
 
 
-def get_client():
-  return dfp.DfpClient.LoadFromStorage(GOOGLEADS_YAML_FILE)
-
-def get_all_orders():
+def main():
   """
   Prints all orders in DFP.
 
@@ -27,7 +24,6 @@ def get_all_orders():
   # through until all orders have been retrieved.
   while True:
     response = order_service.getOrdersByStatement(statement.ToStatement())
-    print response
     if 'results' in response:
       for order in response['results']:
         # Print out some information for each order.
@@ -38,3 +34,6 @@ def get_all_orders():
       break
 
   print '\nNumber of results found: %s' % response['totalResultSetSize']
+
+if __name__ == '__main__':
+  main()
