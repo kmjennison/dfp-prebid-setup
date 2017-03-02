@@ -1,2 +1,6 @@
 node_modules
 .env
+key.p12
+key.pem
+googleads.yaml
+*.pyc
