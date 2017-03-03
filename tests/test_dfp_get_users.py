@@ -75,7 +75,6 @@ class DFPGetUsersTests(TestCase):
         return_value={
           'totalResultSetSize': 0,
           'startIndex': 0,
-          'results': []
         }
       )
 

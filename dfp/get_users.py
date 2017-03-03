@@ -32,7 +32,13 @@ def get_user_id_by_email(email_address):
   response = user_service.getUsersByStatement(statement.ToStatement())
 
   # A user is required.
-  if len(response['results']) < 1:
+  no_user_found = False
+  try:
+    no_user_found = True if len(response['results']) < 1 else False 
+  except (AttributeError, KeyError):
+    no_user_found = True
+
+  if no_user_found:
     raise DFPObjectNotFound('No DFP user found  with email address {0}'.format(
       email_address))
 

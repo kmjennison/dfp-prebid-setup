@@ -68,7 +68,7 @@ def get_advertiser_id_by_name(name):
   no_company_found = False
   try:
     no_company_found = True if len(response['results']) < 1 else False 
-  except AttributeError, KeyError:
+  except (AttributeError, KeyError):
     no_company_found = True
 
   if no_company_found:
