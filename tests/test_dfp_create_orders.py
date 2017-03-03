@@ -11,7 +11,7 @@ from dfp.exceptions import MissingSettingException
   DFP_ORDER_ADVERTISER_ID=24681012,
   DFP_ORDER_TRAFFICKER_ID=12359113)
 @patch('googleads.dfp.DfpClient.LoadFromStorage')
-class DFPServiceTests(TestCase):
+class DFPCreateOrderTests(TestCase):
 
   def test_create_orders_call(self, mock_dfp_client):
     """
