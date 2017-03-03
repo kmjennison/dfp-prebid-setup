@@ -4,3 +4,4 @@ key.p12
 key.pem
 googleads.yaml
 *.pyc
+local_settings.py
