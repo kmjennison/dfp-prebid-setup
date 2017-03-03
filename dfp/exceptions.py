@@ -10,3 +10,10 @@ class DFPObjectNotFound(Exception):
   For when a required object does not exist in DFP.
   """
   pass
+
+class BadSettingException(Exception):
+  """
+  When a setting is malformed or somehow incorrect.
+  """
+  pass
+

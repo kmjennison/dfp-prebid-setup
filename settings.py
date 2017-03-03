@@ -14,6 +14,13 @@ DFP_ORDER_NAME = None
 # the created order
 DFP_USER_EMAIL_ADDRESS = None
 
+# The exact name of the DFP advertiser for the created order
+DFP_ADVERTISER_NAME = None
+
+# Whether we should create the advertiser in DFP if it does not exist.
+# If False, the program will exit rather than create an advertiser.
+CREATE_ADVERTISER_IF_DOES_NOT_EXIST = False
+
 # Integer from DFP
 DFP_ORDER_ADVERTISER_ID = None
 
