@@ -5,6 +5,7 @@ import settings
 from dfp.client import get_client
 from dfp.exceptions import MissingSettingException
 
+
 def create_order_config(name, advertiser_id, trafficker_id):
   """
   Creates an object of order info.
@@ -21,14 +22,37 @@ def create_order_config(name, advertiser_id, trafficker_id):
       'traffickerId': trafficker_id
   }
 
-def main():
+def create_order(order_name, advertiser_id, trafficker_id):
   """
-  Create an order in DFP.
+  Creates an order in DFP.
 
+  Args:
+    order_name (str): the name of the order
+    advertiser_id (int): the ID of the advertiser in DFP
+    trafficker_id (int): the ID of the DFP user owning the order
   Returns:
-      None
+    an object: the order config
   """
 
+  dfp_client = get_client()
+
+  # TODO: should check to make sure an order does not exist with this name.
+  # Otherwise, DFP will throw an exception.
+
+  orders = [
+    create_order_config(name=order_name, advertiser_id=advertiser_id,
+      trafficker_id=trafficker_id)
+  ]
+  order_service = dfp_client.GetService('OrderService', version='v201702')
+  orders = order_service.createOrders(orders)
+
+  order = orders[0]
+  print ('Order with id \'%s\' and name \'%s\' was created.'
+           % (order['id'], order['name']))
+
+  return order['id']
+
+def main():
   name = getattr(settings, 'DFP_ORDER_NAME', None)
   advertiser_id = getattr(settings, 'DFP_ORDER_ADVERTISER_ID', None)
   trafficker_id = getattr(settings, 'DFP_ORDER_TRAFFICKER_ID', None)
@@ -40,19 +64,7 @@ def main():
   if trafficker_id is None:
     raise MissingSettingException('DFP_ORDER_TRAFFICKER_ID')
 
-  dfp_client = get_client()
-
-  orders = [
-    create_order_config(name=name, advertiser_id=advertiser_id,
-      trafficker_id=trafficker_id)
-  ]
-  order_service = dfp_client.GetService('OrderService', version='v201702')
-  orders = order_service.createOrders(orders)
-
-  # Display results.
-  for order in orders:
-    print ('Order with id \'%s\' and name \'%s\' was created.'
-           % (order['id'], order['name']))
+  create_order(name, advertiser_id, trafficker_id)
 
 if __name__ == '__main__':
   main()

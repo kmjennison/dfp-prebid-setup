@@ -6,10 +6,7 @@ import settings
 import dfp.create_orders
 from dfp.exceptions import MissingSettingException
 
-@patch.multiple('settings',
-  DFP_ORDER_NAME='My Test Order!',
-  DFP_ORDER_ADVERTISER_ID=24681012,
-  DFP_ORDER_TRAFFICKER_ID=12359113)
+
 @patch('googleads.dfp.DfpClient.LoadFromStorage')
 class DFPCreateOrderTests(TestCase):
 
@@ -26,7 +23,7 @@ class DFPCreateOrderTests(TestCase):
     order_name = 'My Test Order!'
     advertiser_id = 24681012
     trafficker_id = 12359113
-    dfp.create_orders.main()
+    dfp.create_orders.create_order(order_name, advertiser_id, trafficker_id)
 
     expected_config = [
       dfp.create_orders.create_order_config(name=order_name,
@@ -38,35 +35,50 @@ class DFPCreateOrderTests(TestCase):
       .createOrders.assert_called_once_with(expected_config)
       )
 
-  def test_create_orders_missing_name(self, mock_dfp_client):
+  def test_return_order_id(self, mock_dfp_client):
     """
-    Raises an exception when missing the name parameter.
-    """
-    mock_dfp_client.return_value = MagicMock()
-
-    with patch('settings.DFP_ORDER_NAME', None):
-      with self.assertRaises(MissingSettingException):
-        dfp.create_orders.main()
-
-  def test_create_orders_missing_advertiser_id(self, mock_dfp_client):
-    """
-    Raises an exception when missing the advertiser_id parameter.
+    Ensure it returns the created order ID.
     """
     mock_dfp_client.return_value = MagicMock()
 
-    with patch('settings.DFP_ORDER_ADVERTISER_ID', None):
-      with self.assertRaises(MissingSettingException):
-        dfp.create_orders.main()
+    order_name = 'Some Order!'
+    advertiser_id = 97867564
+    trafficker_id = 13243546
 
-  def test_create_orders_missing_trafficker_id(self, mock_dfp_client):
-    """
-    Raises an exception when missing the trafficker_id parameter.
-    """
-    mock_dfp_client.return_value = MagicMock()
+    # Mock DFP response.
+    (mock_dfp_client.return_value
+      .GetService.return_value
+      .createOrders) = MagicMock(
+        return_value=[{
+          'id': 22233344,
+          'name': order_name,
+          'startDateTime': {},
+          'endDateTime': {},
+          'unlimitedEndDateTime': True,
+          'status': 'DRAFT',
+          'isArchived': False,
+          'externalOrderId': 0,
+          'currencyCode': 'USD',
+          'advertiserId': advertiser_id,
+          'creatorId': 123456789,
+          'traffickerId': trafficker_id,
+          'totalImpressionsDelivered': 0,
+          'totalClicksDelivered': 0,
+          'totalViewableImpressionsDelivered': 0,
+          'totalBudget': {
+            'currencyCode': 'USD',
+            'microAmount': 0,
+          },
+          'lastModifiedByApp': 'tab-for-',
+          'isProgrammatic': False,
+          'lastModifiedDateTime': {},
+        }]
+      )
 
-    with patch('settings.DFP_ORDER_TRAFFICKER_ID', None):
-      with self.assertRaises(MissingSettingException):
-        dfp.create_orders.main()
+    order_id = dfp.create_orders.create_order(order_name, advertiser_id,
+      trafficker_id)
+
+    self.assertEqual(order_id, 22233344)
 
   def test_order_config(self, mock_dfp_client):
     """
@@ -86,3 +98,35 @@ class DFPCreateOrderTests(TestCase):
       'traffickerId': 12359113
       })
 
+  @patch.multiple('settings',
+    DFP_ORDER_NAME=None,
+    DFP_ORDER_ADVERTISER_ID=24681012,
+    DFP_ORDER_TRAFFICKER_ID=12359113)
+  def test_main_create_orders_missing_name(self, mock_dfp_client):
+    """
+    Raises an exception when missing the name parameter.
+    """
+    with self.assertRaises(MissingSettingException):
+      dfp.create_orders.main()
+
+  @patch.multiple('settings',
+    DFP_ORDER_NAME='Some order',
+    DFP_ORDER_ADVERTISER_ID=None,
+    DFP_ORDER_TRAFFICKER_ID=12359113)
+  def test_main_create_orders_missing_advertiser_id(self, mock_dfp_client):
+    """
+    Raises an exception when missing the advertiser_id parameter.
+    """
+    with self.assertRaises(MissingSettingException):
+      dfp.create_orders.main()
+
+  @patch.multiple('settings',
+    DFP_ORDER_NAME='My order',
+    DFP_ORDER_ADVERTISER_ID=24681012,
+    DFP_ORDER_TRAFFICKER_ID=None)
+  def test_create_orders_missing_trafficker_id(self, mock_dfp_client):
+    """
+    Raises an exception when missing the trafficker_id parameter.
+    """
+    with self.assertRaises(MissingSettingException):
+      dfp.create_orders.main()
