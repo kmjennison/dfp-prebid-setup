@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 import settings
 import dfp.create_orders
