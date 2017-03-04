@@ -2,8 +2,9 @@
 from googleads import dfp
 
 import settings
+import dfp.get_orders
 from dfp.client import get_client
-from dfp.exceptions import MissingSettingException
+from dfp.exceptions import BadSettingException, MissingSettingException
 
 
 def create_order_config(name, advertiser_id, trafficker_id):
@@ -36,8 +37,12 @@ def create_order(order_name, advertiser_id, trafficker_id):
 
   dfp_client = get_client()
 
-  # TODO: should check to make sure an order does not exist with this name.
+  # Check to make sure an order does not exist with this name.
   # Otherwise, DFP will throw an exception.
+  existing_order = dfp.get_orders.get_order_by_name(order_name)
+  if existing_order is not None:
+    raise BadSettingException(('An order already exists with name {0}. '
+      'Please choose a new order name.').format(order_name))
 
   orders = [
     create_order_config(name=order_name, advertiser_id=advertiser_id,
