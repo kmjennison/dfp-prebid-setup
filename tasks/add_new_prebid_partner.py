@@ -8,6 +8,7 @@ from dfp.exceptions import (
   BadSettingException,
   MissingSettingException
 )
+from tasks.utils import get_price_bucket_array
 
 # TODO: Change all print statements to logging and add logging flag.
 # TODO: Disable logging during tests.
@@ -100,6 +101,11 @@ def main():
     raise MissingSettingException('PREBID_PRICE_BUCKETS')
 
   check_price_buckets_validity(price_buckets)
+
+  # price_bucket_array = get_price_bucket_array(price_bucket_granularity, 
+  #   price_bucket_max)
+
+  # print price_bucket_array
 
   # TODO: also display Prebid info.
   print """
