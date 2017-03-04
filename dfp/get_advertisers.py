@@ -71,7 +71,7 @@ def get_advertiser_id_by_name(name):
     no_company_found = True
 
   if no_company_found:
-    if getattr(settings, 'CREATE_ADVERTISER_IF_DOES_NOT_EXIST', False):
+    if getattr(settings, 'DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST', False):
       advertiser = create_advertiser(name)
     else:
       raise DFPObjectNotFound('No advertiser found  with name {0}'.format(

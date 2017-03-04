@@ -60,7 +60,7 @@ class DFPGetAdvertisersTests(TestCase):
       .getCompaniesByStatement.assert_called_once_with(expected_statement)
       )
 
-  @patch.multiple('settings', CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False)
+  @patch.multiple('settings', DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False)
   @patch('dfp.get_advertisers.create_advertiser')
   def test_get_no_advertiser(self, mock_create_advertiser, mock_dfp_client):
     """
@@ -86,7 +86,7 @@ class DFPGetAdvertisersTests(TestCase):
 
     mock_create_advertiser.assert_not_called()
 
-  @patch.multiple('settings', CREATE_ADVERTISER_IF_DOES_NOT_EXIST=True)
+  @patch.multiple('settings', DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=True)
   @patch('dfp.get_advertisers.create_advertiser')
   def test_get_no_advertiser_create(self, mock_create_advertiser, 
     mock_dfp_client):
