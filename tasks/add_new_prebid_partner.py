@@ -8,7 +8,10 @@ from dfp.exceptions import (
   BadSettingException,
   MissingSettingException
 )
-from tasks.utils import get_price_bucket_array
+from tasks.price_utils import (
+  get_prices_array,
+  get_prices_summary_string,
+)
 
 # TODO: Change all print statements to logging and add logging flag.
 # TODO: Disable logging during tests.
@@ -102,19 +105,29 @@ def main():
 
   check_price_buckets_validity(price_buckets)
 
-  # price_bucket_array = get_price_bucket_array(price_bucket_granularity, 
-  #   price_bucket_max)
+  prices = get_prices_array(price_buckets)
+  prices_summary = get_prices_summary_string(prices)
 
-  # print price_bucket_array
-
-  # TODO: also display Prebid info.
   print """
-    Going to create a new order in DFP called "{order_name}"
-    for advertiser "{advertiser}", owned by user {user_email}.
+
+    Going to create {num_line_items} new line items.
+      Order: {order_name}
+      Advertiser: {advertiser}
+      Order owner: {user_email}
+
+    Line items will have targeting:
+      `hb_pb` prices = {prices_summary}
+      `hb_bidder` = {bidder_code}
+      `placements` = {placements}
+
     """.format(
+      num_line_items = len(prices),
       order_name=order_name,
       advertiser=advertiser_name,
-      user_email=user_email
+      user_email=user_email,
+      prices_summary=prices_summary,
+      bidder_code=bidder_code,
+      placements=placements,
     )
 
   ok = raw_input('Is this correct? (y/n)\n')
