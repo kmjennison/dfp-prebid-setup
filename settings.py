@@ -3,6 +3,11 @@ import os
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 GOOGLEADS_YAML_FILE = os.path.join(ROOT_DIR, 'googleads.yaml')
 
+
+#########################################################################
+# DFP SETTINGS
+#########################################################################
+
 # A string describing the order
 DFP_ORDER_NAME = None
 
@@ -13,10 +18,27 @@ DFP_USER_EMAIL_ADDRESS = None
 # The exact name of the DFP advertiser for the created order
 DFP_ADVERTISER_NAME = None
 
+# IDs of placements the line items should target.
+DFP_TARGETED_PLACEMENT_IDS = []
+
 # Whether we should create the advertiser in DFP if it does not exist.
 # If False, the program will exit rather than create an advertiser.
 DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST = False
 
+#########################################################################
+# PREBID SETTINGS
+#########################################################################
+
+PREBID_BIDDER_CODE = None
+
+# Price buckets. This should match your Prebid settings for the partner. See:
+# http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity
+PREBID_PRICE_BUCKETS = {
+  'precision': 2,
+  'min' : 0,
+  'max' : 20,
+  'increment': 0.10,
+}
 
 #########################################################################
 # EXTRA SETTINGS
