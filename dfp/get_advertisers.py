@@ -62,8 +62,6 @@ def get_advertiser_id_by_name(name):
 
   response = company_service.getCompaniesByStatement(statement.ToStatement())
 
-  # print response
-
   # A company is required.
   no_company_found = False
   try:
