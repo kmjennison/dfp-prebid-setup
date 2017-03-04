@@ -48,3 +48,9 @@ and you should see all of the orders in your DFP account.
 ## Creating Prebid Line Items
 
 ... more to come.
+
+## What Happens Behind the Scenes
+You define the advertiser, user (owner of the order), placements, and Prebid partner settings. Then, we:
+* Check that the advertiser exists in DFP (and, optionally, create the advertiser if it does not)
+* Create an order for the advertiser, assigned to the specified user
+* Create one line item per price bucket, attach creatives, set placement targeting, and set Prebid key-value targeting
