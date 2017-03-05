@@ -70,6 +70,18 @@ def check_price_buckets_validity(price_buckets):
     raise BadSettingException('The "increment" key in "PREBID_PRICE_BUCKETS" '
       'must be a number.')
 
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
 def main():
   """
   Validate the settings and ask for confirmation from the user. Then,
@@ -110,15 +122,15 @@ def main():
 
   print """
 
-    Going to create {num_line_items} new line items.
-      Order: {order_name}
-      Advertiser: {advertiser}
-      Order owner: {user_email}
+    Going to create {name_start_format}{num_line_items}{format_end} new line items.
+      {name_start_format}Order{format_end}: {value_start_format}{order_name}{format_end}
+      {name_start_format}Advertiser{format_end}: {value_start_format}{advertiser}{format_end}
+      {name_start_format}Owner{format_end}: {value_start_format}{user_email}{format_end}
 
     Line items will have targeting:
-      `hb_pb` prices = {prices_summary}
-      `hb_bidder` = {bidder_code}
-      `placements` = {placements}
+      {name_start_format}hb_pb{format_end} = {value_start_format}{prices_summary}{format_end}
+      {name_start_format}hb_bidder{format_end} = {value_start_format}{bidder_code}{format_end}
+      {name_start_format}placements{format_end} = {value_start_format}{placements}{format_end}
 
     """.format(
       num_line_items = len(prices),
@@ -128,6 +140,9 @@ def main():
       prices_summary=prices_summary,
       bidder_code=bidder_code,
       placements=placements,
+      name_start_format=color.BOLD,
+      format_end=color.END,
+      value_start_format=color.BLUE,
     )
 
   ok = raw_input('Is this correct? (y/n)\n')
