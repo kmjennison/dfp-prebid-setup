@@ -118,7 +118,8 @@ def main():
   check_price_buckets_validity(price_buckets)
 
   prices = get_prices_array(price_buckets)
-  prices_summary = get_prices_summary_string(prices)
+  prices_summary = get_prices_summary_string(prices,
+    price_buckets['precision'])
 
   print """
 

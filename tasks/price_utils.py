@@ -75,7 +75,7 @@ def get_prices_array(price_bucket):
     
   return prices
 
-def get_prices_summary_string(prices_array):
+def get_prices_summary_string(prices_array, precision=2):
   """
   Returns a string preview of the prices array.
 
@@ -88,15 +88,16 @@ def get_prices_summary_string(prices_array):
   """
   if (len(prices_array) < 6):
     summary = ', '.join(
-      [num_to_str(micro_amount_to_num(price)) for price in prices_array])
+      [num_to_str(micro_amount_to_num(price), precision)
+        for price in prices_array])
   else:
     summary = '{0}, {1}, {2}, ... {3}, {4}, {5}'.format(
-        num_to_str(micro_amount_to_num(prices_array[0])),
-        num_to_str(micro_amount_to_num(prices_array[1])),
-        num_to_str(micro_amount_to_num(prices_array[2])),
-        num_to_str(micro_amount_to_num(prices_array[-3])),
-        num_to_str(micro_amount_to_num(prices_array[-2])),
-        num_to_str(micro_amount_to_num(prices_array[-1])),
+        num_to_str(micro_amount_to_num(prices_array[0]), precision),
+        num_to_str(micro_amount_to_num(prices_array[1]), precision),
+        num_to_str(micro_amount_to_num(prices_array[2]), precision),
+        num_to_str(micro_amount_to_num(prices_array[-3]), precision),
+        num_to_str(micro_amount_to_num(prices_array[-2]), precision),
+        num_to_str(micro_amount_to_num(prices_array[-1]), precision),
       )
 
   return summary

@@ -164,4 +164,10 @@ class UtilsTests(TestCase):
       get_prices_summary_string([3200000, 3300000, 3400000, 3500000]),
       '3.20, 3.30, 3.40, 3.50'
     )
-  
+
+    # Different precision
+    self.assertEqual(
+      get_prices_summary_string([8220000, 8060000, 8427100, 8000000],
+        precision=4),
+      '8.2200, 8.0600, 8.4271, 8.0000'
+    )
