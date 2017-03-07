@@ -1,7 +1,7 @@
 
 from unittest import TestCase
 
-from mock import patch
+from mock import MagicMock, patch
 
 import settings
 from dfp.exceptions import BadSettingException, MissingSettingException
@@ -10,7 +10,7 @@ import tasks.add_new_prebid_partner
 email = 'fakeuser@example.com'
 advertiser = 'My Advertiser'
 order = 'My Cool Order'
-placements = ['id-1', 'id-42']
+placements = ['My Site Leaderboard', 'Another Placement']
 bidder_code = 'mypartner'
 price_buckets = {
   'precision': 2,
@@ -27,9 +27,10 @@ price_buckets = {
   PREBID_BIDDER_CODE=bidder_code,
   PREBID_PRICE_BUCKETS=price_buckets,
   DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False)
+@patch('googleads.dfp.DfpClient.LoadFromStorage')
 class AddNewPrebidPartnerTests(TestCase):
 
-  def test_missing_email_setting(self):
+  def test_missing_email_setting(self, mock_dfp_client):
     """
     It throws an exception with a missing setting.
     """
@@ -37,7 +38,7 @@ class AddNewPrebidPartnerTests(TestCase):
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
 
-  def test_missing_advertiser_setting(self):
+  def test_missing_advertiser_setting(self, mock_dfp_client):
     """
     It throws an exception with a missing setting.
     """
@@ -45,7 +46,7 @@ class AddNewPrebidPartnerTests(TestCase):
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
 
-  def test_missing_order_setting(self):
+  def test_missing_order_setting(self, mock_dfp_client):
     """
     It throws an exception with a missing setting.
     """
@@ -54,7 +55,7 @@ class AddNewPrebidPartnerTests(TestCase):
       tasks.add_new_prebid_partner.main()
 
 
-  def test_missing_placement_setting(self):
+  def test_missing_placement_setting(self, mock_dfp_client):
     """
     It throws an exception with a missing setting.
     """
@@ -63,7 +64,7 @@ class AddNewPrebidPartnerTests(TestCase):
       tasks.add_new_prebid_partner.main()
 
 
-  def test_missing_bidder_code_setting(self):
+  def test_missing_bidder_code_setting(self, mock_dfp_client):
     """
     It throws an exception with a missing setting.
     """
@@ -71,7 +72,7 @@ class AddNewPrebidPartnerTests(TestCase):
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
 
-  def test_price_bucket_validity_missing_key(self):
+  def test_price_bucket_validity_missing_key(self, mock_dfp_client):
     """
     It throws an exception of the price bucket setting
     is missing keys.
@@ -85,7 +86,7 @@ class AddNewPrebidPartnerTests(TestCase):
     with self.assertRaises(BadSettingException):
       tasks.add_new_prebid_partner.main()
 
-  def test_price_bucket_validity_bad_values(self):
+  def test_price_bucket_validity_bad_values(self, mock_dfp_client):
     """
     It throws an exception of the price bucket setting
     has bad value types.
@@ -99,7 +100,7 @@ class AddNewPrebidPartnerTests(TestCase):
     with self.assertRaises(BadSettingException):
       tasks.add_new_prebid_partner.main()
 
-  def test_price_bucket_validity_bad_values_again(self):
+  def test_price_bucket_validity_bad_values_again(self, mock_dfp_client):
     """
     It throws an exception of the price bucket setting
     has bad value types.
@@ -116,7 +117,7 @@ class AddNewPrebidPartnerTests(TestCase):
   @patch('tasks.add_new_prebid_partner.setup_partner')
   @patch('tasks.add_new_prebid_partner.raw_input', return_value='n')
   def test_user_confirmation_rejected(self, mock_raw_input, 
-    mock_setup_partners):
+    mock_setup_partners, mock_dfp_client):
     """
     Make sure we exit when the user rejects the confirmation.
     """
@@ -126,7 +127,7 @@ class AddNewPrebidPartnerTests(TestCase):
   @patch('tasks.add_new_prebid_partner.setup_partner')
   @patch('tasks.add_new_prebid_partner.raw_input', return_value='asdf')
   def test_user_confirmation_not_accepted(self, mock_raw_input, 
-    mock_setup_partners):
+    mock_setup_partners, mock_dfp_client):
     """
     Make sure we exit when the user types something other than 'y'.
     """
@@ -136,10 +137,46 @@ class AddNewPrebidPartnerTests(TestCase):
   @patch('tasks.add_new_prebid_partner.setup_partner')
   @patch('tasks.add_new_prebid_partner.raw_input', return_value='y')
   def test_user_confirmation_accepted(self, mock_raw_input, 
-    mock_setup_partners):
+    mock_setup_partners, mock_dfp_client):
     """
     Make sure we start the process when the user confirms we should proceed.
     """
     tasks.add_new_prebid_partner.main()
     mock_setup_partners.assert_called_once_with(email, advertiser, order,
       placements, bidder_code, price_buckets)
+
+  @patch('dfp.create_orders')
+  @patch('dfp.get_advertisers')
+  @patch('dfp.get_placements')
+  @patch('dfp.get_users')
+  def test_setup_partner(self, mock_get_users, mock_get_placements,
+    mock_get_advertisers, mock_create_orders, mock_dfp_client):
+    """
+    It calls all expected DFP functions.
+    """
+
+    mock_get_users.get_user_id_by_email = MagicMock(return_value=14523)
+    mock_get_placements.get_placement_ids_by_name = MagicMock(
+      return_value=[1234567, 9876543])
+    mock_get_advertisers.get_advertiser_id_by_name = MagicMock(
+      return_value=246810)
+
+    tasks.add_new_prebid_partner.setup_partner(
+      user_email=email,
+      advertiser_name=advertiser,
+      order_name=order,
+      placements=placements,
+      bidder_code=bidder_code,
+      price_buckets=price_buckets
+    )
+
+    mock_get_users.get_user_id_by_email.assert_called_once_with(email)
+    mock_get_placements.get_placement_ids_by_name.assert_called_once_with(
+      placements)
+    mock_get_advertisers.get_advertiser_id_by_name.assert_called_once_with(
+      advertiser)
+    mock_create_orders.create_order.assert_called_once_with(order, 246810,
+      14523)
+
+    # TODO: test mock line item call
+    

@@ -3,6 +3,7 @@
 import settings
 import dfp.create_orders
 import dfp.get_advertisers
+import dfp.get_placements
 import dfp.get_users
 from dfp.exceptions import (
   BadSettingException,
@@ -24,6 +25,9 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
 
   # Get the user.
   user_id = dfp.get_users.get_user_id_by_email(user_email)
+
+  # Get the placement IDs.
+  placement_ids = dfp.get_placements.get_placement_ids_by_name(placements)
 
   # Get (or potentially create) the advertiser.
   advertiser_id = dfp.get_advertisers.get_advertiser_id_by_name(
