@@ -25,6 +25,8 @@ def create_creatives(creatives):
   created_creative_ids = []
   for creative in creatives:
     created_creative_ids.append(creative['id'])
+    print 'Created creative with id {0}, name {1}.'.format(
+      creative['id'], creative['name'])
   return created_creative_ids
 
 def create_creative_config(name, advertiser_id):
@@ -56,5 +58,5 @@ def create_creative_config(name, advertiser_id):
     # https://github.com/prebid/Prebid.js/issues/418
     'isSafeFrameCompatible': False,
   }
-  
+
   return config

@@ -149,6 +149,7 @@ class AddNewPrebidPartnerTests(TestCase):
     mock_setup_partners.assert_called_once_with(email, advertiser, order,
       placements, bidder_code, prices)
 
+  @patch('dfp.create_creatives')
   @patch('dfp.create_line_items')
   @patch('dfp.create_orders')
   @patch('dfp.get_advertisers')
@@ -156,7 +157,7 @@ class AddNewPrebidPartnerTests(TestCase):
   @patch('dfp.get_users')
   def test_setup_partner(self, mock_get_users, mock_get_placements,
     mock_get_advertisers, mock_create_orders, mock_create_line_items,
-    mock_dfp_client):
+    mock_create_creatives, mock_dfp_client):
     """
     It calls all expected DFP functions.
     """
@@ -184,6 +185,7 @@ class AddNewPrebidPartnerTests(TestCase):
       advertiser)
     mock_create_orders.create_order.assert_called_once_with(order, 246810,
       14523)
+    mock_create_creatives.create_creatives.assert_called_once()
     mock_create_line_items.create_line_items.assert_called_once()
 
 

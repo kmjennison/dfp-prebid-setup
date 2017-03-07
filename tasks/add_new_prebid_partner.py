@@ -3,6 +3,7 @@
 from pprint import pprint
 
 import settings
+import dfp.create_creatives
 import dfp.create_line_items
 import dfp.create_orders
 import dfp.get_advertisers
@@ -41,7 +42,12 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   # Create the order.
   order_id = dfp.create_orders.create_order(order_name, advertiser_id, user_id)
 
-  # TODO: create creatives
+  # Create creatives.
+  creative_config = dfp.create_creatives.create_creative_config(
+    name='{advertiser_name}: HB {order_name}'.format(
+      advertiser_name=advertiser_name, order_name=order_name),
+    advertiser_id=advertiser_id)
+  creative_ids = dfp.create_creatives.create_creatives([creative_config])
 
   line_items_config = create_line_item_configs(prices, order_id,
     placement_ids, advertiser_name)
