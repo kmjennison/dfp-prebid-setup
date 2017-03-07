@@ -8,7 +8,7 @@ import dfp.create_creatives
 
 
 @patch('googleads.dfp.DfpClient.LoadFromStorage')
-class DFPCreateLineItemsTests(TestCase):
+class DFPCreateCreativesTests(TestCase):
 
   def test_create_creatives_items_call(self, mock_dfp_client):
     """
