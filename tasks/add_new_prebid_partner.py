@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 
+from pprint import pprint
+
 import settings
+import dfp.create_line_items
 import dfp.create_orders
 import dfp.get_advertisers
 import dfp.get_placements
@@ -12,13 +15,15 @@ from dfp.exceptions import (
 from tasks.price_utils import (
   get_prices_array,
   get_prices_summary_string,
+  micro_amount_to_num,
+  num_to_str,
 )
 
 # TODO: Change all print statements to logging and add logging flag.
 # TODO: Disable logging during tests.
 
 def setup_partner(user_email, advertiser_name, order_name, placements,
-    bidder_code, price_buckets):
+    bidder_code, prices):
   """
   Call all necessary DfP tasks for a new Prebid partner setup.
   """
@@ -36,7 +41,43 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   # Create the order.
   order_id = dfp.create_orders.create_order(order_name, advertiser_id, user_id)
 
-  # TODO: line items, creatives, targeting
+  # TODO: create creatives
+
+  line_items_config = create_line_item_configs(prices, order_id,
+    placement_ids, advertiser_name)
+  dfp.create_line_items.create_line_items(line_items_config)
+
+  # TODO attach creatives to line items
+
+
+# TODO: add key-value targeting
+def create_line_item_configs(prices, order_id, placement_ids, advertiser_name):
+  """
+  Create a line item config for each price bucket.
+
+  Args:
+    prices (array)
+    order_id (int)
+    placement_ids (arr)
+    advertiser_name (str)
+  Returns:
+    an array of objects: the array of DFP line item configurations
+  """
+
+  line_items_config = []
+  for price in prices:
+
+    # Autogenerate the line item name.
+    line_item_name = '{advertiser_name}: HB ${price}'.format(
+      advertiser_name=advertiser_name,
+      price=num_to_str(micro_amount_to_num(price))
+    )
+
+    line_items_config.append(dfp.create_line_items.create_line_item_config(
+      name=line_item_name, order_id=order_id, placement_ids=placement_ids,
+      cpm_micro_amount=price))
+
+  return line_items_config
 
 def check_price_buckets_validity(price_buckets):
   """
@@ -162,7 +203,7 @@ def main():
     order_name,
     placements,
     bidder_code,
-    price_buckets
+    prices,
   )
 
 if __name__ == '__main__':

@@ -4,8 +4,11 @@ from unittest import TestCase
 from mock import MagicMock, patch
 
 import settings
-from dfp.exceptions import BadSettingException, MissingSettingException
 import tasks.add_new_prebid_partner
+from dfp.exceptions import BadSettingException, MissingSettingException
+from tasks.price_utils import (
+  get_prices_array,
+)
 
 email = 'fakeuser@example.com'
 advertiser = 'My Advertiser'
@@ -18,6 +21,7 @@ price_buckets = {
   'max' : 20,
   'increment': 0.10,
 }
+prices = get_prices_array(price_buckets)
 
 @patch.multiple('settings',
   DFP_USER_EMAIL_ADDRESS=email,
@@ -143,14 +147,16 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     tasks.add_new_prebid_partner.main()
     mock_setup_partners.assert_called_once_with(email, advertiser, order,
-      placements, bidder_code, price_buckets)
+      placements, bidder_code, prices)
 
+  @patch('dfp.create_line_items')
   @patch('dfp.create_orders')
   @patch('dfp.get_advertisers')
   @patch('dfp.get_placements')
   @patch('dfp.get_users')
   def test_setup_partner(self, mock_get_users, mock_get_placements,
-    mock_get_advertisers, mock_create_orders, mock_dfp_client):
+    mock_get_advertisers, mock_create_orders, mock_create_line_items,
+    mock_dfp_client):
     """
     It calls all expected DFP functions.
     """
@@ -160,6 +166,7 @@ class AddNewPrebidPartnerTests(TestCase):
       return_value=[1234567, 9876543])
     mock_get_advertisers.get_advertiser_id_by_name = MagicMock(
       return_value=246810)
+    mock_create_orders.create_order = MagicMock(return_value=1357913)
 
     tasks.add_new_prebid_partner.setup_partner(
       user_email=email,
@@ -167,7 +174,7 @@ class AddNewPrebidPartnerTests(TestCase):
       order_name=order,
       placements=placements,
       bidder_code=bidder_code,
-      price_buckets=price_buckets
+      prices=prices,
     )
 
     mock_get_users.get_user_id_by_email.assert_called_once_with(email)
@@ -177,6 +184,34 @@ class AddNewPrebidPartnerTests(TestCase):
       advertiser)
     mock_create_orders.create_order.assert_called_once_with(order, 246810,
       14523)
+    mock_create_line_items.create_line_items.assert_called_once()
 
-    # TODO: test mock line item call
-    
+
+  def test_create_line_item_configs(self, mock_dfp_client):
+    """
+    It creates the expected line item configs.
+    """
+
+    configs = tasks.add_new_prebid_partner.create_line_item_configs(
+      prices=[100000, 200000, 300000],
+      order_id=1234567,
+      placement_ids=[9876543, 1234567],
+      advertiser_name='Wonderful Ad Partner'
+    )
+
+    self.assertEqual(len(configs), 3)
+
+    self.assertEqual(configs[0]['name'], 'Wonderful Ad Partner: HB $0.10')
+    self.assertEqual(
+      configs[0]['targeting']['inventoryTargeting']['targetedPlacementIds'],
+      [9876543, 1234567]
+    )
+    self.assertEqual(configs[0]['costPerUnit']['microAmount'], 100000)
+
+    self.assertEqual(configs[2]['name'], 'Wonderful Ad Partner: HB $0.30')
+    self.assertEqual(
+      configs[2]['targeting']['inventoryTargeting']['targetedPlacementIds'],
+      [9876543, 1234567]
+    )
+    self.assertEqual(configs[2]['costPerUnit']['microAmount'], 300000)
+
