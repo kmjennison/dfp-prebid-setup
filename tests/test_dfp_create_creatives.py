@@ -94,9 +94,11 @@ class DFPCreateCreativesTests(TestCase):
         # Some simple mock creatives.
         {
           'id': 444555666,
+          'name': 'Another creative'
         },
         {
           'id': 999888777,
+          'name': 'Blinking banner ad'
         },
       ])
 
