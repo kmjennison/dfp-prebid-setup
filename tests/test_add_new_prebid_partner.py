@@ -23,7 +23,7 @@ price_buckets = {
   DFP_USER_EMAIL_ADDRESS=email,
   DFP_ADVERTISER_NAME=advertiser,
   DFP_ORDER_NAME=order,
-  DFP_TARGETED_PLACEMENT_IDS=placements,
+  DFP_TARGETED_PLACEMENT_NAMES=placements,
   PREBID_BIDDER_CODE=bidder_code,
   PREBID_PRICE_BUCKETS=price_buckets,
   DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False)
@@ -58,7 +58,7 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     It throws an exception with a missing setting.
     """
-    settings.DFP_TARGETED_PLACEMENT_IDS = None
+    settings.DFP_TARGETED_PLACEMENT_NAMES = None
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
 

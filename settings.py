@@ -18,8 +18,8 @@ DFP_USER_EMAIL_ADDRESS = None
 # The exact name of the DFP advertiser for the created order
 DFP_ADVERTISER_NAME = None
 
-# IDs of placements the line items should target.
-DFP_TARGETED_PLACEMENT_IDS = []
+# Names of placements the line items should target.
+DFP_TARGETED_PLACEMENT_NAMES = []
 
 # Whether we should create the advertiser in DFP if it does not exist.
 # If False, the program will exit rather than create an advertiser.

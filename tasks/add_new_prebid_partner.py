@@ -100,11 +100,11 @@ def main():
   if order_name is None:
     raise MissingSettingException('DFP_ORDER_NAME')
 
-  placements = getattr(settings, 'DFP_TARGETED_PLACEMENT_IDS', None)
+  placements = getattr(settings, 'DFP_TARGETED_PLACEMENT_NAMES', None)
   if placements is None:
-    raise MissingSettingException('DFP_TARGETED_PLACEMENT_IDS')
+    raise MissingSettingException('DFP_TARGETED_PLACEMENT_NAMES')
   elif len(placements) < 1:
-    raise BadSettingException('The setting "DFP_TARGETED_PLACEMENT_IDS" '
+    raise BadSettingException('The setting "DFP_TARGETED_PLACEMENT_NAMES" '
       'must contain at least one DFP placement ID.')
 
   bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
