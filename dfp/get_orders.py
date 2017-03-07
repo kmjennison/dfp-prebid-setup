@@ -7,7 +7,7 @@ from dfp.client import get_client
 
 def get_order_by_name(order_name):
   """
-  Prints all orders in DFP.
+  Gets an order by name from DFP.
 
   Args:
     order_name (str): the name of the DFP order

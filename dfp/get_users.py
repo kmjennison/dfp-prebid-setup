@@ -40,7 +40,7 @@ def get_user_id_by_email(email_address):
     no_user_found = True
 
   if no_user_found:
-    raise DFPObjectNotFound('No DFP user found  with email address {0}'.format(
+    raise DFPObjectNotFound('No DFP user found with email address {0}'.format(
       email_address))
 
   # Only get the first user in case there are multiple matches.

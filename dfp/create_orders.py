@@ -33,7 +33,7 @@ def create_order(order_name, advertiser_id, trafficker_id):
     advertiser_id (int): the ID of the advertiser in DFP
     trafficker_id (int): the ID of the DFP user owning the order
   Returns:
-    an object: the order config
+    an integer: the ID of the created order
   """
 
   dfp_client = get_client()

@@ -30,7 +30,7 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
     advertiser_name)
 
   # Create the order.
-  dfp.create_orders.create_order(order_name, advertiser_id, user_id)
+  order_id = dfp.create_orders.create_order(order_name, advertiser_id, user_id)
 
   # TODO: line items, creatives, targeting
 
