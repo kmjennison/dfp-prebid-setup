@@ -40,7 +40,7 @@ def get_order_by_name(order_name):
     return None
   else:
     order = response['results'][0]
-    print('Order with ID "%d" and name "%s" was found.\n' % (order['id'],
+    print('Order with ID "%d" and name "%s" was found.' % (order['id'],
                                                              order['name']))
     return order
 
@@ -67,13 +67,13 @@ def get_all_orders():
     if 'results' in response:
       for order in response['results']:
         # Print out some information for each order.
-        print('Order with ID "%d" and name "%s" was found.\n' % (order['id'],
+        print('Order with ID "%d" and name "%s" was found.' % (order['id'],
                                                                  order['name']))
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
     else:
       break
 
-  print '\nNumber of results found: %s' % response['totalResultSetSize']
+  print 'Number of results found: %s' % response['totalResultSetSize']
 
 def main():
   get_all_orders()
