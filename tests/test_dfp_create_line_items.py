@@ -68,16 +68,20 @@ class DFPCreateLineItemsTests(TestCase):
               'width': '1',
               'height': '1'
             },
+          },
+          {
             'size': {
               'width': '300',
               'height': '250'
             },
+          },
+          {
             'size': {
               'width': '728',
               'height': '90'
             },
-          }
-    ],
+          },
+        ],
       }
     )
 
