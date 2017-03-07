@@ -25,6 +25,11 @@ DFP_TARGETED_PLACEMENT_NAMES = []
 # If False, the program will exit rather than create an advertiser.
 DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST = False
 
+# If settings.DFP_ORDER_NAME is the same as an existing order, add the created 
+# line items to that order. If False, the program will exit rather than
+# modify an existing order.
+DFP_USE_EXISTING_ORDER_IF_EXISTS = False
+
 #########################################################################
 # PREBID SETTINGS
 #########################################################################

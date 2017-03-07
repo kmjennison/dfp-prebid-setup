@@ -42,19 +42,31 @@ def create_order(order_name, advertiser_id, trafficker_id):
   # Otherwise, DFP will throw an exception.
   existing_order = dfp.get_orders.get_order_by_name(order_name)
   if existing_order is not None:
-    raise BadSettingException(('An order already exists with name {0}. '
-      'Please choose a new order name.').format(order_name))
 
-  orders = [
-    create_order_config(name=order_name, advertiser_id=advertiser_id,
-      trafficker_id=trafficker_id)
-  ]
-  order_service = dfp_client.GetService('OrderService', version='v201702')
-  orders = order_service.createOrders(orders)
-
-  order = orders[0]
-  print ('Order with id \'%s\' and name \'%s\' was created.'
+    # If the settings allow modifying an existing order, do so. Otherwise,
+    # throw an exception.
+    can_use_existing_order = getattr(settings,
+      'DFP_USE_EXISTING_ORDER_IF_EXISTS', None)
+    if can_use_existing_order:
+      order = existing_order
+      print ('Using existing order with id \'%s\' and name \'%s\'.'
            % (order['id'], order['name']))
+    else:
+      raise BadSettingException(('An order already exists with name {0}. '
+        'Please choose a new order name.').format(order_name))
+
+  # No order with the name exists, so create it.
+  else:
+    orders = [
+      create_order_config(name=order_name, advertiser_id=advertiser_id,
+        trafficker_id=trafficker_id)
+    ]
+    order_service = dfp_client.GetService('OrderService', version='v201702')
+    orders = order_service.createOrders(orders)
+
+    order = orders[0]
+    print ('Order with id \'%s\' and name \'%s\' was created.'
+             % (order['id'], order['name']))
 
   return order['id']
 

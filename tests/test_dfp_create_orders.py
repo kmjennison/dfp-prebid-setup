@@ -40,18 +40,21 @@ class DFPCreateOrderTests(TestCase):
       .createOrders.assert_called_once_with(expected_config)
       )
 
+  @patch.multiple('settings', DFP_USE_EXISTING_ORDER_IF_EXISTS=False)
   @patch('dfp.get_orders.get_order_by_name')
-  def test_create_orders_duplicate_name(self, mock_get_order_by_name, 
+  def test_create_orders_duplicate_name_fail(self, mock_get_order_by_name, 
     mock_dfp_client):
 
     """
-    Ensure it throws an Exception if an order with that name already exists.
+    Ensure it throws an Exception if an order with that name already exists
+    and we should not modify the existing order.
     """
 
     # Mock that an order already exists with the same name.
-    mock_get_order_by_name.return_value = {'id': 123456789 }
-
-    mock_dfp_client.return_value = MagicMock()
+    mock_get_order_by_name.return_value = {
+      'id': 123456789,
+      'name': 'My Test Order!'
+    }
 
     order_name = 'My Test Order!'
     advertiser_id = 24681012
@@ -59,6 +62,30 @@ class DFPCreateOrderTests(TestCase):
 
     with self.assertRaises(BadSettingException):
       dfp.create_orders.create_order(order_name, advertiser_id, trafficker_id)
+
+  @patch.multiple('settings', DFP_USE_EXISTING_ORDER_IF_EXISTS=True)
+  @patch('dfp.get_orders.get_order_by_name')
+  def test_create_orders_duplicate_name_success(self, mock_get_order_by_name, 
+    mock_dfp_client):
+
+    """
+    Use an existing order with the same name if settings allow.
+    """
+
+    # Mock that an order already exists with the same name.
+    mock_get_order_by_name.return_value = {
+      'id': 123456789,
+      'name': 'My Test Order!'
+    }
+
+    order_name = 'My Test Order!'
+    advertiser_id = 24681012
+    trafficker_id = 12359113
+
+    order_id = dfp.create_orders.create_order(order_name, advertiser_id,
+      trafficker_id)
+
+    self.assertEqual(order_id, 123456789)
 
   @patch('dfp.get_orders.get_order_by_name')
   def test_return_order_id(self, mock_get_order_by_name, mock_dfp_client):
