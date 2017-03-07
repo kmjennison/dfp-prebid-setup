@@ -67,18 +67,6 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount):
           'height': '1'
         },
       },
-      {
-        'size': {
-          'width': '300',
-          'height': '250'
-        },
-      },
-      {
-        'size': {
-          'width': '728',
-          'height': '90'
-        },
-      },
     ],
   }
   return line_item

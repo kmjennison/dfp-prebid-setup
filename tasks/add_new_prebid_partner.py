@@ -3,6 +3,7 @@
 from pprint import pprint
 
 import settings
+import dfp.associate_line_items_and_creatives
 import dfp.create_creatives
 import dfp.create_line_items
 import dfp.create_orders
@@ -43,21 +44,25 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   order_id = dfp.create_orders.create_order(order_name, advertiser_id, user_id)
 
   # Create creatives.
+  # Right now, we create only one creative for all line items.
   creative_config = dfp.create_creatives.create_creative_config(
-    name='{advertiser_name}: HB {order_name}'.format(
-      advertiser_name=advertiser_name, order_name=order_name),
+    name='{bidder_code}: HB {order_name}'.format(
+      bidder_code=bidder_code, order_name=order_name),
     advertiser_id=advertiser_id)
   creative_ids = dfp.create_creatives.create_creatives([creative_config])
 
+  # Create line items.
   line_items_config = create_line_item_configs(prices, order_id,
-    placement_ids, advertiser_name)
-  dfp.create_line_items.create_line_items(line_items_config)
+    placement_ids, bidder_code)
+  line_item_ids = dfp.create_line_items.create_line_items(line_items_config)
 
-  # TODO attach creatives to line items
+  # Associate creatives with line items.
+  dfp.associate_line_items_and_creatives.make_licas(line_item_ids,
+    creative_ids)
 
 
 # TODO: add key-value targeting
-def create_line_item_configs(prices, order_id, placement_ids, advertiser_name):
+def create_line_item_configs(prices, order_id, placement_ids, bidder_code):
   """
   Create a line item config for each price bucket.
 
@@ -65,7 +70,7 @@ def create_line_item_configs(prices, order_id, placement_ids, advertiser_name):
     prices (array)
     order_id (int)
     placement_ids (arr)
-    advertiser_name (str)
+    bidder_code (str)
   Returns:
     an array of objects: the array of DFP line item configurations
   """
@@ -74,8 +79,8 @@ def create_line_item_configs(prices, order_id, placement_ids, advertiser_name):
   for price in prices:
 
     # Autogenerate the line item name.
-    line_item_name = '{advertiser_name}: HB ${price}'.format(
-      advertiser_name=advertiser_name,
+    line_item_name = '{bidder_code}: HB ${price}'.format(
+      bidder_code=bidder_code,
       price=num_to_str(micro_amount_to_num(price))
     )
 

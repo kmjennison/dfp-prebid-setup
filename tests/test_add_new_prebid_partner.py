@@ -149,6 +149,7 @@ class AddNewPrebidPartnerTests(TestCase):
     mock_setup_partners.assert_called_once_with(email, advertiser, order,
       placements, bidder_code, prices)
 
+  @patch('dfp.associate_line_items_and_creatives')
   @patch('dfp.create_creatives')
   @patch('dfp.create_line_items')
   @patch('dfp.create_orders')
@@ -157,7 +158,7 @@ class AddNewPrebidPartnerTests(TestCase):
   @patch('dfp.get_users')
   def test_setup_partner(self, mock_get_users, mock_get_placements,
     mock_get_advertisers, mock_create_orders, mock_create_line_items,
-    mock_create_creatives, mock_dfp_client):
+    mock_create_creatives, mock_licas, mock_dfp_client):
     """
     It calls all expected DFP functions.
     """
@@ -187,7 +188,7 @@ class AddNewPrebidPartnerTests(TestCase):
       14523)
     mock_create_creatives.create_creatives.assert_called_once()
     mock_create_line_items.create_line_items.assert_called_once()
-
+    mock_licas.make_licas.assert_called_once()
 
   def test_create_line_item_configs(self, mock_dfp_client):
     """
@@ -198,19 +199,19 @@ class AddNewPrebidPartnerTests(TestCase):
       prices=[100000, 200000, 300000],
       order_id=1234567,
       placement_ids=[9876543, 1234567],
-      advertiser_name='Wonderful Ad Partner'
+      bidder_code='iamabiddr'
     )
 
     self.assertEqual(len(configs), 3)
 
-    self.assertEqual(configs[0]['name'], 'Wonderful Ad Partner: HB $0.10')
+    self.assertEqual(configs[0]['name'], 'iamabiddr: HB $0.10')
     self.assertEqual(
       configs[0]['targeting']['inventoryTargeting']['targetedPlacementIds'],
       [9876543, 1234567]
     )
     self.assertEqual(configs[0]['costPerUnit']['microAmount'], 100000)
 
-    self.assertEqual(configs[2]['name'], 'Wonderful Ad Partner: HB $0.30')
+    self.assertEqual(configs[2]['name'], 'iamabiddr: HB $0.30')
     self.assertEqual(
       configs[2]['targeting']['inventoryTargeting']['targetedPlacementIds'],
       [9876543, 1234567]
