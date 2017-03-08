@@ -5,6 +5,41 @@ from googleads import dfp
 from dfp.client import get_client
 
 
+def get_key_id_by_name(name):
+  """
+  Gets a targeting key by key name.
+
+  Args:
+    name (str): the name of the targeting key
+  Returns:
+    an integer, or None
+  """
+
+  dfp_client = get_client()
+  custom_targeting_service = dfp_client.GetService('CustomTargetingService',
+    version='v201702')
+
+  # Get a key by name.
+  query = ('WHERE name = :name')
+  values = [{
+    'key': 'name',
+    'value': {
+      'xsi_type': 'TextValue',
+      'value': name
+    }
+  }]
+  targeting_key_statement = dfp.FilterStatement(query, values)
+
+  response = custom_targeting_service.getCustomTargetingKeysByStatement(
+      targeting_key_statement.ToStatement())
+
+  key = None
+  if 'results' in response:
+    key = response['results'][0]
+
+  return key['id']
+
+
 def get_targeting_by_key_name(name):
   """
   Gets a set of custom targeting values by key name
@@ -65,3 +100,10 @@ def get_targeting_by_key_name(name):
       key_name=name, num=len(key_values))
 
   return key_values
+
+def main():
+  get_targeting_by_key_name('hb_bidder')
+  get_targeting_by_key_name('hb_pb')
+
+if __name__ == '__main__':
+  main()

@@ -6,7 +6,7 @@ import dfp.get_custom_targeting
 
 
 @patch('googleads.dfp.DfpClient.LoadFromStorage')
-class DFPServiceTests(TestCase):
+class DFPGetCustomTargetingTests(TestCase):
 
   def test_get_targeting_by_key_name_call_no_key(self, mock_dfp_client):
     """
@@ -113,3 +113,29 @@ class DFPServiceTests(TestCase):
         }
       ]
     )
+
+  def test_get_key_id_by_name(self, mock_dfp_client):
+    """
+    Ensure it makes a call to DFP to get the key.
+    """
+    mock_dfp_client.return_value = MagicMock()
+
+    # Mock response from DFP for key fetching.
+    (mock_dfp_client.return_value
+      .GetService.return_value
+      .getCustomTargetingKeysByStatement) = MagicMock(
+        return_value={
+          'totalResultSetSize': 1,
+          'startIndex': 0,
+          'results': [{
+            'id': 987654,
+            'name': 'hb_pb',
+            'displayName': 'hb_pb',
+            'type': 'FREEFORM',
+            'status': 'ACTIVE',
+          }]
+      })
+
+    response = dfp.get_custom_targeting.get_key_id_by_name('hb_pb')
+
+    self.assertEqual(response, 987654)
