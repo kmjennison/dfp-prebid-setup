@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 
 
 def setup_partner(user_email, advertiser_name, order_name, placements,
-    bidder_code, prices):
+    sizes, bidder_code, prices):
   """
   Call all necessary DFP tasks for a new Prebid partner setup.
   """
@@ -71,13 +71,14 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
 
   # Create line items.
   line_items_config = create_line_item_configs(prices, order_id,
-    placement_ids, bidder_code, hb_bidder_key_id, hb_pb_key_id,
+    placement_ids, bidder_code, sizes, hb_bidder_key_id, hb_pb_key_id,
     HBBidderValueGetter, HBPBValueGetter)
+  logger.info("Creating line items...")
   line_item_ids = dfp.create_line_items.create_line_items(line_items_config)
 
   # Associate creatives with line items.
   dfp.associate_line_items_and_creatives.make_licas(line_item_ids,
-    creative_ids)
+    creative_ids, size_overrides=sizes)
 
   logger.info("""
 
@@ -146,7 +147,7 @@ def get_or_create_dfp_targeting_key(name):
   return key_id
 
 def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
-  hb_bidder_key_id, hb_pb_key_id, HBBidderValueGetter, HBPBValueGetter):
+  sizes, hb_bidder_key_id, hb_pb_key_id, HBBidderValueGetter, HBPBValueGetter):
   """
   Create a line item config for each price bucket.
 
@@ -185,6 +186,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
       order_id=order_id,
       placement_ids=placement_ids,
       cpm_micro_amount=price,
+      sizes=sizes,
       hb_bidder_key_id=hb_bidder_key_id,
       hb_pb_key_id=hb_pb_key_id,
       hb_bidder_value_id=hb_bidder_value_id,
@@ -268,6 +270,13 @@ def main():
     raise BadSettingException('The setting "DFP_TARGETED_PLACEMENT_NAMES" '
       'must contain at least one DFP placement ID.')
 
+  sizes = getattr(settings, 'DFP_PLACEMENT_SIZES', None)
+  if sizes is None:
+    raise MissingSettingException('DFP_PLACEMENT_SIZES')
+  elif len(sizes) < 1:
+    raise BadSettingException('The setting "DFP_PLACEMENT_SIZES" '
+      'must contain at least one size object.')
+
   bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
   if bidder_code is None:
     raise MissingSettingException('PREBID_BIDDER_CODE')
@@ -302,6 +311,7 @@ def main():
       prices_summary=prices_summary,
       bidder_code=bidder_code,
       placements=placements,
+      sizes=sizes,
       name_start_format=color.BOLD,
       format_end=color.END,
       value_start_format=color.BLUE,
@@ -318,6 +328,7 @@ def main():
     advertiser_name,
     order_name,
     placements,
+    sizes,
     bidder_code,
     prices,
   )

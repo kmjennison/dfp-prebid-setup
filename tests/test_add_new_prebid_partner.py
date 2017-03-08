@@ -15,6 +15,16 @@ email = 'fakeuser@example.com'
 advertiser = 'My Advertiser'
 order = 'My Cool Order'
 placements = ['My Site Leaderboard', 'Another Placement']
+sizes = [
+  {
+    'width': '300',
+    'height': '250'
+  },
+  {
+    'width': '728',
+    'height': '90'
+  },
+]
 bidder_code = 'mypartner'
 price_buckets = {
   'precision': 2,
@@ -29,6 +39,7 @@ prices = get_prices_array(price_buckets)
   DFP_ADVERTISER_NAME=advertiser,
   DFP_ORDER_NAME=order,
   DFP_TARGETED_PLACEMENT_NAMES=placements,
+  DFP_PLACEMENT_SIZES = sizes,
   PREBID_BIDDER_CODE=bidder_code,
   PREBID_PRICE_BUCKETS=price_buckets,
   DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False)
@@ -148,7 +159,7 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     tasks.add_new_prebid_partner.main()
     mock_setup_partners.assert_called_once_with(email, advertiser, order,
-      placements, bidder_code, prices)
+      placements, sizes, bidder_code, prices)
 
   @patch('tasks.add_new_prebid_partner.create_line_item_configs')
   @patch('tasks.add_new_prebid_partner.DFPValueIdGetter')
@@ -182,6 +193,7 @@ class AddNewPrebidPartnerTests(TestCase):
       order_name=order,
       placements=placements,
       bidder_code=bidder_code,
+      sizes=sizes,
       prices=prices,
     )
 
@@ -206,6 +218,10 @@ class AddNewPrebidPartnerTests(TestCase):
       order_id=1234567,
       placement_ids=[9876543, 1234567],
       bidder_code='iamabiddr',
+      sizes=[{
+        'width': '728',
+        'height': '90'
+      }],
       hb_bidder_key_id=999999,
       hb_pb_key_id=888888,
       HBBidderValueGetter=MagicMock(return_value=3434343434),

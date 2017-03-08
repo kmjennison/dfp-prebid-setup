@@ -21,6 +21,18 @@ DFP_ADVERTISER_NAME = None
 # Names of placements the line items should target.
 DFP_TARGETED_PLACEMENT_NAMES = []
 
+# Sizes of placements. These are used to set line item and creative sizes.
+DFP_PLACEMENT_SIZES = [
+  {
+    'width': '300',
+    'height': '250'
+  },
+  {
+    'width': '728',
+    'height': '90'
+  },
+]
+
 # Whether we should create the advertiser in DFP if it does not exist.
 # If False, the program will exit rather than create an advertiser.
 DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST = False

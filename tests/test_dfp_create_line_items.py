@@ -22,6 +22,7 @@ class DFPCreateLineItemsTests(TestCase):
         name='My Line Item',
         order_id=1234567,
         placement_ids=['one-placement', 'another-placement'],
+        sizes=[],
         cpm_micro_amount=10000000,
         hb_bidder_key_id=999999,
         hb_pb_key_id=888888,
@@ -48,6 +49,10 @@ class DFPCreateLineItemsTests(TestCase):
         order_id=1234567,
         placement_ids=['one-placement', 'another-placement-id'],
         cpm_micro_amount=24000000,
+        sizes=[{
+          'width': '728',
+          'height': '90',
+        }],
         hb_bidder_key_id=999999,
         hb_pb_key_id=888888,
         hb_bidder_value_id=222222,
@@ -94,6 +99,12 @@ class DFPCreateLineItemsTests(TestCase):
               'width': '1',
               'height': '1'
             },
+          },
+          {
+            'size': {
+              'width': '728',
+              'height': '90'
+            }
           },
         ],
       }

@@ -24,7 +24,7 @@ def create_line_items(line_items):
   return created_line_item_ids
 
 def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
-  hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id):
+  sizes, hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id):
   """
   Creates a line item config object.
 
@@ -34,11 +34,27 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
     placement_ids (arr): an array of DFP placement IDs to target
     cpm_micro_amount (int): the currency value (in micro amounts) of the
       line item
+    sizes (arr): an array of objects, each containing 'width' and 'height'
+      keys, to set the creative sizes this line item will serve
     hb_bidder_key_id (int): the DFP ID of the `hb_bidder` targeting key
     hb_pb_key_id (int): the DFP ID of the `hb_pb` targeting key
   Returns:
     an object: the line item config
   """
+
+  # Set up sizes.
+  creative_placeholders = [
+    {
+      'size': {
+        'width': '1',
+        'height': '1'
+      },
+    },
+  ]
+  for size in sizes:
+    creative_placeholders.append({
+      'size': size
+    })
 
   # Create key/value targeting for Prebid.
   # https://github.com/googleads/googleads-python-lib/blob/master/examples/dfp/v201702/line_item_service/target_custom_criteria.py
@@ -90,13 +106,6 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
     'primaryGoal': {
       'goalType': 'NONE'
     },
-    'creativePlaceholders': [
-      {
-        'size': {
-          'width': '1',
-          'height': '1'
-        },
-      },
-    ],
+    'creativePlaceholders': creative_placeholders,
   }
   return line_item_config

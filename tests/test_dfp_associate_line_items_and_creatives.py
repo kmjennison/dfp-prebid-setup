@@ -19,30 +19,114 @@ class DFPCreateLICAsTests(TestCase):
     dfp.associate_line_items_and_creatives.make_licas(
       [987654, 7654321, 5432109], [111222, 223344])
 
+    sizes = [{
+      'width': '1',
+      'height': '1'
+    }]
+
     expected_arg = [
       {
         'lineItemId': 987654,
-        'creativeId': 111222
+        'creativeId': 111222,
+        'sizes': sizes,
       },
       {
         'lineItemId': 987654,
-        'creativeId': 223344
+        'creativeId': 223344,
+        'sizes': sizes,
       },
       {
         'lineItemId': 7654321,
-        'creativeId': 111222
+        'creativeId': 111222,
+        'sizes': sizes,
       },
       {
         'lineItemId': 7654321,
-        'creativeId': 223344
+        'creativeId': 223344,
+        'sizes': sizes,
       },
       {
         'lineItemId': 5432109,
-        'creativeId': 111222
+        'creativeId': 111222,
+        'sizes': sizes,
       },
       {
         'lineItemId': 5432109,
-        'creativeId': 223344
+        'creativeId': 223344,
+        'sizes': sizes,
+      },
+    ]
+    
+    (mock_dfp_client.return_value
+      .GetService.return_value
+      .createLineItemCreativeAssociations.assert_called_once_with(expected_arg)
+      )
+
+  def test_association_with_size_overrides(self, mock_dfp_client):
+    """
+    Ensure it calls DFP with expected associations when overriding sizes.
+    """
+
+    mock_dfp_client.return_value = MagicMock()
+    dfp.associate_line_items_and_creatives.make_licas(
+      [987654, 7654321, 5432109], [111222, 223344],
+      size_overrides=[
+        {
+          'width': '300',
+          'height': '250'
+        },
+        {
+          'width': '728',
+          'height': '90'
+        }
+      ]
+    )
+
+    sizes = [
+      {
+        'width': '1',
+        'height': '1'
+      },
+      {
+        'width': '300',
+        'height': '250'
+      },
+      {
+        'width': '728',
+        'height': '90'
+      },
+    ]
+
+    expected_arg = [
+      {
+        'lineItemId': 987654,
+        'creativeId': 111222,
+        'sizes': sizes,
+      },
+      {
+        'lineItemId': 987654,
+        'creativeId': 223344,
+        'sizes': sizes,
+      },
+      {
+        'lineItemId': 7654321,
+        'creativeId': 111222,
+        'sizes': sizes,
+      },
+      {
+        'lineItemId': 7654321,
+        'creativeId': 223344,
+        'sizes': sizes,
+      },
+      {
+        'lineItemId': 5432109,
+        'creativeId': 111222,
+        'sizes': sizes,
+      },
+      {
+        'lineItemId': 5432109,
+        'creativeId': 223344,
+        'sizes': sizes,
       },
     ]
     
