@@ -6,6 +6,7 @@ from mock import MagicMock, patch
 import settings
 import tasks.add_new_prebid_partner
 from dfp.exceptions import BadSettingException, MissingSettingException
+from tasks.add_new_prebid_partner import DFPValueIdGetter
 from tasks.price_utils import (
   get_prices_array,
 )
@@ -149,6 +150,9 @@ class AddNewPrebidPartnerTests(TestCase):
     mock_setup_partners.assert_called_once_with(email, advertiser, order,
       placements, bidder_code, prices)
 
+  @patch('tasks.add_new_prebid_partner.create_line_item_configs')
+  @patch('tasks.add_new_prebid_partner.DFPValueIdGetter')
+  @patch('tasks.add_new_prebid_partner.get_or_create_dfp_targeting_key')
   @patch('dfp.associate_line_items_and_creatives')
   @patch('dfp.create_creatives')
   @patch('dfp.create_line_items')
@@ -158,7 +162,9 @@ class AddNewPrebidPartnerTests(TestCase):
   @patch('dfp.get_users')
   def test_setup_partner(self, mock_get_users, mock_get_placements,
     mock_get_advertisers, mock_create_orders, mock_create_line_items,
-    mock_create_creatives, mock_licas, mock_dfp_client):
+    mock_create_creatives, mock_licas, mock_dfp_client,
+    mock_get_or_create_dfp_targeting_key, mock_dfp_value_id_getter,
+    mock_create_line_item_configs):
     """
     It calls all expected DFP functions.
     """
@@ -199,7 +205,11 @@ class AddNewPrebidPartnerTests(TestCase):
       prices=[100000, 200000, 300000],
       order_id=1234567,
       placement_ids=[9876543, 1234567],
-      bidder_code='iamabiddr'
+      bidder_code='iamabiddr',
+      hb_bidder_key_id=999999,
+      hb_pb_key_id=888888,
+      HBBidderValueGetter=MagicMock(return_value=3434343434),
+      HBPBValueGetter=MagicMock(return_value=5656565656),
     )
 
     self.assertEqual(len(configs), 3)
@@ -218,3 +228,44 @@ class AddNewPrebidPartnerTests(TestCase):
     )
     self.assertEqual(configs[2]['costPerUnit']['microAmount'], 300000)
 
+  @patch('dfp.create_custom_targeting')
+  @patch('dfp.get_custom_targeting')
+  def test_value_id_getter(self, mock_get_targeting, mock_create_targeting,
+    mock_dfp_client):
+    """
+    It returns the expected values from DFP.
+    """
+
+    mock_get_targeting.get_targeting_by_key_name = MagicMock(
+      return_value=[
+        {
+          'customTargetingKeyId': 987654,
+          'displayName': '12.50',
+          'id': 1324354657,
+          'name': '12.50'
+        },
+        {
+          'customTargetingKeyId': 987654,
+          'displayName': '20.00',
+          'id': 3546576879,
+          'name': '20.00'
+        }
+      ]
+    )
+    mock_get_targeting.get_key_id_by_name = MagicMock(return_value=987654)
+    mock_create_targeting.create_targeting_value = MagicMock(
+      return_value=44445555)
+
+    getter = DFPValueIdGetter('some-key-name')
+
+    mock_get_targeting.get_targeting_by_key_name.assert_called_once_with(
+      'some-key-name')
+    mock_create_targeting.create_targeting_value.assert_not_called()
+
+    # This targeting value already exists.
+    self.assertEqual(getter.get_value_id('12.50'), 1324354657)
+
+    # This targeting value does not exist, but we should create it.
+    self.assertEqual(getter.get_value_id('15.00'), 44445555)
+    mock_create_targeting.create_targeting_value.assert_called_once_with(
+      '15.00', 987654)

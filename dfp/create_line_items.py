@@ -23,7 +23,8 @@ def create_line_items(line_items):
     created_line_item_ids.append(line_item['id'])
   return created_line_item_ids
 
-def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount):
+def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
+  hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id):
   """
   Creates a line item config object.
 
@@ -33,20 +34,49 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount):
     placement_ids (arr): an array of DFP placement IDs to target
     cpm_micro_amount (int): the currency value (in micro amounts) of the
       line item
+    hb_bidder_key_id (int): the DFP ID of the `hb_bidder` targeting key
+    hb_pb_key_id (int): the DFP ID of the `hb_pb` targeting key
   Returns:
     an object: the line item config
   """
 
+  # Create key/value targeting for Prebid.
+  # https://github.com/googleads/googleads-python-lib/blob/master/examples/dfp/v201702/line_item_service/target_custom_criteria.py
+  # create custom criterias
+
+  hb_bidder_criteria = {
+    'xsi_type': 'CustomCriteria',
+    'keyId': hb_bidder_key_id,
+    'valueIds': [hb_bidder_value_id],
+    'operator': 'IS'
+  }
+
+  hb_pb_criteria = {
+    'xsi_type': 'CustomCriteria',
+    'keyId': hb_pb_key_id,
+    'valueIds': [hb_pb_value_id],
+    'operator': 'IS'
+  }
+
+  # The custom criteria will resemble:
+  # (hb_bidder_criteria.key == hb_bidder_criteria.value AND
+  #    hb_pb_criteria.key == hb_pb_criteria.value)
+  top_set = {
+    'xsi_type': 'CustomCriteriaSet',
+    'logicalOperator': 'AND',
+    'children': [hb_bidder_criteria, hb_pb_criteria]
+  }
+
   # https://developers.google.com/doubleclick-publishers/docs/reference/v201702/LineItemService.LineItem
-  line_item = {
+  line_item_config = {
     'name': name,
     'orderId': order_id,
     # https://developers.google.com/doubleclick-publishers/docs/reference/v201702/LineItemService.Targeting
     'targeting': {
-      # TODO: additional key/value targeting
       'inventoryTargeting': {
         'targetedPlacementIds': placement_ids
       },
+      'customTargeting': top_set,
     },
     'startDateTimeType': 'IMMEDIATELY',
     'unlimitedEndDateTime': True,
@@ -69,4 +99,4 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount):
       },
     ],
   }
-  return line_item
+  return line_item_config

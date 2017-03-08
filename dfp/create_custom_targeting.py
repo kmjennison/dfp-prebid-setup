@@ -34,9 +34,8 @@ def create_targeting_key(name, display_name, key_type='FREEFORM'):
   keys = custom_targeting_service.createCustomTargetingKeys(keys)
   key = keys[0]
 
-  print ('A custom targeting key with id \'%s\', name \'%s\', and display '
-         'name \'%s\' was created.' % (key['id'], key['name'],
-                                       key['displayName']))
+  print ('Created a custom targeting key with id \'%s\', name \'%s\', and '
+         'display name \'%s\'.' % (key['id'], key['name'], key['displayName']))
 
   return key['id']
 

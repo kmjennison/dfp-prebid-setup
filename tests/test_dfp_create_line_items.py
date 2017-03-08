@@ -22,7 +22,11 @@ class DFPCreateLineItemsTests(TestCase):
         name='My Line Item',
         order_id=1234567,
         placement_ids=['one-placement', 'another-placement'],
-        cpm_micro_amount=10000000
+        cpm_micro_amount=10000000,
+        hb_bidder_key_id=999999,
+        hb_pb_key_id=888888,
+        hb_bidder_value_id=222222,
+        hb_pb_value_id=111111,
       )
     ]
 
@@ -43,7 +47,11 @@ class DFPCreateLineItemsTests(TestCase):
         name='A Fake Line Item',
         order_id=1234567,
         placement_ids=['one-placement', 'another-placement-id'],
-        cpm_micro_amount=24000000
+        cpm_micro_amount=24000000,
+        hb_bidder_key_id=999999,
+        hb_pb_key_id=888888,
+        hb_bidder_value_id=222222,
+        hb_pb_value_id=111111,
       ),
       {
         'orderId': 1234567,
@@ -51,7 +59,25 @@ class DFPCreateLineItemsTests(TestCase):
         'targeting': {
           'inventoryTargeting': {
             'targetedPlacementIds': ['one-placement', 'another-placement-id']
-          }
+          },
+          'customTargeting': {
+            'children': [
+              {
+                'keyId': 999999,
+                'operator': 'IS',
+                'valueIds': [222222],
+                'xsi_type': 'CustomCriteria'
+              },
+              {
+                'keyId': 888888,
+                'operator': 'IS',
+                'valueIds': [111111],
+                'xsi_type': 'CustomCriteria'
+              }
+            ],
+            'logicalOperator': 'AND',
+            'xsi_type': 'CustomCriteriaSet'
+          },
         },
         'name': 'A Fake Line Item',
         'costType': 'CPM',
