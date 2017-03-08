@@ -1,11 +1,15 @@
 #!/usr/bin/env python
 
+import logging
+
 from googleads import dfp
 
 import settings
 from dfp.client import get_client
 from dfp.exceptions import DFPObjectNotFound, MissingSettingException
 
+
+logger = logging.getLogger(__name__)
 
 def get_user_id_by_email(email_address):
   """
@@ -46,8 +50,8 @@ def get_user_id_by_email(email_address):
   # Only get the first user in case there are multiple matches.
   user = response['results'][0]
 
-  print('User with email "%s" found: ID "%d" and name "%s".' % (
-    user['email'], user['id'], user['name']))
+  logger.info('Found user with email "{email}" and name {name}.'.format(
+    email=user['email'], name=user['name']))
 
   return user['id']
 

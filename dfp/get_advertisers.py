@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import logging
+
 from googleads import dfp
 
 import settings
@@ -9,6 +11,9 @@ from dfp.exceptions import (
   DFPObjectNotFound,
   MissingSettingException
 )
+
+
+logger = logging.getLogger(__name__)
 
 def create_advertiser(name):
   """
@@ -33,8 +38,9 @@ def create_advertiser(name):
 
   # Display results.
   for advertiser in advertisers:
-    print ('Company with ID \'%s\', name \'%s\', and type \'%s\' was created.'
-           % (advertiser['id'], advertiser['name'], advertiser['type']))
+    logger.info('Created an advertiser with ID "{id}", name "{name}", and '
+      'type "{type}".'.format(id=advertiser['id'], name=advertiser['name'],
+        type=advertiser['type']))
 
   return advertiser
 
@@ -82,8 +88,9 @@ def get_advertiser_id_by_name(name):
   else:
     advertiser = response['results'][0]
 
-  print('Advertiser with ID "%d", name "%s", and type "%s" was found.' %
-              (advertiser['id'], advertiser['name'], advertiser['type']))
+  logger.info('Using existing advertiser with ID "{id}", name "{name}", and '
+    'type "{type}".'.format(id=advertiser['id'], name=advertiser['name'],
+      type=advertiser['type']))
 
   return advertiser['id']
 

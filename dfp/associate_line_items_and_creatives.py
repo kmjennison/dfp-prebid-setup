@@ -1,8 +1,11 @@
 
+import logging
 from googleads import dfp
 
 from dfp.client import get_client
 
+
+logger = logging.getLogger(__name__)
 
 def make_licas(line_item_ids, creative_ids):
   """
@@ -26,6 +29,7 @@ def make_licas(line_item_ids, creative_ids):
   licas = lica_service.createLineItemCreativeAssociations(licas)
 
   if licas:
-    print 'Created {0} line item <> creative associations.'.format(len(licas))
+    logger.info(
+      'Created {0} line item <> creative associations.'.format(len(licas)))
   else:
-    print 'No line item <> creative associations created.'
+    logger.info('No line item <> creative associations created.')

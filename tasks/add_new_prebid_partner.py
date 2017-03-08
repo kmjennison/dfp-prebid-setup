@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import logging
+import sys
 from pprint import pprint
 
 import settings
@@ -23,8 +25,14 @@ from tasks.price_utils import (
   num_to_str,
 )
 
-# TODO: Change all print statements to logging and add logging flag.
-# TODO: Disable logging during tests.
+# Configure logging.
+FORMAT = '%(message)s'
+logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=FORMAT)
+logging.getLogger('googleads').setLevel(logging.ERROR)
+logging.getLogger('oauth2client').setLevel(logging.ERROR)
+
+logger = logging.getLogger(__name__)
+
 
 def setup_partner(user_email, advertiser_name, order_name, placements,
     bidder_code, prices):
@@ -71,6 +79,14 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   dfp.associate_line_items_and_creatives.make_licas(line_item_ids,
     creative_ids)
 
+  logger.info("""
+
+    Done! Please review your order, line items, and creatives to
+    make sure they are correct. Then, approve the order in DFP.
+
+    Happy bidding!
+
+  """)
 
 class DFPValueIdGetter(object):
   """
@@ -266,7 +282,7 @@ def main():
   prices_summary = get_prices_summary_string(prices,
     price_buckets['precision'])
 
-  print """
+  logger.info("""
 
     Going to create {name_start_format}{num_line_items}{format_end} new line items.
       {name_start_format}Order{format_end}: {value_start_format}{order_name}{format_end}
@@ -289,12 +305,12 @@ def main():
       name_start_format=color.BOLD,
       format_end=color.END,
       value_start_format=color.BLUE,
-    )
+    ))
 
   ok = raw_input('Is this correct? (y/n)\n')
 
   if ok != 'y':
-    print 'Exiting.'
+    logger.info('Exiting.')
     return
 
   setup_partner(

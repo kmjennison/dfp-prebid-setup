@@ -1,4 +1,5 @@
 
+import logging
 import os
 import pprint
 
@@ -6,6 +7,8 @@ from googleads import dfp
 
 from dfp.client import get_client
 
+
+logger = logging.getLogger(__name__)
 
 def create_creatives(creatives):
   """
@@ -25,8 +28,8 @@ def create_creatives(creatives):
   created_creative_ids = []
   for creative in creatives:
     created_creative_ids.append(creative['id'])
-    print 'Created creative with id {0}, name {1}.'.format(
-      creative['id'], creative['name'])
+    logger.info('Created creative with ID "{0}" and name "{1}".'.format(
+      creative['id'], creative['name']))
   return created_creative_ids
 
 def create_creative_config(name, advertiser_id):

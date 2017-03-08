@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
+import logging
+
 from googleads import dfp
 
 from dfp.client import get_client
 
+
+logger = logging.getLogger(__name__)
 
 def get_key_id_by_name(name):
   """
@@ -91,13 +95,14 @@ def get_targeting_by_key_name(name):
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
 
   if key_values is None:
-    print 'Key {key_name} does not exist in DFP.'. format(key_name=name)
+    logger.info('Key "{key_name}"" does not exist in DFP.'. format(
+      key_name=name))
   elif len(key_values) < 1:
-    print 'Key {key_name} exists but has no custom values.'. format(
-      key_name=name)
+    logger.info('Key "{key_name}" exists but has no existing values.'. format(
+      key_name=name))
   else:
-    print 'Key {key_name} exists and has {num} custom values.'. format(
-      key_name=name, num=len(key_values))
+    logger.info('Key "{key_name}" exists and has {num} existing values.'. format(
+      key_name=name, num=len(key_values)))
 
   return key_values
 

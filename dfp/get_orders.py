@@ -1,8 +1,13 @@
 #!/usr/bin/env python
 
+import logging
+
 from googleads import dfp
 
 from dfp.client import get_client
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_order_by_name(order_name):
@@ -40,13 +45,13 @@ def get_order_by_name(order_name):
     return None
   else:
     order = response['results'][0]
-    print('Order with ID "%d" and name "%s" was found.' % (order['id'],
-                                                             order['name']))
+    logger.info('Found an order with ID "{id}" and name "{name}".'.format(
+      id=order['id'], name=order['name']))
     return order
 
 def get_all_orders():
   """
-  Prints all orders in DFP.
+  Logs all orders in DFP.
 
   Returns:
       None
@@ -66,14 +71,12 @@ def get_all_orders():
     response = order_service.getOrdersByStatement(statement.ToStatement())
     if 'results' in response:
       for order in response['results']:
-        # Print out some information for each order.
-        print('Order with ID "%d" and name "%s" was found.' % (order['id'],
-                                                                 order['name']))
+        
+        logger.info('Found an order with ID "{id}" and name "{name}".'.format(
+          id=order['id'], name=order['name']))
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
     else:
       break
-
-  print 'Number of results found: %s' % response['totalResultSetSize']
 
 def main():
   get_all_orders()

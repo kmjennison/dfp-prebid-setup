@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import logging
+
 from googleads import dfp
 
 import settings
@@ -9,6 +11,9 @@ from dfp.exceptions import (
   DFPObjectNotFound,
   MissingSettingException
 )
+
+
+logger = logging.getLogger(__name__)
 
 def get_placement_by_name(placement_name):
   """
@@ -47,8 +52,8 @@ def get_placement_by_name(placement_name):
       placement_name))
   else:
     placement = response['results'][0]
-    print('Found placement with ID "%d" and name "%s".' %
-      (placement['id'], placement['name']))
+    logger.info('Found placement with ID "{id}" and name "{name}".'.format(
+      id=placement['id'], name=placement['name']))
   return placement
 
 def get_placement_ids_by_name(placement_names):
