@@ -20,13 +20,13 @@ def get_order_by_name(order_name):
 
   # Filter by name.
   query = 'WHERE name = :name'
-  values = [
-      {'key': 'name',
-       'value': {
-           'xsi_type': 'TextValue',
-           'value': order_name
-       }},
-  ]
+  values = [{
+    'key': 'name',
+    'value': {
+      'xsi_type': 'TextValue',
+      'value': order_name
+    }
+  }]
   statement = dfp.FilterStatement(query, values)
   response = order_service.getOrdersByStatement(statement.ToStatement())
 
