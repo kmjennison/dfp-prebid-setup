@@ -49,14 +49,30 @@ class DFPCreateCustomTargetingTests(TestCase):
 
   def test_create_targeting_value(self, mock_dfp_client):
     """
-    Ensure it calls DFP to create values.
+    Ensure it calls DFP to create a value.
     """
     mock_dfp_client.return_value = MagicMock()
 
-    key_id = 2468
-    values = ['a-value', 'another-value', 'yet-another']
+    # Mock response from DFP.
+    (mock_dfp_client.return_value
+      .GetService.return_value
+      .createCustomTargetingValues) = MagicMock(
+        return_value=[
+          {
+            'customTargetingKeyId': 2468,
+            'id': 555666777,
+            'name': 'a-value',
+            'displayName': 'a-value',
+            'matchType': 'EXACT',
+            'status': 'ACTIVE',
+          }
+        ]
+      )
 
-    response = dfp.create_custom_targeting.create_targeting_values(values, 
+    key_id = 2468
+    value = 'a-value'
+
+    response = dfp.create_custom_targeting.create_targeting_value(value, 
       key_id)
 
     expected_arg = [
@@ -65,19 +81,7 @@ class DFPCreateCustomTargetingTests(TestCase):
         'displayName': 'a-value',
         'name': 'a-value',
         'matchType': 'EXACT'
-      },
-      {
-        'customTargetingKeyId': key_id,
-        'displayName': 'another-value',
-        'name': 'another-value',
-        'matchType': 'EXACT'
-      },
-      {
-        'customTargetingKeyId': key_id,
-        'displayName': 'yet-another',
-        'name': 'yet-another',
-        'matchType': 'EXACT'
-      },
+      }
     ]
     
     (mock_dfp_client.return_value
@@ -85,5 +89,4 @@ class DFPCreateCustomTargetingTests(TestCase):
       .createCustomTargetingValues.assert_called_once_with(expected_arg)
       )
     
-    self.assertIsNone(response)
-
+    self.assertEqual(response, 555666777)

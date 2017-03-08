@@ -40,13 +40,12 @@ def create_targeting_key(name, display_name, key_type='FREEFORM'):
 
   return key['id']
 
-def create_targeting_values(names, key_id):
+def create_targeting_value(name, key_id):
   """
-  Creates custom targeting values for a specific key in DFP.
+  Creates a custom targeting value for a specific key in DFP.
 
   Args:
-    names (arr): an array of values to create
-    display_name (str)
+    name (str): the name of value
     key_id (int): the ID of the associated DFP key
   Returns:
     None
@@ -63,7 +62,7 @@ def create_targeting_values(names, key_id):
       'name': str(name),
       'matchType': 'EXACT'
     }
-    for name in names]
+  ]
 
   # Add custom targeting values.
   if len(values_config) > 0:
@@ -72,8 +71,11 @@ def create_targeting_values(names, key_id):
 
   # Display results.
   if values:
-    for value in values:
-      print ('A custom targeting value with id \'%s\', belonging to key with id'
-             ' \'%s\', name \'%s\', and display name \'%s\' was created.'
-             % (value['id'], value['customTargetingKeyId'], value['name'],
-                value['displayName']))
+    created_value = values[0]
+
+  print ('A custom targeting value with id \'%s\', belonging to key with id'
+         ' \'%s\', name \'%s\', and display name \'%s\' was created.'
+         % (created_value['id'], created_value['customTargetingKeyId'],
+            created_value['name'], created_value['displayName']))
+
+  return created_value['id']
