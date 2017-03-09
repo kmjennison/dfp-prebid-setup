@@ -47,4 +47,19 @@ and you should see all of the orders in your DFP account.
 
 ## Creating Prebid Line Items
 
-... more to come.
+Modify the following settings in `settings.py`:
+
+Setting | Description | Type
+------------ | ------------- | -------------
+`DFP_ORDER_NAME` | What you want to call your new DFP order | string
+`DFP_USER_EMAIL_ADDRESS` | The email of the DFP user who will be the trafficker for the created order | string
+`DFP_ADVERTISER_NAME` | The name of the DFP advertiser for the created order | string
+`DFP_TARGETED_PLACEMENT_NAMES` | The names of DFP placements the line items should target | array of strings
+`DFP_PLACEMENT_SIZES` | The creative sizes for the targeted placements | array of objects (e.g., `[{'width': '728', 'height': '90'}]`)
+`PREBID_BIDDER_CODE` | The value of [`hb_bidder`](http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.bidderSettings) for this partner | string
+`PREBID_PRICE_BUCKETS` | The [price granularity](http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity); used to set `hb_pb` for each line item | object
+
+Then, from the root of the repository, run:
+
+`python -m tasks.add_new_prebid_partner`
+
