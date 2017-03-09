@@ -72,8 +72,8 @@ def get_all_orders():
     if 'results' in response:
       for order in response['results']:
         
-        logger.info('Found an order with ID "{id}" and name "{name}".'.format(
-          id=order['id'], name=order['name']))
+        print 'Found an order with ID "{id}" and name "{name}".'.format(
+          id=order['id'], name=order['name'])
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
     else:
       break
