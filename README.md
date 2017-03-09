@@ -1,10 +1,10 @@
-# DFP Prebid Setup Tool
-Quick, automated DFP line item generator for [Prebid.js](http://prebid.org/)
+# DFP Setup Tool for Prebid
+An automated DFP line item generator for [Prebid.js](http://prebid.org/)
 
 ## Overview
 When setting up Prebid, your ad ops team often has to create [hundreds of line items](http://prebid.org/adops.html) in Doubleclick.
 
-This project automates line item creation for new header bidding partners. It aims to solve the typical use case: one order per header bidding partner, one line item per price bucket, and standard Prebid key-value targeting.
+This tool automates setup for new header bidding partners. You define the advertiser, placements, and Prebid settings; then, it creates an order with one line item per price level, attaches creatives, and sets placement and Prebid key-value targeting.
 
 ## Getting Started
 
@@ -48,9 +48,3 @@ and you should see all of the orders in your DFP account.
 ## Creating Prebid Line Items
 
 ... more to come.
-
-## What Happens Behind the Scenes
-You define the advertiser, user (owner of the order), placements, and Prebid partner settings. Then, we:
-* Check that the advertiser exists in DFP (and, optionally, create the advertiser if it does not)
-* Create an order for the advertiser, assigned to the specified user
-* Create one line item per price bucket, attach creatives, set placement targeting, and set Prebid key-value targeting
