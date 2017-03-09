@@ -6,6 +6,8 @@ When setting up Prebid, your ad ops team often has to create [hundreds of line i
 
 This tool automates setup for new header bidding partners. You define the advertiser, placements, and Prebid settings; then, it creates an order with one line item per price level, attaches creatives, and sets placement and Prebid key-value targeting.
 
+While this tool covers typical use cases, it might not fit your needs. Check out the [limitations](#limitations) before you dive in.
+
 ## Getting Started
 
 ### Creating Google Credentials
