@@ -45,7 +45,7 @@ Let's try it out! From the top level directory, run
 
 and you should see all of the orders in your DFP account.
 
-## Creating Prebid Line Items
+## Creating Line Items
 
 Modify the following settings in `settings.py`:
 
@@ -62,4 +62,13 @@ Setting | Description | Type
 Then, from the root of the repository, run:
 
 `python -m tasks.add_new_prebid_partner`
+
+## Limitations
+
+* Currently, the names of the bidder code targeting key (`hb_bidder`) and price bucket targeting key (`hb_pb`) are not customizable.
+* This tool does not support additional line item targeting beyond placement, `hb_bidder`, and `hb_pb` values.
+* The price bucketing setting `PREBID_PRICE_BUCKETS` only allows for uniform bucketing. For example, you can create $0.01 buckets from $0 - $20, but you cannot specify $0.01 buckets from $0 - $5 and $0.50 buckets from $5 - $20. Using entirely $0.01 buckets will still work for the custom buckets—you'll just have more line items than you need.
+* This tool does not modify existing orders or line items, it only creates them. If you need to make a change to an order, it's easiest to archive the existing order and recreate it.
+
+Please consider [contributing](CONTRIBUTING.md) to make the tool more flexible.
 
