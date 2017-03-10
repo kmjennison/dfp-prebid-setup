@@ -37,11 +37,11 @@ def get_key_id_by_name(name):
   response = custom_targeting_service.getCustomTargetingKeysByStatement(
       targeting_key_statement.ToStatement())
 
-  key = None
-  if 'results' in response:
-    key = response['results'][0]
+  key_id = None
+  if 'results' in response and len(response['results']) > 0:
+    key_id = response['results'][0]['id']
 
-  return key['id']
+  return key_id
 
 
 def get_targeting_by_key_name(name):

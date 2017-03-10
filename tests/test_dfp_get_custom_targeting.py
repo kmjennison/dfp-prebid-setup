@@ -139,3 +139,22 @@ class DFPGetCustomTargetingTests(TestCase):
     response = dfp.get_custom_targeting.get_key_id_by_name('hb_pb')
 
     self.assertEqual(response, 987654)
+
+  def test_get_key_id_by_name_no_key(self, mock_dfp_client):
+    """
+    Ensure it returns None when the key does not exist.
+    """
+    mock_dfp_client.return_value = MagicMock()
+
+    # Mock response from DFP for key fetching.
+    (mock_dfp_client.return_value
+      .GetService.return_value
+      .getCustomTargetingKeysByStatement) = MagicMock(
+        return_value={
+          'totalResultSetSize': 0,
+          'startIndex': 0
+      })
+
+    response = dfp.get_custom_targeting.get_key_id_by_name('hb_pb')
+
+    self.assertEqual(response, None)
