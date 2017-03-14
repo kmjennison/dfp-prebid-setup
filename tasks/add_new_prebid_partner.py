@@ -5,6 +5,8 @@ import sys
 from builtins import input
 from pprint import pprint
 
+from colorama import init
+
 import settings
 import dfp.associate_line_items_and_creatives
 import dfp.create_custom_targeting
@@ -25,6 +27,10 @@ from tasks.price_utils import (
   micro_amount_to_num,
   num_to_str,
 )
+
+# Colorama for cross-platform support for colored logging.
+# https://github.com/kmjennison/dfp-prebid-setup/issues/9
+init()
 
 # Configure logging.
 FORMAT = '%(message)s'
