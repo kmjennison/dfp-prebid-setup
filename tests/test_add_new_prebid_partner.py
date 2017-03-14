@@ -131,8 +131,8 @@ class AddNewPrebidPartnerTests(TestCase):
       tasks.add_new_prebid_partner.main()
 
   @patch('tasks.add_new_prebid_partner.setup_partner')
-  @patch('tasks.add_new_prebid_partner.raw_input', return_value='n')
-  def test_user_confirmation_rejected(self, mock_raw_input, 
+  @patch('tasks.add_new_prebid_partner.input', return_value='n')
+  def test_user_confirmation_rejected(self, mock_input, 
     mock_setup_partners, mock_dfp_client):
     """
     Make sure we exit when the user rejects the confirmation.
@@ -141,8 +141,8 @@ class AddNewPrebidPartnerTests(TestCase):
     mock_setup_partners.assert_not_called()
 
   @patch('tasks.add_new_prebid_partner.setup_partner')
-  @patch('tasks.add_new_prebid_partner.raw_input', return_value='asdf')
-  def test_user_confirmation_not_accepted(self, mock_raw_input, 
+  @patch('tasks.add_new_prebid_partner.input', return_value='asdf')
+  def test_user_confirmation_not_accepted(self, mock_input, 
     mock_setup_partners, mock_dfp_client):
     """
     Make sure we exit when the user types something other than 'y'.
@@ -151,8 +151,8 @@ class AddNewPrebidPartnerTests(TestCase):
     mock_setup_partners.assert_not_called()
 
   @patch('tasks.add_new_prebid_partner.setup_partner')
-  @patch('tasks.add_new_prebid_partner.raw_input', return_value='y')
-  def test_user_confirmation_accepted(self, mock_raw_input, 
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_user_confirmation_accepted(self, mock_input, 
     mock_setup_partners, mock_dfp_client):
     """
     Make sure we start the process when the user confirms we should proceed.

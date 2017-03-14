@@ -2,6 +2,7 @@
 
 import logging
 import sys
+from builtins import input
 from pprint import pprint
 
 import settings
@@ -317,7 +318,7 @@ def main():
       value_start_format=color.BLUE,
     ))
 
-  ok = raw_input('Is this correct? (y/n)\n')
+  ok = input('Is this correct? (y/n)\n')
 
   if ok != 'y':
     logger.info('Exiting.')
