@@ -107,3 +107,55 @@ class DFPCreateCreativesTests(TestCase):
       dfp.create_creatives.create_creatives(creative_configs),
       [16273849, 444555666, 999888777]
     )
+
+  def test_build_creative_name(self, mock_dfp_client):
+    """
+    Ensure the creative name is formatted as expected.
+    """
+
+    self.assertEqual(
+      dfp.create_creatives.build_creative_name('coolbiddr', 'Order Up!', 1),
+      'coolbiddr: HB Order Up!, #1'
+    )
+
+    self.assertEqual(
+      dfp.create_creatives.build_creative_name('coolbiddr', 'Order Up!', 2),
+      'coolbiddr: HB Order Up!, #2'
+    )
+
+    self.assertEqual(
+      dfp.create_creatives.build_creative_name('anotherpartner', 'ordrrr', 11),
+      'anotherpartner: HB ordrrr, #11'
+    )
+
+  @patch('dfp.create_creatives.create_creative_config')
+  def test_create_duplicate_creative_configs(self, mock_create_creative_config,
+    mock_dfp_client):
+    """
+    Ensure we generate the correct array of creative configs.
+    """
+
+    # Mock the actual creative config.
+    mock_create_creative_config.return_value = {'advertiserId': 12345}
+
+    bidder_code = 'somebidder'
+    order_name = 'An order'
+    advertiser_id = 12345
+    creative_num = 4
+
+    configs = dfp.create_creatives.create_duplicate_creative_configs(
+      bidder_code, order_name, advertiser_id, creative_num)
+
+    # Assert we created the correct number of configs.
+    self.assertEqual(mock_create_creative_config.call_count, creative_num)
+
+    self.assertEqual(
+      configs, 
+      [
+        {'advertiserId': 12345},
+        {'advertiserId': 12345},
+        {'advertiserId': 12345},
+        {'advertiserId': 12345},
+      ]
+    )
+

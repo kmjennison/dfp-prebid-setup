@@ -42,7 +42,7 @@ logger = logging.getLogger(__name__)
 
 
 def setup_partner(user_email, advertiser_name, order_name, placements,
-    sizes, bidder_code, prices):
+    sizes, bidder_code, prices, num_creatives):
   """
   Call all necessary DFP tasks for a new Prebid partner setup.
   """
@@ -61,12 +61,9 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   order_id = dfp.create_orders.create_order(order_name, advertiser_id, user_id)
 
   # Create creatives.
-  # Right now, we create only one creative for all line items.
-  creative_config = dfp.create_creatives.create_creative_config(
-    name='{bidder_code}: HB {order_name}'.format(
-      bidder_code=bidder_code, order_name=order_name),
-    advertiser_id=advertiser_id)
-  creative_ids = dfp.create_creatives.create_creatives([creative_config])
+  creative_configs = dfp.create_creatives.create_duplicate_creative_configs(
+      bidder_code, order_name, advertiser_id, num_creatives)
+  creative_ids = dfp.create_creatives.create_creatives(creative_configs)
 
   # Get DFP key IDs for line item targeting.
   hb_bidder_key_id = get_or_create_dfp_targeting_key('hb_bidder')
@@ -284,6 +281,14 @@ def main():
     raise BadSettingException('The setting "DFP_PLACEMENT_SIZES" '
       'must contain at least one size object.')
 
+  # How many creatives to attach to each line item. We need at least one
+  # creative per ad unit on a page. See:
+  # https://github.com/kmjennison/dfp-prebid-setup/issues/13
+  num_creatives = (
+    getattr(settings, 'DFP_NUM_CREATIVES_PER_LINE_ITEM', None) or
+    len(placements)
+  )
+
   bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
   if bidder_code is None:
     raise MissingSettingException('PREBID_BIDDER_CODE')
@@ -338,6 +343,7 @@ def main():
     sizes,
     bidder_code,
     prices,
+    num_creatives,
   )
 
 if __name__ == '__main__':
