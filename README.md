@@ -67,9 +67,11 @@ Then, from the root of the repository, run:
 
 You should be all set! Review your order, line items, and creatives to make sure they are correct. Then, approve the order in DFP.
 
+*Note: DFP might show a "Needs creatives" warning on the order for ~15 minutes after order creation. Typically, the warning is incorrect and will disappear on its own.*
+
 ## Additional Settings
 
-You probably won't need to modify these settings.
+In most cases, you won't need to modify these settings.
 
 Setting | Description | Default
 ------------ | ------------- | -------------
