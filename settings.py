@@ -72,15 +72,6 @@ PREBID_PRICE_BUCKETS = {
 }
 
 #########################################################################
-# EXTRA SETTINGS
-# These are not required for typical use. Only set these if you are
-# directly calling some modules.
-#########################################################################
-
-DFP_ORDER_ADVERTISER_ID = None
-DFP_ORDER_TRAFFICKER_ID = None
-
-#########################################################################
 
 # Try importing local settings, which will take precedence.
 try:
