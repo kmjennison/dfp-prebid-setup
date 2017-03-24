@@ -42,6 +42,18 @@ DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST = False
 # modify an existing order.
 DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 
+# Optional
+# Each line item should have at least as many creatives as the number of 
+# ad units you serve on a single page because DFP specifies:
+#   "Each of a line item's assigned creatives can only serve once per page,
+#    so if you want the same creative to appear more than once per page,
+#    copy the creative to associate multiple instances of the same creative."
+# https://support.google.com/dfp_sb/answer/82245?hl=en
+#
+# This will default to the number of placements specified in
+# `DFP_TARGETED_PLACEMENT_NAMES`.
+# DFP_NUM_CREATIVES_PER_LINE_ITEM = 2
+
 #########################################################################
 # PREBID SETTINGS
 #########################################################################
@@ -58,15 +70,6 @@ PREBID_PRICE_BUCKETS = {
   'max' : 20,
   'increment': 0.10,
 }
-
-#########################################################################
-# EXTRA SETTINGS
-# These are not required for typical use. Only set these if you are
-# directly calling some modules.
-#########################################################################
-
-DFP_ORDER_ADVERTISER_ID = None
-DFP_ORDER_TRAFFICKER_ID = None
 
 #########################################################################
 

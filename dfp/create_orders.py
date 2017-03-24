@@ -74,20 +74,3 @@ def create_order(order_name, advertiser_id, trafficker_id):
            id=order['id'], name=order['name']))
 
   return order['id']
-
-def main():
-  name = getattr(settings, 'DFP_ORDER_NAME', None)
-  advertiser_id = getattr(settings, 'DFP_ORDER_ADVERTISER_ID', None)
-  trafficker_id = getattr(settings, 'DFP_ORDER_TRAFFICKER_ID', None)
-
-  if name is None:
-    raise MissingSettingException('DFP_ORDER_NAME')
-  if advertiser_id is None:
-    raise MissingSettingException('DFP_ORDER_ADVERTISER_ID')
-  if trafficker_id is None:
-    raise MissingSettingException('DFP_ORDER_TRAFFICKER_ID')
-
-  create_order(name, advertiser_id, trafficker_id)
-
-if __name__ == '__main__':
-  main()

@@ -15,30 +15,30 @@ _You will need credentials to access your DFP account programmatically. This sum
 
 1. If you haven't yet, sign up for a [DFP account](https://www.doubleclickbygoogle.com/solutions/revenue-management/dfp/).
 2. Create Google developer credentials
-  * Go to the [Google Developers Console Credentials page](https://console.developers.google.com/apis/credentials).
-  * On the **Credentials** page, select **Create credentials**, then select **Service account key**.
-  * Select **New service account**, and select P12 key type.
-  * Click **Create** to download a file containing a `.p12` private key. Take note of the password (probably Google's default, "notasecret").
+   * Go to the [Google Developers Console Credentials page](https://console.developers.google.com/apis/credentials).
+   * On the **Credentials** page, select **Create credentials**, then select **Service account key**.
+   * Select **New service account**, and select P12 key type.
+   * Click **Create** to download a file containing a `.p12` private key. Take note of the password (probably Google's default, "notasecret").
 3. Enable API access to DFP
-  * Sign into your [DFP account](https://www.google.com/dfp/). You must have admin rights.
-  * Select the **Admin** tab.
-  * Ensure that API access is enabled.
-  * Click the **Add a service account user** button.
-  * Use the service account email for the Google developer credentials you created above.
-  * Click on the **Save** button. A message should appear, confirming the addition of your service account.
+   * Sign into your [DFP account](https://www.google.com/dfp/). You must have admin rights.
+   * Select the **Admin** tab.
+   * Ensure that API access is enabled.
+   * Click the **Add a service account user** button.
+   * Use the service account email for the Google developer credentials you created above.
+   * Click on the **Save** button. A message should appear, confirming the addition of your service account.
 
 ### Setting Up
 1. Clone this repository.
 2. Run `pip install -r requirements.txt`.
 3. Convert the PKCS12 key format to PEM
-  * Rename the Google credentials key you previously downloaded (`[something].p12`) to `key.p12` and move it to the root of this repository
-  * Run `openssl pkcs12 -in key.p12 -nodes -nocerts > key.pem`. Enter your password.
-  * Delete `key.p12`.
+   * Rename the Google credentials key you previously downloaded (`[something].p12`) to `key.p12` and move it to the root of this repository
+   * Run `openssl pkcs12 -in key.p12 -nodes -nocerts > key.pem`. Enter your password.
+   * Delete `key.p12`.
 4. Make a copy of `googleads.example.yaml` and name it `googleads.yaml`.
 5. In `googleads.yaml`, set the required fields:
-  * `application_name` is the name of the application you used to get your Google developer credentials
-  * `network_code` is your DFP network number; e.g., for `https://www.google.com/dfp/12398712#delivery`, the network code is `12398712`.
-  * `service_account_email` is the account email for the Google developer credentials
+   * `application_name` is the name of the application you used to get your Google developer credentials
+   * `network_code` is your DFP network number; e.g., for `https://www.google.com/dfp/12398712#delivery`, the network code is `12398712`.
+   * `service_account_email` is the account email for the Google developer credentials
 
 ### Verifying Setup
 Let's try it out! From the top level directory, run
@@ -64,6 +64,20 @@ Setting | Description | Type
 Then, from the root of the repository, run:
 
 `python -m tasks.add_new_prebid_partner`
+
+You should be all set! Review your order, line items, and creatives to make sure they are correct. Then, approve the order in DFP.
+
+*Note: DFP might show a "Needs creatives" warning on the order for ~15 minutes after order creation. Typically, the warning is incorrect and will disappear on its own.*
+
+## Additional Settings
+
+In most cases, you won't need to modify these settings.
+
+Setting | Description | Default
+------------ | ------------- | -------------
+`DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST` | Whether we should create the advertiser with `DFP_ADVERTISER_NAME` in DFP if it does not exist | False
+`DFP_USE_EXISTING_ORDER_IF_EXISTS` | Whether we should modify an existing order if one already exists with name `DFP_ORDER_NAME` | False
+`DFP_NUM_CREATIVES_PER_LINE_ITEM` | The number of duplicate creatives to attach to each line item. Due to [DFP limitations](https://support.google.com/dfp_sb/answer/82245?hl=en), this should be equal to or greater than the number of ad units you serve on a given page. | the length of setting `DFP_TARGETED_PLACEMENT_NAMES`
 
 ## Limitations
 

@@ -154,36 +154,3 @@ class DFPCreateOrderTests(TestCase):
       'name': 'My Test Order!',
       'traffickerId': 12359113
       })
-
-  @patch.multiple('settings',
-    DFP_ORDER_NAME=None,
-    DFP_ORDER_ADVERTISER_ID=24681012,
-    DFP_ORDER_TRAFFICKER_ID=12359113)
-  def test_main_create_orders_missing_name(self, mock_dfp_client):
-    """
-    Raises an exception when missing the name parameter.
-    """
-    with self.assertRaises(MissingSettingException):
-      dfp.create_orders.main()
-
-  @patch.multiple('settings',
-    DFP_ORDER_NAME='Some order',
-    DFP_ORDER_ADVERTISER_ID=None,
-    DFP_ORDER_TRAFFICKER_ID=12359113)
-  def test_main_create_orders_missing_advertiser_id(self, mock_dfp_client):
-    """
-    Raises an exception when missing the advertiser_id parameter.
-    """
-    with self.assertRaises(MissingSettingException):
-      dfp.create_orders.main()
-
-  @patch.multiple('settings',
-    DFP_ORDER_NAME='My order',
-    DFP_ORDER_ADVERTISER_ID=24681012,
-    DFP_ORDER_TRAFFICKER_ID=None)
-  def test_create_orders_missing_trafficker_id(self, mock_dfp_client):
-    """
-    Raises an exception when missing the trafficker_id parameter.
-    """
-    with self.assertRaises(MissingSettingException):
-      dfp.create_orders.main()
