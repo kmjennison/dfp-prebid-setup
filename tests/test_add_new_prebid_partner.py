@@ -315,3 +315,49 @@ class AddNewPrebidPartnerTests(TestCase):
     self.assertEqual(getter.get_value_id('15.00'), 44445555)
     mock_create_targeting.create_targeting_value.assert_called_once_with(
       '15.00', 987654)
+
+  @patch('dfp.create_custom_targeting')
+  @patch('dfp.get_custom_targeting')
+  def test_get_or_create_dfp_targeting_key_does_not_exist(self,
+    mock_get_targeting, mock_create_targeting, mock_dfp_client):
+    """
+    Make sure get_or_create_dfp_targeting_key calls the custom targeting
+    module as expected when a targeting key does not exist.
+    """
+
+    # Mock that the key does not exist in DFP
+    mock_get_targeting.get_key_id_by_name = MagicMock(return_value=None)
+    mock_create_targeting.create_targeting_key = MagicMock()
+
+    tasks.add_new_prebid_partner.get_or_create_dfp_targeting_key('my-key')
+
+    (mock_get_targeting.get_key_id_by_name
+      .assert_called_once_with('my-key'))
+    (mock_create_targeting.create_targeting_key
+      .assert_called_once_with('my-key'))
+
+  @patch('dfp.create_custom_targeting')
+  @patch('dfp.get_custom_targeting')
+  def test_get_or_create_dfp_targeting_key_exists(self,
+    mock_get_targeting, mock_create_targeting, mock_dfp_client):
+    """
+    Make sure get_or_create_dfp_targeting_key calls the custom targeting
+    module as expected when a targeting key exists.
+    """
+
+    mock_get_targeting.get_key_id_by_name = MagicMock(
+      return_value=[
+        {
+          'customTargetingKeyId': 987654,
+          'displayName': 'some-key',
+          'id': 1324354657,
+          'name': 'Some other key'
+        }
+      ]
+    )
+    mock_create_targeting.create_targeting_key = MagicMock()
+
+    tasks.add_new_prebid_partner.get_or_create_dfp_targeting_key('some-key')
+
+    mock_get_targeting.get_key_id_by_name.assert_called_once_with('some-key')
+    mock_create_targeting.create_targeting_key.assert_not_called()

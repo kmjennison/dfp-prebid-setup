@@ -9,7 +9,7 @@ from dfp.client import get_client
 
 logger = logging.getLogger(__name__)
 
-def create_targeting_key(name, display_name, key_type='FREEFORM'):
+def create_targeting_key(name, display_name=None, key_type='FREEFORM'):
   """
   Creates a custom targeting key in DFP.
 
@@ -24,6 +24,9 @@ def create_targeting_key(name, display_name, key_type='FREEFORM'):
   dfp_client = get_client()
   custom_targeting_service = dfp_client.GetService('CustomTargetingService',
     version='v201702')
+
+  if display_name is None:
+    display_name = name
 
   # Create custom targeting key objects.
   keys = [
