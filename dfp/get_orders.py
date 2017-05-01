@@ -46,7 +46,7 @@ def get_order_by_name(order_name):
     return None
   else:
     order = response['results'][0]
-    logger.info('Found an order with ID "{id}" and name "{name}".'.format(
+    logger.info(u'Found an order with ID "{id}" and name "{name}".'.format(
       id=order['id'], name=order['name']))
     return order
 

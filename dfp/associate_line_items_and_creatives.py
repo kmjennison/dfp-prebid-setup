@@ -48,6 +48,6 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
 
   if licas:
     logger.info(
-      'Created {0} line item <> creative associations.'.format(len(licas)))
+      u'Created {0} line item <> creative associations.'.format(len(licas)))
   else:
-    logger.info('No line item <> creative associations created.')
+    logger.info(u'No line item <> creative associations created.')

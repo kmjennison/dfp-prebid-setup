@@ -52,7 +52,7 @@ def get_placement_by_name(placement_name):
       placement_name))
   else:
     placement = response['results'][0]
-    logger.info('Found placement with ID "{id}" and name "{name}".'.format(
+    logger.info(u'Found placement with ID "{id}" and name "{name}".'.format(
       id=placement['id'], name=placement['name']))
   return placement
 

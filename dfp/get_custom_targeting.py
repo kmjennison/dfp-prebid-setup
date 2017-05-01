@@ -95,13 +95,13 @@ def get_targeting_by_key_name(name):
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
 
   if key_values is None:
-    logger.info('Key "{key_name}"" does not exist in DFP.'. format(
+    logger.info(u'Key "{key_name}"" does not exist in DFP.'. format(
       key_name=name))
   elif len(key_values) < 1:
-    logger.info('Key "{key_name}" exists but has no existing values.'. format(
+    logger.info(u'Key "{key_name}" exists but has no existing values.'. format(
       key_name=name))
   else:
-    logger.info('Key "{key_name}" exists and has {num} existing values.'. format(
+    logger.info(u'Key "{key_name}" exists and has {num} existing values.'. format(
       key_name=name, num=len(key_values)))
 
   return key_values

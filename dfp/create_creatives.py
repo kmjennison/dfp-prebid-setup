@@ -28,7 +28,7 @@ def create_creatives(creatives):
   created_creative_ids = []
   for creative in creatives:
     created_creative_ids.append(creative['id'])
-    logger.info('Created creative with ID "{0}" and name "{1}".'.format(
+    logger.info(u'Created creative with ID "{0}" and name "{1}".'.format(
       creative['id'], creative['name']))
   return created_creative_ids
 

@@ -50,7 +50,7 @@ def get_user_id_by_email(email_address):
   # Only get the first user in case there are multiple matches.
   user = response['results'][0]
 
-  logger.info('Found user with email "{email}" and name {name}.'.format(
+  logger.info(u'Found user with email "{email}" and name {name}.'.format(
     email=user['email'], name=user['name']))
 
   return user['id']
