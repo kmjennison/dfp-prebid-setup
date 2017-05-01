@@ -43,7 +43,7 @@ logger = logging.getLogger(__name__)
 
 
 def setup_partner(user_email, advertiser_name, order_name, placements,
-    sizes, bidder_code, prices, num_creatives):
+    sizes, bidder_code, prices, num_creatives, currency_code):
   """
   Call all necessary DFP tasks for a new Prebid partner setup.
   """
@@ -77,7 +77,7 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   # Create line items.
   line_items_config = create_line_item_configs(prices, order_id,
     placement_ids, bidder_code, sizes, hb_bidder_key_id, hb_pb_key_id,
-    HBBidderValueGetter, HBPBValueGetter)
+    currency_code, HBBidderValueGetter, HBPBValueGetter)
   logger.info("Creating line items...")
   line_item_ids = dfp.create_line_items.create_line_items(line_items_config)
 
@@ -152,7 +152,8 @@ def get_or_create_dfp_targeting_key(name):
   return key_id
 
 def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
-  sizes, hb_bidder_key_id, hb_pb_key_id, HBBidderValueGetter, HBPBValueGetter):
+  sizes, hb_bidder_key_id, hb_pb_key_id, currency_code, HBBidderValueGetter,
+  HBPBValueGetter):
   """
   Create a line item config for each price bucket.
 
@@ -163,6 +164,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
     bidder_code (str)
     hb_bidder_key_id (int)
     hb_pb_key_id (int)
+    currency_code (str)
     HBBidderValueGetter (DFPValueIdGetter)
     HBPBValueGetter (DFPValueIdGetter)
   Returns:
@@ -195,7 +197,8 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
       hb_bidder_key_id=hb_bidder_key_id,
       hb_pb_key_id=hb_pb_key_id,
       hb_bidder_value_id=hb_bidder_value_id,
-      hb_pb_value_id=hb_pb_value_id
+      hb_pb_value_id=hb_pb_value_id,
+      currency_code=currency_code,
     )
 
     line_items_config.append(config)
@@ -282,6 +285,8 @@ def main():
     raise BadSettingException('The setting "DFP_PLACEMENT_SIZES" '
       'must contain at least one size object.')
 
+  currency_code = getattr(settings, 'DFP_CURRENCY_CODE', 'USD')
+
   # How many creatives to attach to each line item. We need at least one
   # creative per ad unit on a page. See:
   # https://github.com/kmjennison/dfp-prebid-setup/issues/13
@@ -346,6 +351,7 @@ def main():
     bidder_code,
     prices,
     num_creatives,
+    currency_code,
   )
 
 if __name__ == '__main__':

@@ -24,7 +24,8 @@ def create_line_items(line_items):
   return created_line_item_ids
 
 def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
-  sizes, hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id):
+  sizes, hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id,
+  currency_code='USD'):
   """
   Creates a line item config object.
 
@@ -38,6 +39,7 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
       keys, to set the creative sizes this line item will serve
     hb_bidder_key_id (int): the DFP ID of the `hb_bidder` targeting key
     hb_pb_key_id (int): the DFP ID of the `hb_pb` targeting key
+    currency_code (str): the currency code (e.g. 'USD' or 'EUR')
   Returns:
     an object: the line item config
   """
@@ -99,7 +101,7 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
     'lineItemType': 'PRICE_PRIORITY',
     'costType': 'CPM',
     'costPerUnit': {
-      'currencyCode': 'USD',
+      'currencyCode': currency_code,
       'microAmount': cpm_micro_amount
     },
     'creativeRotationType': 'EVEN',
