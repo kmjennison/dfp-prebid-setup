@@ -19,10 +19,7 @@ class DFPCreateLICAsTests(TestCase):
     dfp.associate_line_items_and_creatives.make_licas(
       [987654, 7654321, 5432109], [111222, 223344])
 
-    sizes = [{
-      'width': '1',
-      'height': '1'
-    }]
+    sizes = []
 
     expected_arg = [
       {
@@ -83,10 +80,6 @@ class DFPCreateLICAsTests(TestCase):
     )
 
     sizes = [
-      {
-        'width': '1',
-        'height': '1'
-      },
       {
         'width': '300',
         'height': '250'
