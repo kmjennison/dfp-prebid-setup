@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import logging
 
@@ -73,7 +74,7 @@ def get_all_orders():
       for order in response['results']:
         
         print('Found an order with ID "{id}" and name "{name}".'.format(
-          id=order['id'], name=order['name']))
+          id=order['id'], name=order['name'].encode('utf-8')))
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
     else:
       break

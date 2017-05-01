@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 
 from unittest import TestCase
 from mock import MagicMock, Mock, patch
@@ -29,6 +30,52 @@ class DFPServiceTests(TestCase):
       .GetService.return_value
       .getOrdersByStatement.assert_called_once_with(expected_arg)
       )
+
+  def test_get_all_orders_unicode(self, mock_dfp_client):
+    """
+    Ensure `get_all_orders` prints when orders contain unicode characters.
+    """
+    mock_dfp_client.return_value = MagicMock()
+
+    # Response for fetching orders.
+    (mock_dfp_client.return_value
+      .GetService.return_value
+      .getOrdersByStatement).side_effect = [
+        {
+          'totalResultSetSize': 1,
+          'startIndex': 0,
+          'results': [{
+            'id': 152637489,
+            'name': u'\xe4',
+            'startDateTime': {},
+            'endDateTime': {},
+            'unlimitedEndDateTime': True,
+            'status': 'DRAFT',
+            'isArchived': False,
+            'externalOrderId': 0,
+            'currencyCode': 'USD',
+            'advertiserId': 123456789,
+            'creatorId': 123456789,
+            'traffickerId': 123456789,
+            'totalImpressionsDelivered': 0,
+            'totalClicksDelivered': 0,
+            'totalViewableImpressionsDelivered': 0,
+            'totalBudget': {
+              'currencyCode': 'USD',
+              'microAmount': 0,
+            },
+            'lastModifiedByApp': 'tab-for-',
+            'isProgrammatic': False,
+            'lastModifiedDateTime': {},
+          }]
+        },
+        {
+          'totalResultSetSize': 0,
+          'startIndex': 0,
+        },
+    ]
+
+    dfp.get_orders.get_all_orders()
 
   def test_get_order_by_name(self, mock_dfp_client):
     """
