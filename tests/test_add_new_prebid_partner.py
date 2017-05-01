@@ -70,7 +70,6 @@ class AddNewPrebidPartnerTests(TestCase):
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
 
-
   def test_missing_placement_setting(self, mock_dfp_client):
     """
     It throws an exception with a missing setting.
@@ -79,7 +78,6 @@ class AddNewPrebidPartnerTests(TestCase):
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
 
-
   def test_missing_bidder_code_setting(self, mock_dfp_client):
     """
     It throws an exception with a missing setting.
@@ -87,6 +85,18 @@ class AddNewPrebidPartnerTests(TestCase):
     settings.PREBID_BIDDER_CODE = None
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
+
+  @patch('settings.DFP_CURRENCY_CODE', 'EUR', create=True)
+  @patch('tasks.add_new_prebid_partner.setup_partner')
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_custom_currency_code(self, mock_input, mock_setup_partners,
+    mock_dfp_client):
+    """
+    Ensure we use the currency code setting if it exists.
+    """
+    tasks.add_new_prebid_partner.main()
+    args, kwargs = mock_setup_partners.call_args
+    self.assertEqual(args[8], 'EUR')
 
   def test_price_bucket_validity_missing_key(self, mock_dfp_client):
     """
@@ -223,6 +233,7 @@ class AddNewPrebidPartnerTests(TestCase):
       sizes=sizes,
       prices=prices,
       num_creatives=2,
+      currency_code='USD',
     )
 
     mock_get_users.get_user_id_by_email.assert_called_once_with(email)
@@ -254,6 +265,7 @@ class AddNewPrebidPartnerTests(TestCase):
       }],
       hb_bidder_key_id=999999,
       hb_pb_key_id=888888,
+      currency_code='HUF',
       HBBidderValueGetter=MagicMock(return_value=3434343434),
       HBPBValueGetter=MagicMock(return_value=5656565656),
     )
@@ -273,6 +285,7 @@ class AddNewPrebidPartnerTests(TestCase):
       [9876543, 1234567]
     )
     self.assertEqual(configs[2]['costPerUnit']['microAmount'], 300000)
+    self.assertEqual(configs[2]['costPerUnit']['currencyCode'], 'HUF')
 
   @patch('dfp.create_custom_targeting')
   @patch('dfp.get_custom_targeting')

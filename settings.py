@@ -54,6 +54,10 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 # `DFP_TARGETED_PLACEMENT_NAMES`.
 # DFP_NUM_CREATIVES_PER_LINE_ITEM = 2
 
+# Optional
+# The currency to use in DFP when setting line item CPMs. Defaults to 'USD'.
+# DFP_CURRENCY_CODE = 'USD'
+
 #########################################################################
 # PREBID SETTINGS
 #########################################################################
