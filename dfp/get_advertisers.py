@@ -38,7 +38,7 @@ def create_advertiser(name):
 
   # Display results.
   for advertiser in advertisers:
-    logger.info('Created an advertiser with ID "{id}", name "{name}", and '
+    logger.info(u'Created an advertiser with ID "{id}", name "{name}", and '
       'type "{type}".'.format(id=advertiser['id'], name=advertiser['name'],
         type=advertiser['type']))
 
@@ -88,7 +88,7 @@ def get_advertiser_id_by_name(name):
   else:
     advertiser = response['results'][0]
 
-  logger.info('Using existing advertiser with ID "{id}", name "{name}", and '
+  logger.info(u'Using existing advertiser with ID "{id}", name "{name}", and '
     'type "{type}".'.format(id=advertiser['id'], name=advertiser['name'],
       type=advertiser['type']))
 

@@ -70,7 +70,7 @@ def create_order(order_name, advertiser_id, trafficker_id):
     orders = order_service.createOrders(orders)
 
     order = orders[0]
-    logger.info('Created an order with id "{id}"" and name "{name}".'.format(
+    logger.info(u'Created an order with id "{id}"" and name "{name}".'.format(
            id=order['id'], name=order['name']))
 
   return order['id']

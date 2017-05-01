@@ -361,3 +361,12 @@ class AddNewPrebidPartnerTests(TestCase):
 
     mock_get_targeting.get_key_id_by_name.assert_called_once_with('some-key')
     mock_create_targeting.create_targeting_key.assert_not_called()
+
+  def test_logging_unicode(self, mock_dfp_client):
+    """
+    We can log unicode.
+    """
+    tasks.add_new_prebid_partner.logger.info(u'Hi there!')
+    tasks.add_new_prebid_partner.logger.info(u'\xe4')
+    tasks.add_new_prebid_partner.logger.info(
+      u"""A with umlaut: {my_character}""".format(my_character=u'\xe4'))

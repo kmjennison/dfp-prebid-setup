@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import logging
 import sys
@@ -177,7 +178,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
     price_str = num_to_str(micro_amount_to_num(price))
 
     # Autogenerate the line item name.
-    line_item_name = '{bidder_code}: HB ${price}'.format(
+    line_item_name = u'{bidder_code}: HB ${price}'.format(
       bidder_code=bidder_code,
       price=price_str
     )
@@ -303,7 +304,8 @@ def main():
   prices_summary = get_prices_summary_string(prices,
     price_buckets['precision'])
 
-  logger.info("""
+  logger.info(
+    u"""
 
     Going to create {name_start_format}{num_line_items}{format_end} new line items.
       {name_start_format}Order{format_end}: {value_start_format}{order_name}{format_end}
