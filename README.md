@@ -75,9 +75,10 @@ In most cases, you won't need to modify these settings.
 
 Setting | Description | Default
 ------------ | ------------- | -------------
-`DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST` | Whether we should create the advertiser with `DFP_ADVERTISER_NAME` in DFP if it does not exist | False
-`DFP_USE_EXISTING_ORDER_IF_EXISTS` | Whether we should modify an existing order if one already exists with name `DFP_ORDER_NAME` | False
+`DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST` | Whether we should create the advertiser with `DFP_ADVERTISER_NAME` in DFP if it does not exist | `False`
+`DFP_USE_EXISTING_ORDER_IF_EXISTS` | Whether we should modify an existing order if one already exists with name `DFP_ORDER_NAME` | `False`
 `DFP_NUM_CREATIVES_PER_LINE_ITEM` | The number of duplicate creatives to attach to each line item. Due to [DFP limitations](https://support.google.com/dfp_sb/answer/82245?hl=en), this should be equal to or greater than the number of ad units you serve on a given page. | the length of setting `DFP_TARGETED_PLACEMENT_NAMES`
+`DFP_CURRENCY_CODE` | The currency to use in line items. | `'USD'`
 
 ## Limitations
 
