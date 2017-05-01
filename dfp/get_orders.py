@@ -50,7 +50,7 @@ def get_order_by_name(order_name):
       id=order['id'], name=order['name']))
     return order
 
-def get_all_orders():
+def get_all_orders(print_orders=False):
   """
   Logs all orders in DFP.
 
@@ -72,15 +72,16 @@ def get_all_orders():
     response = order_service.getOrdersByStatement(statement.ToStatement())
     if 'results' in response:
       for order in response['results']:
-        
-        print('Found an order with ID "{id}" and name "{name}".'.format(
-          id=order['id'], name=order['name'].encode('utf-8')))
+        msg = u'Found an order with ID "{id}" and name "{name}".'.format(
+          id=order['id'], name=order['name'])
+        if print_orders:
+          print(msg)
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
     else:
       break
 
 def main():
-  get_all_orders()
+  get_all_orders(print_orders=True)
 
 if __name__ == '__main__':
   main()
