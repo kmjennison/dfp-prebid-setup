@@ -1,8 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+# encoding=utf8
 
 import logging
 import sys
+
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 from builtins import input
 from pprint import pprint
 
@@ -116,6 +120,7 @@ class DFPValueIdGetter(object):
       if value_obj['name'] == value_name:
         val_id = value_obj['id']
         break
+    logger.info(u'Value: {value} matches ID "{val_id}"'.format(value=value_name,val_id=val_id))
     return val_id
 
   def _create_value_and_return_id(self, value_name):
@@ -142,7 +147,7 @@ def get_or_create_dfp_targeting_key(name):
   Get or create a custom targeting key by name.
 
   Args:
-    name (str)  
+    name (str)
   Returns:
     an integer: the ID of the targeting key
   """
@@ -180,10 +185,11 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
     price_str = num_to_str(micro_amount_to_num(price))
 
     # Autogenerate the line item name.
-    line_item_name = u'{bidder_code}: HB ${price}'.format(
+    line_item_name = u'{bidder_code}: HB {price}'.format(
       bidder_code=bidder_code,
-      price=price_str
+      price=u'\u00a3' + price_str
     )
+    # logger.info(line_item_name)
 
     # The DFP targeting value ID for this `hb_pb` price value.
     hb_pb_value_id = HBPBValueGetter.get_value_id(price_str)
@@ -224,7 +230,7 @@ def check_price_buckets_validity(price_buckets):
   except KeyError:
     raise BadSettingException('The setting "PREBID_PRICE_BUCKETS" '
       'must contain keys "precision", "min", "max", and "increment".')
-  
+
   if not (isinstance(pb_precision, int) or isinstance(pb_precision, float)):
     raise BadSettingException('The "precision" key in "PREBID_PRICE_BUCKETS" '
       'must be a number.')
@@ -262,7 +268,7 @@ def main():
   user_email = getattr(settings, 'DFP_USER_EMAIL_ADDRESS', None)
   if user_email is None:
     raise MissingSettingException('DFP_USER_EMAIL_ADDRESS')
-   
+
   advertiser_name = getattr(settings, 'DFP_ADVERTISER_NAME', None)
   if advertiser_name is None:
     raise MissingSettingException('DFP_ADVERTISER_NAME')
