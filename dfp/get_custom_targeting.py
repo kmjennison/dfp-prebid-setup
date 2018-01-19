@@ -79,12 +79,12 @@ def get_targeting_by_key_name(name):
     key = response['results'][0]
     key_values = []
 
-    query = 'WHERE customTargetingKeyId IN (%s)' % str(key['id'])
+    query = "WHERE status = 'ACTIVE' AND customTargetingKeyId IN (%s)" % str(key['id'])
     statement = dfp.FilterStatement(query)
 
     response = custom_targeting_service.getCustomTargetingValuesByStatement(
         statement.ToStatement())
-    if 'results' in response:
+    while 'results' in response:
       for custom_val in response['results']:
         key_values.append({
           'id': custom_val['id'],
@@ -93,6 +93,8 @@ def get_targeting_by_key_name(name):
           'customTargetingKeyId': custom_val['customTargetingKeyId']
         })
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
+      response = custom_targeting_service.getCustomTargetingValuesByStatement(
+        statement.ToStatement())
 
   if key_values is None:
     logger.info(u'Key "{key_name}"" does not exist in DFP.'. format(
