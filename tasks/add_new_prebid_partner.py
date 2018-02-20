@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import os
 import sys
 from builtins import input
 from pprint import pprint
@@ -34,10 +35,15 @@ from tasks.price_utils import (
 init()
 
 # Configure logging.
-FORMAT = '%(message)s'
-logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=FORMAT)
-logging.getLogger('googleads').setLevel(logging.ERROR)
-logging.getLogger('oauth2client').setLevel(logging.ERROR)
+if 'DISABLE_LOGGING' in os.environ and os.environ['DISABLE_LOGGING'] == 'true':
+  logging.disable(logging.CRITICAL)
+  logging.getLogger('googleads').setLevel(logging.CRITICAL)
+  logging.getLogger('oauth2client').setLevel(logging.CRITICAL)
+else:
+  FORMAT = '%(message)s'
+  logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=FORMAT)
+  logging.getLogger('googleads').setLevel(logging.ERROR)
+  logging.getLogger('oauth2client').setLevel(logging.ERROR)
 
 logger = logging.getLogger(__name__)
 
