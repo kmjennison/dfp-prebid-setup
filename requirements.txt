@@ -2,5 +2,5 @@ colorama==0.3.7
 future==0.16.0
 googleads==5.1.0
 mock==2.0.0
-pycrypto==2.6.1
+pycryptodome==3.4.11
 PyYAML==3.12
