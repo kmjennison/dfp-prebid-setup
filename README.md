@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/kmjennison/dfp-prebid-setup.svg?branch=master)](https://travis-ci.org/kmjennison/dfp-prebid-setup)
+
 # DFP Setup Tool for Prebid
 An automated DFP line item generator for [Prebid.js](http://prebid.org/)
 
