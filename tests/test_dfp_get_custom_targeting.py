@@ -58,31 +58,38 @@ class DFPGetCustomTargetingTests(TestCase):
       })
 
     # Mock response from DFP for values fetching.
+    mocked_dfp_custom_targ_vals = Mock()
+    mocked_dfp_custom_targ_vals.side_effect = [
+      {
+        'totalResultSetSize': 2,
+        'startIndex': 0,
+        'results': [
+          {
+            'customTargetingKeyId': 987654,
+            'id': 1324354657,
+            'name': '12.50',
+            'displayName': '12.50',
+            'matchType': 'EXACT',
+            'status': 'ACTIVE',
+          },
+          {
+            'customTargetingKeyId': 987654,
+            'id': 3546576879,
+            'name': '20.00',
+            'displayName': '20.00',
+            'matchType': 'EXACT',
+            'status': 'ACTIVE',
+          }
+        ]
+      },
+      {
+        'totalResultSetSize': 0,
+        'startIndex': 0
+      }
+    ]
     (mock_dfp_client.return_value
       .GetService.return_value
-      .getCustomTargetingValuesByStatement) = MagicMock(
-        return_value={
-          'totalResultSetSize': 1,
-          'startIndex': 0,
-          'results': [
-            {
-              'customTargetingKeyId': 987654,
-              'id': 1324354657,
-              'name': '12.50',
-              'displayName': '12.50',
-              'matchType': 'EXACT',
-              'status': 'ACTIVE',
-            },
-            {
-              'customTargetingKeyId': 987654,
-              'id': 3546576879,
-              'name': '20.00',
-              'displayName': '20.00',
-              'matchType': 'EXACT',
-              'status': 'ACTIVE',
-            }
-          ]
-      })
+      .getCustomTargetingValuesByStatement) = mocked_dfp_custom_targ_vals
 
     response = dfp.get_custom_targeting.get_targeting_by_key_name('hb_pb')
 
@@ -92,10 +99,12 @@ class DFPGetCustomTargetingTests(TestCase):
       )
 
     # It should not fetch values because the key does not exist.
-    (mock_dfp_client.return_value
-      .GetService.return_value
-      .getCustomTargetingValuesByStatement.assert_called_once()
-      )
+    self.assertEqual(
+      mock_dfp_client.return_value
+        .GetService.return_value
+        .getCustomTargetingValuesByStatement.call_count,
+      2
+    )
 
     self.assertEqual(response,
       [
