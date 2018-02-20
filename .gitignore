@@ -5,3 +5,5 @@ key.pem
 googleads.yaml
 *.pyc
 local_settings.py
+.idea/
+env/
