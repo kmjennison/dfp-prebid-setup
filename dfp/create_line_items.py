@@ -45,14 +45,8 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
   """
 
   # Set up sizes.
-  creative_placeholders = [
-    {
-      'size': {
-        'width': '1',
-        'height': '1'
-      },
-    },
-  ]
+  creative_placeholders = []
+  
   for size in sizes:
     creative_placeholders.append({
       'size': size
