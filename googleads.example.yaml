@@ -18,4 +18,4 @@ dfp:
   #############################################################################
   # The following values configure the client for the service account flow.
   service_account_email: INSERT_SERVICE_ACCOUNT_EMAIL_HERE
-  path_to_private_key_file: ./key.pem
+  path_to_private_key_file: ./key.json

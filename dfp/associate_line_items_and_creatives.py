@@ -19,7 +19,7 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
   """
   dfp_client = get_client()
   lica_service = dfp_client.GetService(
-    'LineItemCreativeAssociationService', version='v201702')
+    'LineItemCreativeAssociationService', version='v201802')
 
   sizes = []
 
@@ -35,7 +35,7 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
         # "Overrides the value set for Creative.size, which allows the
         #   creative to be served to ad units that would otherwise not be
         #   compatible for its actual size."
-        #    https://developers.google.com/doubleclick-publishers/docs/reference/v201702/LineItemCreativeAssociationService.LineItemCreativeAssociation
+        #    https://developers.google.com/doubleclick-publishers/docs/reference/v201802/LineItemCreativeAssociationService.LineItemCreativeAssociation
         #
         # This is equivalent to selecting "Size overrides" in the DFP creative
         # settings, as recommended: http://prebid.org/adops/step-by-step.html
