@@ -75,7 +75,7 @@ def get_targeting_by_key_name(name):
 
   # If the key exists, get predefined values.
   key_values = None
-  if 'results' in response:
+  if 'results' in response and len(response['results']) > 0:
     key = response['results'][0]
     key_values = []
 
@@ -84,7 +84,7 @@ def get_targeting_by_key_name(name):
 
     response = custom_targeting_service.getCustomTargetingValuesByStatement(
         statement.ToStatement())
-    while 'results' in response:
+    while 'results' in response and len(response['results']) > 0:
       for custom_val in response['results']:
         key_values.append({
           'id': custom_val['id'],
