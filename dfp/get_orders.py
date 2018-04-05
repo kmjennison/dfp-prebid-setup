@@ -65,12 +65,13 @@ def get_all_orders(print_orders=False):
 
   # Create a statement to select orders.
   statement = dfp.FilterStatement()
+  print('Getting all orders...')
 
   # Retrieve a small amount of orders at a time, paging
   # through until all orders have been retrieved.
   while True:
     response = order_service.getOrdersByStatement(statement.ToStatement())
-    if 'results' in response:
+    if 'results' in response and len(response['results']) > 0:
       for order in response['results']:
         msg = u'Found an order with ID "{id}" and name "{name}".'.format(
           id=order['id'], name=order['name'])
@@ -78,6 +79,7 @@ def get_all_orders(print_orders=False):
           print(msg)
       statement.offset += dfp.SUGGESTED_PAGE_LIMIT
     else:
+      print('No additional orders found.')
       break
 
 def main():
