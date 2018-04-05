@@ -1,6 +1,6 @@
 
 from unittest import TestCase
-from mock import MagicMock, Mock, patch
+from mock import MagicMock, patch
 
 import settings
 import dfp.create_line_items
@@ -96,12 +96,6 @@ class DFPCreateLineItemsTests(TestCase):
         'creativePlaceholders': [
           {
             'size': {
-              'width': '1',
-              'height': '1'
-            },
-          },
-          {
-            'size': {
               'width': '728',
               'height': '90'
             }
@@ -165,12 +159,6 @@ class DFPCreateLineItemsTests(TestCase):
         'creativePlaceholders': [
           {
             'size': {
-              'width': '1',
-              'height': '1'
-            },
-          },
-          {
-            'size': {
               'width': '728',
               'height': '90'
             }
@@ -218,11 +206,6 @@ class DFPCreateLineItemsTests(TestCase):
           'contractedUnitsBought': 0,
           'creativePlaceholders': [
             {
-              'size': {
-                'width': 1,
-                'height': 1,
-                'isAspectRatio': False,
-              },
               'expectedCreativeCount': 1,
               'creativeSizeType': 'PIXEL',
             },
