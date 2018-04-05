@@ -19,8 +19,8 @@ _You will need credentials to access your DFP account programmatically. This sum
 2. Create Google developer credentials
    * Go to the [Google Developers Console Credentials page](https://console.developers.google.com/apis/credentials).
    * On the **Credentials** page, select **Create credentials**, then select **Service account key**.
-   * Select **New service account**, and select P12 key type.
-   * Click **Create** to download a file containing a `.p12` private key. Take note of the password (probably Google's default, "notasecret").
+   * Select **New service account**, and select JSON key type.
+   * Click **Create** to download a file containing a `.json` private key.
 3. Enable API access to DFP
    * Sign into your [DFP account](https://www.google.com/dfp/). You must have admin rights.
    * Select the **Admin** tab.
@@ -32,10 +32,8 @@ _You will need credentials to access your DFP account programmatically. This sum
 ### Setting Up
 1. Clone this repository.
 2. Run `pip install -r requirements.txt`.
-3. Convert the PKCS12 key format to PEM
-   * Rename the Google credentials key you previously downloaded (`[something].p12`) to `key.p12` and move it to the root of this repository
-   * Run `openssl pkcs12 -in key.p12 -nodes -nocerts > key.pem`. Enter your password.
-   * Delete `key.p12`.
+3. Rename key
+   * Rename the Google credentials key you previously downloaded (`[something].json`) to `key.json` and move it to the root of this repository
 4. Make a copy of `googleads.example.yaml` and name it `googleads.yaml`.
 5. In `googleads.yaml`, set the required fields:
    * `application_name` is the name of the application you used to get your Google developer credentials

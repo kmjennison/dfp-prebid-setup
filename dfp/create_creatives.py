@@ -21,7 +21,7 @@ def create_creatives(creatives):
   """
   dfp_client = get_client()
   creative_service = dfp_client.GetService('CreativeService',
-    version='v201702')
+    version='v201802')
   creatives = creative_service.createCreatives(creatives)
 
   # Return IDs of created line items.
@@ -48,7 +48,7 @@ def create_creative_config(name, advertiser_id):
   with open(snippet_file_path, 'r') as snippet_file:
       snippet = snippet_file.read()
 
-  # https://developers.google.com/doubleclick-publishers/docs/reference/v201702/CreativeService.Creative
+  # https://developers.google.com/doubleclick-publishers/docs/reference/v201802/CreativeService.Creative
   config = {
     'xsi_type': 'ThirdPartyCreative',
     'name': name,
