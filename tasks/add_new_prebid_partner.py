@@ -278,14 +278,15 @@ def main():
     raise MissingSettingException('DFP_ORDER_NAME')
 
   placements = getattr(settings, 'DFP_TARGETED_PLACEMENT_NAMES', None)
+  no_inventory = getattr(settings, 'DFP_ALLOW_NO_INVENTORY_TARGETING', None)
   if placements is None:
     raise MissingSettingException('DFP_TARGETED_PLACEMENT_NAMES')
-  elif len(placements) < 1:
+  elif len(placements) < 1 and no_inventory is not True:
     raise BadSettingException('The setting "DFP_TARGETED_PLACEMENT_NAMES" '
       'must contain at least one DFP placement ID.')
 
   sizes = getattr(settings, 'DFP_PLACEMENT_SIZES', None)
-  if sizes is None:
+  if sizes is None :
     raise MissingSettingException('DFP_PLACEMENT_SIZES')
   elif len(sizes) < 1:
     raise BadSettingException('The setting "DFP_PLACEMENT_SIZES" '
