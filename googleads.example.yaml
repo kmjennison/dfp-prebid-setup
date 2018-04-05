@@ -5,17 +5,5 @@ dfp:
   # Required Fields                                                           #
   #############################################################################
   application_name: INSERT_APPLICATION_NAME_HERE
-  #############################################################################
-  # Optional Fields                                                           #
-  #############################################################################
-  # The network_code is required for all services except NetworkService:
   network_code: INSERT_NETWORK_CODE_HERE
-  #############################################################################
-  # OAuth2 Configuration                                                      #
-  # Below you may provide credentials for either the installed application or #
-  # service account flows. Remove or comment the lines for the flow you're    #
-  # not using.                                                                #
-  #############################################################################
-  # The following values configure the client for the service account flow.
-  service_account_email: INSERT_SERVICE_ACCOUNT_EMAIL_HERE
   path_to_private_key_file: ./key.json
