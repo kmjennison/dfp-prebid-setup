@@ -44,6 +44,19 @@ def get_all_ad_units(print_ad_units=False):
 
   return ad_units
 
+def get_root_ad_unit():
+  """
+  Gets root ad unit from DFP.
+
+  Returns:
+    an ad unit, or None
+  """
+  ad_units = get_all_ad_units()
+  for ad_unit in ad_units:
+    if not hasattr(ad_unit, 'parentId'):
+      return ad_unit	
+  return None
+
 def main():
   get_all_ad_units(print_ad_units=True)
 

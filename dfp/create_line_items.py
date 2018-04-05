@@ -25,7 +25,7 @@ def create_line_items(line_items):
 
 def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
   sizes, hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id,
-  currency_code='USD'):
+  currency_code='USD', root_ad_unit=None):
   """
   Creates a line item config object.
 
@@ -79,15 +79,25 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
     'children': [hb_bidder_criteria, hb_pb_criteria]
   }
 
+  targeting = {
+    'targetedPlacementIds': placement_ids
+  }
+
+  if not root_ad_unit is None:
+    targeting = {
+      'targetedAdUnits': [{
+        'adUnitId': root_ad_unit['id'],
+        'includeDescendants': True
+      }]
+    }
+
   # https://developers.google.com/doubleclick-publishers/docs/reference/v201802/LineItemService.LineItem
   line_item_config = {
     'name': name,
     'orderId': order_id,
     # https://developers.google.com/doubleclick-publishers/docs/reference/v201802/LineItemService.Targeting
     'targeting': {
-      'inventoryTargeting': {
-        'targetedPlacementIds': placement_ids
-      },
+      'inventoryTargeting': targeting,
       'customTargeting': top_set,
     },
     'startDateTimeType': 'IMMEDIATELY',
