@@ -19,9 +19,11 @@ import dfp.get_advertisers
 import dfp.get_custom_targeting
 import dfp.get_placements
 import dfp.get_users
+import dfp.get_ad_units
 from dfp.exceptions import (
   BadSettingException,
-  MissingSettingException
+  MissingSettingException,
+  DFPObjectNotFound
 )
 from tasks.price_utils import (
   get_prices_array,
@@ -181,6 +183,15 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
   hb_bidder_value_id = HBBidderValueGetter.get_value_id(bidder_code)
 
   line_items_config = []
+  root_ad_unit = None
+
+  if not placement_ids:
+    # Since the placement ids array is empty, it means we should target a run of network for the line item
+    root_ad_unit = dfp.get_ad_units.get_root_ad_unit()
+
+    if root_ad_unit is None:
+      raise DFPObjectNotFound('Could not find the root ad unit to target a run of network.')
+
   for price in prices:
 
     price_str = num_to_str(micro_amount_to_num(price))
@@ -205,6 +216,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
       hb_bidder_value_id=hb_bidder_value_id,
       hb_pb_value_id=hb_pb_value_id,
       currency_code=currency_code,
+      root_ad_unit=root_ad_unit
     )
 
     line_items_config.append(config)
@@ -278,14 +290,15 @@ def main():
     raise MissingSettingException('DFP_ORDER_NAME')
 
   placements = getattr(settings, 'DFP_TARGETED_PLACEMENT_NAMES', None)
+  no_inventory = getattr(settings, 'DFP_ALLOW_NO_INVENTORY_TARGETING', None)
   if placements is None:
     raise MissingSettingException('DFP_TARGETED_PLACEMENT_NAMES')
-  elif len(placements) < 1:
+  elif len(placements) < 1 and no_inventory is not True:
     raise BadSettingException('The setting "DFP_TARGETED_PLACEMENT_NAMES" '
       'must contain at least one DFP placement ID.')
 
   sizes = getattr(settings, 'DFP_PLACEMENT_SIZES', None)
-  if sizes is None:
+  if sizes is None :
     raise MissingSettingException('DFP_PLACEMENT_SIZES')
   elif len(sizes) < 1:
     raise BadSettingException('The setting "DFP_PLACEMENT_SIZES" '

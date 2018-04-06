@@ -18,8 +18,11 @@ DFP_USER_EMAIL_ADDRESS = None
 # The exact name of the DFP advertiser for the created order
 DFP_ADVERTISER_NAME = None
 
-# Names of placements the line items should target.
+# Names of placements the line items should target. Has priority over ad units.
 DFP_TARGETED_PLACEMENT_NAMES = []
+
+# Names of ad units the line items should target.
+DFP_TARGETED_ADUNIT_NAMES = []
 
 # Sizes of placements. These are used to set line item and creative sizes.
 DFP_PLACEMENT_SIZES = [
@@ -32,6 +35,11 @@ DFP_PLACEMENT_SIZES = [
     'height': '90'
   },
 ]
+
+# If no placement or ad unit should be used, for example if the user wants a run  
+# of network. If True, DFP_PLACEMENT_SIZE and DFP_TARGETED_PLACEMENT_NAMES need 
+# to be set to an empty array.
+DFP_ALLOW_NO_INVENTORY_TARGETING = False
 
 # Whether we should create the advertiser in DFP if it does not exist.
 # If False, the program will exit rather than create an advertiser.
