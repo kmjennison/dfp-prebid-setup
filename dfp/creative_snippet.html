@@ -4,7 +4,7 @@ for (i = 0; i < 10; i++) {
   w = w.parent;
   if (w.pbjs) {
     try {
-      w.pbjs.renderAd(document, '%%PATTERN:hb_adid%%');
+      w.pbjs.renderAd(document, '%%PATTERN:{hb_adid_key}%%');
       break;
     } catch (e) {
       continue;

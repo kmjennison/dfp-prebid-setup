@@ -6,6 +6,7 @@ import os
 import sys
 from builtins import input
 from pprint import pprint
+import sys
 
 from colorama import init
 
@@ -72,15 +73,38 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   # Create creatives.
   creative_configs = dfp.create_creatives.create_duplicate_creative_configs(
       bidder_code, order_name, advertiser_id, num_creatives)
+
   creative_ids = dfp.create_creatives.create_creatives(creative_configs)
+
+  # Determine what bidder params should be
+  bidder_params = getattr(settings, 'PREBID_BIDDER_PARAMS', None)
+  hb_pb_key = 'hb_pb'
+
+  if bidder_params is True:
+    hb_pb_key += '_' + bidder_code
+    hb_adid_key = 'hb_adid_' + bidder_code
+    hb_size_key = 'hb_size_' + bidder_code
+
+    if len(hb_pb_key) > 20:
+      hb_pb_key = hb_pb_key[:20]
+
+    if len(hb_adid_key) > 20:
+      hb_adid_key = hb_adid_key[:20]
+
+    if len(hb_size_key) > 20:
+      hb_size_key = hb_size_key[:20]
+
+    # Create adid and size keys
+    get_or_create_dfp_targeting_key(hb_adid_key)
+    get_or_create_dfp_targeting_key(hb_size_key)
 
   # Get DFP key IDs for line item targeting.
   hb_bidder_key_id = get_or_create_dfp_targeting_key('hb_bidder')
-  hb_pb_key_id = get_or_create_dfp_targeting_key('hb_pb')
+  hb_pb_key_id = get_or_create_dfp_targeting_key(hb_pb_key)
 
   # Instantiate DFP targeting value ID getters for the targeting keys.
   HBBidderValueGetter = DFPValueIdGetter('hb_bidder')
-  HBPBValueGetter = DFPValueIdGetter('hb_pb')
+  HBPBValueGetter = DFPValueIdGetter(hb_pb_key)
 
   # Create line items.
   line_items_config = create_line_item_configs(prices, order_id,
@@ -314,9 +338,41 @@ def main():
     len(placements)
   )
 
+  # In the case where no inventory is being used, make sure at least one 
+  # creative is created
+  if not num_creatives > 0:
+    num_creatives = 1
+
   bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
   if bidder_code is None:
     raise MissingSettingException('PREBID_BIDDER_CODE')
+
+  bidder_params = getattr(settings, 'PREBID_BIDDER_PARAMS', None)
+  hb_pb_key = 'hb_pb'
+  additional_keys = ''
+
+  if bidder_params is True:
+    hb_pb_key += '_' + bidder_code
+    hb_adid_key = 'hb_adid_' + bidder_code
+    hb_size_key = 'hb_size_' + bidder_code
+
+    if len(hb_pb_key) > 20:
+      hb_pb_key = hb_pb_key[:20]
+
+    if len(hb_adid_key) > 20:
+      hb_adid_key = hb_adid_key[:20]
+
+    if len(hb_size_key) > 20:
+      hb_size_key = hb_size_key[:20]
+
+    additional_keys = u"""
+
+    Additionally, keys {name_start_format}{hb_adid_key}{format_end} and {name_start_format}{hb_size_key}{format_end} will be created.""".format(
+      hb_adid_key=hb_adid_key,
+      hb_size_key=hb_size_key,
+      name_start_format=color.BOLD,
+      format_end=color.END,
+    )
 
   price_buckets = getattr(settings, 'PREBID_PRICE_BUCKETS', None)
   if price_buckets is None:
@@ -337,15 +393,16 @@ def main():
       {name_start_format}Owner{format_end}: {value_start_format}{user_email}{format_end}
 
     Line items will have targeting:
-      {name_start_format}hb_pb{format_end} = {value_start_format}{prices_summary}{format_end}
+      {name_start_format}{hb_pb_key}{format_end} = {value_start_format}{prices_summary}{format_end}
       {name_start_format}hb_bidder{format_end} = {value_start_format}{bidder_code}{format_end}
-      {name_start_format}placements{format_end} = {value_start_format}{placements}{format_end}
+      {name_start_format}placements{format_end} = {value_start_format}{placements}{format_end}{additional_keys}
 
     """.format(
       num_line_items = len(prices),
       order_name=order_name,
       advertiser=advertiser_name,
       user_email=user_email,
+      hb_pb_key=hb_pb_key,
       prices_summary=prices_summary,
       bidder_code=bidder_code,
       placements=placements,
@@ -353,6 +410,7 @@ def main():
       name_start_format=color.BOLD,
       format_end=color.END,
       value_start_format=color.BLUE,
+      additional_keys=additional_keys
     ))
 
   ok = input('Is this correct? (y/n)\n')

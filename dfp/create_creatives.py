@@ -7,6 +7,8 @@ from googleads import dfp
 
 from dfp.client import get_client
 
+import settings
+
 
 logger = logging.getLogger(__name__)
 
@@ -47,6 +49,19 @@ def create_creative_config(name, advertiser_id):
     'creative_snippet.html')
   with open(snippet_file_path, 'r') as snippet_file:
       snippet = snippet_file.read()
+
+  # Determine what bidder params should be
+  bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
+  bidder_params = getattr(settings, 'PREBID_BIDDER_PARAMS', None)
+  hb_adid_key = 'hb_adid'
+
+  if bidder_params is True:
+    hb_adid_key += '_' + bidder_code
+
+    if len(hb_adid_key) > 20:
+      hb_adid_key = hb_adid_key[:20]
+
+  snippet = snippet.replace('{hb_adid_key}', hb_adid_key)
 
   # https://developers.google.com/doubleclick-publishers/docs/reference/v201802/CreativeService.Creative
   config = {

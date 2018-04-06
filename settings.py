@@ -37,8 +37,8 @@ DFP_PLACEMENT_SIZES = [
 ]
 
 # If no placement or ad unit should be used, for example if the user wants a run  
-# of network. If True, DFP_PLACEMENT_SIZE and DFP_TARGETED_PLACEMENT_NAMES need 
-# to be set to an empty array.
+# of network. If True, DFP_TARGETED_PLACEMENT_NAMES and DFP_TARGETED_ADUNIT_NAMES 
+# still need to be set to empty arrays.
 DFP_ALLOW_NO_INVENTORY_TARGETING = False
 
 # Whether we should create the advertiser in DFP if it does not exist.
