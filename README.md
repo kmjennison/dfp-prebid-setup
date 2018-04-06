@@ -19,15 +19,16 @@ _You will need credentials to access your DFP account programmatically. This sum
 2. Create Google developer credentials
    * Go to the [Google Developers Console Credentials page](https://console.developers.google.com/apis/credentials).
    * On the **Credentials** page, select **Create credentials**, then select **Service account key**.
-   * Select **New service account**, and select JSON key type.
+   * Select **New service account**, and select JSON key type. You can leave the role blank.
    * Click **Create** to download a file containing a `.json` private key.
 3. Enable API access to DFP
    * Sign into your [DFP account](https://www.google.com/dfp/). You must have admin rights.
-   * Select the **Admin** tab.
-   * Ensure that API access is enabled.
+   * In the **Admin** section, select **Global settings**
+   * Ensure that **API access** is enabled.
    * Click the **Add a service account user** button.
-   * Use the service account email for the Google developer credentials you created above.
-   * Click on the **Save** button. A message should appear, confirming the addition of your service account.
+     * Use the service account email for the Google developer credentials you created above.
+     * Set the role to "Trafficker".
+     * Click **Save**.
 
 ### Setting Up
 1. Clone this repository.
