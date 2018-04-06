@@ -43,6 +43,19 @@ class DFPCreateCreativesTests(TestCase):
     with open(snippet_file_path, 'r') as snippet_file:
         snippet = snippet_file.read()
 
+    # Determine what bidder params should be
+    bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
+    bidder_params = getattr(settings, 'PREBID_BIDDER_PARAMS', None)
+    hb_adid_key = 'hb_adid'
+
+    if bidder_params is True:
+      hb_adid_key += '_' + bidder_code
+
+      if len(hb_adid_key) > 20:
+        hb_adid_key = hb_adid_key[:20]
+
+    snippet = snippet.replace('{hb_adid_key}', hb_adid_key)
+
     self.assertEqual(
       dfp.create_creatives.create_creative_config(
         name='My Creative',
