@@ -211,9 +211,9 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
 
   if not placement_ids:
     # Since the placement ids array is empty, it means we should target a run of network for the line item
-    root_ad_unit = dfp.get_ad_units.get_root_ad_unit()
+    root_ad_unit_id = dfp.get_ad_units.get_root_ad_unit_id()
 
-    if root_ad_unit is None:
+    if root_ad_unit_id is None:
       raise DFPObjectNotFound('Could not find the root ad unit to target a run of network.')
 
   for price in prices:
@@ -240,7 +240,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
       hb_bidder_value_id=hb_bidder_value_id,
       hb_pb_value_id=hb_pb_value_id,
       currency_code=currency_code,
-      root_ad_unit=root_ad_unit
+      root_ad_unit_id=root_ad_unit_id
     )
 
     line_items_config.append(config)

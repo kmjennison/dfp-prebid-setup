@@ -25,7 +25,7 @@ def create_line_items(line_items):
 
 def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
   sizes, hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id,
-  currency_code='USD', root_ad_unit=None):
+  currency_code='USD', root_ad_unit_id=None):
   """
   Creates a line item config object.
 
@@ -83,11 +83,11 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
     'targetedPlacementIds': placement_ids
   }
 
-  if not root_ad_unit is None:
+  if not root_ad_unit_id is None:
     targeting = {
       'targetedAdUnits': [{
-        'adUnitId': root_ad_unit['id'],
-        'includeDescendants': True
+        'adUnitId': root_ad_unit_id,
+        'includeDescendants': 'true'
       }]
     }
 

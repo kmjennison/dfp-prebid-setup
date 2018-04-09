@@ -44,17 +44,21 @@ def get_all_ad_units(print_ad_units=False):
 
   return ad_units
 
-def get_root_ad_unit():
+def get_root_ad_unit_id():
   """
-  Gets root ad unit from DFP.
+  Gets root ad unit ID from DFP.
 
   Returns:
-    an ad unit, or None
+    an ad unit ID, or None
   """
-  ad_units = get_all_ad_units()
-  for ad_unit in ad_units:
-    if not hasattr(ad_unit, 'parentId'):
-      return ad_unit	
+
+  dfp_client = get_client()
+  network_service = dfp_client.GetService('NetworkService', version='v201802')
+  current_network = network_service.getCurrentNetwork()
+
+  if hasattr(current_network, 'effectiveRootAdUnitId'):
+    return current_network.effectiveRootAdUnitId
+
   return None
 
 def main():

@@ -41,6 +41,8 @@ DFP_PLACEMENT_SIZES = [
 # still need to be set to empty arrays.
 DFP_ALLOW_NO_INVENTORY_TARGETING = False
 
+# 
+
 # Whether we should create the advertiser in DFP if it does not exist.
 # If False, the program will exit rather than create an advertiser.
 DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST = False
@@ -71,6 +73,10 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 #########################################################################
 
 PREBID_BIDDER_CODE = None
+
+# Whether DFP targeting keys should be created following Bidders' Params structure
+# See: http://prebid.org/dev-docs/bidders.html
+PREBID_BIDDER_PARAMS = True
 
 # Price buckets. This should match your Prebid settings for the partner. See:
 # http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity
