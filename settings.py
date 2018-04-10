@@ -70,7 +70,7 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 PREBID_BIDDER_CODE = None
 
 # Whether DFP targeting keys should be created following Bidders' Params structure.
-# This is used when it's required to sen all bids to the ad server.
+# This is used when it's required to send all bids to the ad server.
 # See: http://prebid.org/dev-docs/bidders.html
 # And: http://prebid.org/adops/send-all-bids-adops.html
 PREBID_BIDDER_PARAMS = True
