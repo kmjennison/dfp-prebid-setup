@@ -80,6 +80,8 @@ Setting | Description | Default
 `DFP_USE_EXISTING_ORDER_IF_EXISTS` | Whether we should modify an existing order if one already exists with name `DFP_ORDER_NAME` | `False`
 `DFP_NUM_CREATIVES_PER_LINE_ITEM` | The number of duplicate creatives to attach to each line item. Due to [DFP limitations](https://support.google.com/dfp_sb/answer/82245?hl=en), this should be equal to or greater than the number of ad units you serve on a given page. | the length of setting `DFP_TARGETED_PLACEMENT_NAMES`
 `DFP_CURRENCY_CODE` | The currency to use in line items. | `'USD'`
+`DFP_ALLOW_NO_INVENTORY_TARGETING` | If no placement should be used, for example for a run of network. If True, DFP_TARGETED_PLACEMENT_NAMES still need to be set to an empty array. | `False`
+`PREBID_BIDDER_PARAMS` | Whether DFP targeting keys should be created following Bidders' Params structure. This is used when it's required to send all bids to the ad server. | `False`
 
 ## Limitations
 
