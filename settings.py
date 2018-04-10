@@ -38,8 +38,6 @@ DFP_PLACEMENT_SIZES = [
 # still need to be set to empty arrays.
 DFP_ALLOW_NO_INVENTORY_TARGETING = False
 
-# 
-
 # Whether we should create the advertiser in DFP if it does not exist.
 # If False, the program will exit rather than create an advertiser.
 DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST = False
