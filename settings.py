@@ -72,7 +72,7 @@ PREBID_BIDDER_CODE = None
 # This is used when it's required to send all bids to the ad server.
 # See: http://prebid.org/dev-docs/bidders.html
 # And: http://prebid.org/adops/send-all-bids-adops.html
-PREBID_BIDDER_PARAMS = True
+PREBID_BIDDER_PARAMS = False
 
 # Price buckets. This should match your Prebid settings for the partner. See:
 # http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity
