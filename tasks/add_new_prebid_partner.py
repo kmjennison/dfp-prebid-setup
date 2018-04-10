@@ -207,7 +207,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
   hb_bidder_value_id = HBBidderValueGetter.get_value_id(bidder_code)
 
   line_items_config = []
-  root_ad_unit = None
+  root_ad_unit_id = None
 
   if not placement_ids:
     # Since the placement ids array is empty, it means we should target a run of network for the line item

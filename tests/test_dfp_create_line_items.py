@@ -28,6 +28,7 @@ class DFPCreateLineItemsTests(TestCase):
         hb_pb_key_id=888888,
         hb_bidder_value_id=222222,
         hb_pb_value_id=111111,
+        root_ad_unit_id=None
       )
     ]
 
@@ -57,6 +58,7 @@ class DFPCreateLineItemsTests(TestCase):
         hb_pb_key_id=888888,
         hb_bidder_value_id=222222,
         hb_pb_value_id=111111,
+        root_ad_unit_id=None
       ),
       {
         'orderId': 1234567,
@@ -68,15 +70,15 @@ class DFPCreateLineItemsTests(TestCase):
           'customTargeting': {
             'children': [
               {
-                'keyId': 999999,
-                'operator': 'IS',
-                'valueIds': [222222],
-                'xsi_type': 'CustomCriteria'
-              },
-              {
                 'keyId': 888888,
                 'operator': 'IS',
                 'valueIds': [111111],
+                'xsi_type': 'CustomCriteria'
+              },
+              {
+                'keyId': 999999,
+                'operator': 'IS',
+                'valueIds': [222222],
                 'xsi_type': 'CustomCriteria'
               }
             ],
@@ -120,6 +122,7 @@ class DFPCreateLineItemsTests(TestCase):
         hb_bidder_value_id=222222,
         hb_pb_value_id=111111,
         currency_code='EUR',
+        root_ad_unit_id=None
       ),
       {
         'orderId': 22334455,
@@ -131,15 +134,15 @@ class DFPCreateLineItemsTests(TestCase):
           'customTargeting': {
             'children': [
               {
-                'keyId': 999999,
-                'operator': 'IS',
-                'valueIds': [222222],
-                'xsi_type': 'CustomCriteria'
-              },
-              {
                 'keyId': 888888,
                 'operator': 'IS',
                 'valueIds': [111111],
+                'xsi_type': 'CustomCriteria'
+              },
+              {
+                'keyId': 999999,
+                'operator': 'IS',
+                'valueIds': [222222],
                 'xsi_type': 'CustomCriteria'
               }
             ],
