@@ -21,9 +21,6 @@ DFP_ADVERTISER_NAME = None
 # Names of placements the line items should target. Has priority over ad units.
 DFP_TARGETED_PLACEMENT_NAMES = []
 
-# Names of ad units the line items should target.
-DFP_TARGETED_ADUNIT_NAMES = []
-
 # Sizes of placements. These are used to set line item and creative sizes.
 DFP_PLACEMENT_SIZES = [
   {
@@ -74,8 +71,10 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 
 PREBID_BIDDER_CODE = None
 
-# Whether DFP targeting keys should be created following Bidders' Params structure
+# Whether DFP targeting keys should be created following Bidders' Params structure.
+# This is used when it's required to sen all bids to the ad server.
 # See: http://prebid.org/dev-docs/bidders.html
+# And: http://prebid.org/adops/send-all-bids-adops.html
 PREBID_BIDDER_PARAMS = True
 
 # Price buckets. This should match your Prebid settings for the partner. See:
