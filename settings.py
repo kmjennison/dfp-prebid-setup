@@ -62,6 +62,11 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 # The currency to use in DFP when setting line item CPMs. Defaults to 'USD'.
 # DFP_CURRENCY_CODE = 'USD'
 
+# Optional
+# Determine if line items and creative should be associated in batch.
+# Useful to avoid timeouts if many of them have to be created.
+# DFP_ASSOCIATIONS_BATCH = 50
+
 #########################################################################
 # PREBID SETTINGS
 #########################################################################

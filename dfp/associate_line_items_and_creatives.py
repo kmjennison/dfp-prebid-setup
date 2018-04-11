@@ -4,6 +4,8 @@ from googleads import dfp
 
 from dfp.client import get_client
 
+import settings
+
 
 logger = logging.getLogger(__name__)
 
@@ -41,10 +43,29 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
         # settings, as recommended: http://prebid.org/adops/step-by-step.html
         'sizes': sizes
       })
-  licas = lica_service.createLineItemCreativeAssociations(licas)
 
-  if licas:
-    logger.info(
-      u'Created {0} line item <> creative associations.'.format(len(licas)))
+  associations_batch = getattr(settings, 'DFP_ASSOCIATIONS_BATCH', None)
+
+  if not associations_batch is None:
+    while licas:
+      batch = []
+      
+      for b in range(0, associations_batch):
+        if licas:
+          batch.append(licas.pop(0))
+
+      batch = lica_service.createLineItemCreativeAssociations(batch)
+
+      if batch:
+        logger.info(
+          u'Created {0} line item <> creative associations.'.format(len(batch)))
+      else:
+        logger.info(u'No line item <> creative associations created.')
   else:
-    logger.info(u'No line item <> creative associations created.')
+    licas = lica_service.createLineItemCreativeAssociations(licas)
+
+    if licas:
+      logger.info(
+        u'Created {0} line item <> creative associations.'.format(len(licas)))
+    else:
+      logger.info(u'No line item <> creative associations created.')

@@ -113,6 +113,7 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   logger.info("Creating line items...")
   line_item_ids = dfp.create_line_items.create_line_items(line_items_config)
 
+  logger.info("Associating creatives with line items...")
   # Associate creatives with line items.
   dfp.associate_line_items_and_creatives.make_licas(line_item_ids,
     creative_ids, size_overrides=sizes)
