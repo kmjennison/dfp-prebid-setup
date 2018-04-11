@@ -5,7 +5,9 @@ from googleads import dfp
 from dfp.client import get_client
 
 import settings
-
+import time
+import suds
+from pprint import pprint
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +56,15 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
         if licas:
           batch.append(licas.pop(0))
 
-      batch = lica_service.createLineItemCreativeAssociations(batch)
+      try:
+        batch = lica_service.createLineItemCreativeAssociations(batch)
+      except suds.WebFault as err:
+        #if err.fault.faultstring is '[CommonError.CONCURRENT_MODIFICATION @ ]':
+          logger.info(u'A common error was raised (it can happen). Waiting 30 seconds and retrying...')
+          time.sleep(30)
+          batch = lica_service.createLineItemCreativeAssociations(batch)
+        #else:
+        #  raise
 
       if batch:
         logger.info(
