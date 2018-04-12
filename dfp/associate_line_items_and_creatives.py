@@ -57,14 +57,17 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
           batch.append(licas.pop(0))
 
       try:
+        time.sleep(1)
         batch = lica_service.createLineItemCreativeAssociations(batch)
       except suds.WebFault as err:
-        #if err.fault.faultstring is '[CommonError.CONCURRENT_MODIFICATION @ ]':
           logger.info(u'A common error was raised (it can happen). Waiting 30 seconds and retrying...')
           time.sleep(30)
-          batch = lica_service.createLineItemCreativeAssociations(batch)
-        #else:
-        #  raise
+          try:
+            batch = lica_service.createLineItemCreativeAssociations(batch)
+          except suds.WebFault as err:
+              logger.info(u'A common error was raised (it can happen). Waiting 30 seconds and retrying...')
+              time.sleep(30)
+              batch = lica_service.createLineItemCreativeAssociations(batch)
 
       if batch:
         logger.info(
