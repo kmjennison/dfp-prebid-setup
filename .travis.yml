@@ -8,6 +8,9 @@ install:
   - pip install -r requirements.txt
 script:
   - python -m unittest discover tests
+  # TODO: on non-PRs and master branch, run test against
+  # real DFP
+  # - python -m unittest discover -p "integration_test_*"
 env:
   global:
     - DISABLE_LOGGING=true
