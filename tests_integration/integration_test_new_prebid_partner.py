@@ -5,6 +5,7 @@ from mock import patch
 from unittest import TestCase
 
 import settings
+import tasks.add_new_prebid_partner
 from tests_integration.helpers.archive_order_by_name import archive_order_by_name
 from tests_integration.helpers.get_advertiser_by_name import get_advertiser_by_name
 from tests_integration.helpers.get_custom_targeting_by_key_name import (
@@ -53,7 +54,7 @@ class NewPrebidPartnerTests(TestCase):
     print('Cleaning up: archiving the order and deleting custom targeting key-values.')
 
     # Archive the order we created for this test
-    archive_order_by_name('Test April 5 2018')
+    archive_order_by_name(order_name)
 
     # TODO: delete custom targeting keys and values
 
@@ -67,21 +68,22 @@ class NewPrebidPartnerTests(TestCase):
     PREBID_PRICE_BUCKETS=price_buckets,
     DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False,
     DFP_USE_EXISTING_ORDER_IF_EXISTS=False)
-  def test_new_partner(self):
-    # TODO: add new bidder partner
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_new_partner(self, mock_input):
+    # Add new bidder partner
     print('Creating new bidder partner...')
+    tasks.add_new_prebid_partner.main()
     print('New bidder partner created.')
     print('Fetching created order and line items...')
 
     # Get the order and check that the order and line items
     # match what we'd expect.
-    # TODO: use generated order name
-    order = get_order_by_name('Test April 5 2018')
+    order = get_order_by_name(order_name)
     if order is None:
       self.fail('Order was not created.')
 
     # Validate the order
-    self.assertEqual(order['name'], 'Test April 5 2018')
+    self.assertEqual(order['name'], order_name)
     self.assertEqual(order['status'], 'DRAFT')
     self.assertEqual(order['isArchived'], False)
     expected_advertiser = get_advertiser_by_name(advertiser)
@@ -139,8 +141,7 @@ class NewPrebidPartnerTests(TestCase):
       # Status
       # TODO: eventually should have the tool activate line items
       self.assertEqual(li['status'], 'DRAFT')
-      # TODO: reenable (some current test orders are archived)
-      # self.assertEqual(li['isArchived'], False)
+      self.assertEqual(li['isArchived'], False)
 
       # Targeting
       targ = li['targeting']
