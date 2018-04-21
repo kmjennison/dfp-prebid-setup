@@ -5,6 +5,7 @@ from mock import patch
 from unittest import TestCase
 
 import settings
+from tests_integration.helpers.archive_order_by_name import archive_order_by_name
 from tests_integration.helpers.get_advertiser_by_name import get_advertiser_by_name
 from tests_integration.helpers.get_custom_targeting_by_key_name import (
   get_custom_targeting_by_key_name,
@@ -49,9 +50,12 @@ class NewPrebidPartnerTests(TestCase):
     pass
 
   def tearDown(self):
-    # TODO: archive order
+    print('Cleaning up: archiving the order and deleting custom targeting key-values.')
+
+    # Archive the order we created for this test
+    archive_order_by_name('Test April 5 2018')
+
     # TODO: delete custom targeting keys and values
-    pass
 
   @patch.multiple('settings',
     DFP_USER_EMAIL_ADDRESS=email,
@@ -79,6 +83,7 @@ class NewPrebidPartnerTests(TestCase):
     # Validate the order
     self.assertEqual(order['name'], 'Test April 5 2018')
     self.assertEqual(order['status'], 'DRAFT')
+    self.assertEqual(order['isArchived'], False)
     expected_advertiser = get_advertiser_by_name(advertiser)
     self.assertEqual(order['advertiserId'], expected_advertiser['id'])
 
