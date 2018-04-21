@@ -12,6 +12,8 @@ from tests_integration.helpers.get_placement_by_name import get_placement_by_nam
 
 now = datetime.now().isoformat()
 
+# Note: these tests expect that the live DFP network has preexisting
+# trafficker, advertiser, and placements.
 email = os.environ['INTEGRATION_TEST_TRAFFICKER_EMAIL']
 advertiser = 'TestAdvertiser'
 order_name = 'Test Order: {now}'.format(now=now)
