@@ -6,6 +6,10 @@ from unittest import TestCase
 
 import settings
 from tests_integration.helpers.get_advertiser_by_name import get_advertiser_by_name
+from tests_integration.helpers.get_custom_targeting_by_key_name import (
+  get_custom_targeting_by_key_name,
+  get_key_by_name
+)
 from tests_integration.helpers.get_line_items_for_order import get_line_items_for_order
 from tests_integration.helpers.get_order_by_name import get_order_by_name
 from tests_integration.helpers.get_placement_by_name import get_placement_by_name
@@ -60,7 +64,6 @@ class NewPrebidPartnerTests(TestCase):
     DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False,
     DFP_USE_EXISTING_ORDER_IF_EXISTS=False)
   def test_new_partner(self):
-
     # TODO: add new bidder partner
     print('Creating new bidder partner...')
     print('New bidder partner created.')
@@ -80,26 +83,38 @@ class NewPrebidPartnerTests(TestCase):
     self.assertEqual(order['advertiserId'], expected_advertiser['id'])
 
     # Make sure line items match what we expect
-    print('Validating line items...')
-
     line_items = get_line_items_for_order(order['id'])
     sorted_line_items = sorted(line_items, key=lambda li: li['costPerUnit']['microAmount'])
     # print(sorted_line_items[0:2])
+    print('Validating line items...')
 
+    # Fetch expected values from DFP
     expected_placement_ids = [
       get_placement_by_name(placements[0])['id'],
       get_placement_by_name(placements[1])['id']
     ]
+    hb_bidder_key = get_key_by_name('hb_bidder')
+    hb_pb_key = get_key_by_name('hb_pb')
+    hb_bidder_vals = get_custom_targeting_by_key_name('hb_bidder')
+    expected_bidder_val = filter(
+      lambda hb_bidders: hb_bidders['name'] == bidder_code,
+      hb_bidder_vals)[0]
+    hb_pb_vals = get_custom_targeting_by_key_name('hb_pb')
+    sorted_hb_pb_vals = sorted(hb_pb_vals, key=lambda pb: float(pb['name']))
     num_line_items = 201
     cpm_micro_amouts = map(lambda x: x * (10**5), range(num_line_items))
     self.assertEqual(len(sorted_line_items), num_line_items)
 
+    # Check each line item
     for index, li in enumerate(sorted_line_items):
       micro_amount = cpm_micro_amouts[index]
-
-      # Line item name
+      hb_pb_val = sorted_hb_pb_vals[index]
       usd_val = float(micro_amount) / 10**6
       usd_string = '%.{0}f'.format(str(2)) % usd_val
+
+      # print('Validating line item targeting hb_pb = {0}'.format(usd_string))
+
+      # Line item name
       expected_name = 'testbidder: HB ${0}'.format(usd_string)
       self.assertEqual(li['name'], expected_name)
 
@@ -130,8 +145,30 @@ class NewPrebidPartnerTests(TestCase):
       self.assertEqual(targ['inventoryTargeting']['targetedPlacementIds'],
         expected_placement_ids)
 
-      # TODO
       # Check that custom targeting keys and values are correct
+      self.assertEqual(
+        targ['customTargeting']['children'][0]['logicalOperator'],
+        'AND')
+      # The first statement with an "AND" operator.
+      custom_targ_logic = targ['customTargeting']['children'][0]['children']
+      self.assertEqual(len(custom_targ_logic), 2)
+      custom_targ_hb_bidder = filter(
+        lambda ct: ct['keyId'] == hb_bidder_key['id'],
+        custom_targ_logic)[0]
+      custom_targ_hb_pb = filter(
+        lambda ct: ct['keyId'] == hb_pb_key['id'],
+        custom_targ_logic)[0]
+
+      # All line items should be targeted to the same hb_bidder value
+      self.assertEqual(custom_targ_hb_bidder['operator'], 'IS')
+      self.assertEqual(custom_targ_hb_bidder['valueIds'], [expected_bidder_val['id']])
+
+      # Each line item should be targeted to its own hb_pb value
+      self.assertEqual(custom_targ_hb_pb['operator'], 'IS')
+      self.assertEqual(custom_targ_hb_pb['valueIds'], [hb_pb_val['id']])
+      # The hb_pb value should have the same name as the CPM value
+      self.assertEqual(hb_pb_val['name'], usd_string)
+      self.assertEqual(hb_pb_val['displayName'], usd_string)
 
     print('Line items validated.')
 
