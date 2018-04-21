@@ -5,6 +5,7 @@ from mock import patch
 from unittest import TestCase
 
 import settings
+from tests_integration.helpers.get_advertiser_by_name import get_advertiser_by_name
 from tests_integration.helpers.get_line_items_for_order import get_line_items_for_order
 from tests_integration.helpers.get_order_by_name import get_order_by_name
 from tests_integration.helpers.get_placement_by_name import get_placement_by_name
@@ -73,20 +74,20 @@ class NewPrebidPartnerTests(TestCase):
     # Validate the order
     self.assertEqual(order['name'], 'Test April 5 2018')
     self.assertEqual(order['status'], 'DRAFT')
-    # TODO: check advertiser ID
-
-    line_items = get_line_items_for_order(order['id'])
-    sorted_line_items = sorted(line_items, key=lambda li: li['costPerUnit']['microAmount'])
-
-    placement_ids = [
-      get_placement_by_name(placements[0])['id'],
-      get_placement_by_name(placements[1])['id']
-    ]
+    expected_advertiser = get_advertiser_by_name(advertiser)
+    self.assertEqual(order['advertiserId'], expected_advertiser['id'])
 
     # Make sure line items match what we expect
     print('Validating line items...')
+
+    line_items = get_line_items_for_order(order['id'])
+    sorted_line_items = sorted(line_items, key=lambda li: li['costPerUnit']['microAmount'])
     # print(sorted_line_items[0:2])
 
+    expected_placement_ids = [
+      get_placement_by_name(placements[0])['id'],
+      get_placement_by_name(placements[1])['id']
+    ]
     num_line_items = 201
     cpm_micro_amouts = map(lambda x: x * (10**5), range(num_line_items))
     self.assertEqual(len(sorted_line_items), num_line_items)
@@ -125,7 +126,7 @@ class NewPrebidPartnerTests(TestCase):
       self.assertEqual(targ['inventoryTargeting']['targetedAdUnits'], [])
       self.assertEqual(targ['inventoryTargeting']['excludedAdUnits'], [])
       self.assertEqual(targ['inventoryTargeting']['targetedPlacementIds'],
-        placement_ids)
+        expected_placement_ids)
 
       # TODO
       # Check that custom targeting keys and values are correct
