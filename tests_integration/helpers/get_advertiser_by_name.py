@@ -17,13 +17,13 @@ def get_advertiser_by_name(advertiser_name):
   """
 
   client = get_client()
-  company_servicee = client.GetService('CompanyService',
+  company_service = client.GetService('CompanyService',
     version='v201802')
 
   statement = (dfp.StatementBuilder()
     .Where('name = :name')
     .WithBindVariable('name', advertiser_name))
-  response = company_servicee.getCompaniesByStatement(
+  response = company_service.getCompaniesByStatement(
     statement.ToStatement())
 
   if 'results' in response and len(response['results']) > 0:
