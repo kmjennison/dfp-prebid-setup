@@ -7,6 +7,7 @@ from unittest import TestCase
 import settings
 from tests_integration.helpers.get_line_items_for_order import get_line_items_for_order
 from tests_integration.helpers.get_order_by_name import get_order_by_name
+from tests_integration.helpers.get_placement_by_name import get_placement_by_name
 
 now = datetime.now().isoformat()
 
@@ -77,6 +78,11 @@ class NewPrebidPartnerTests(TestCase):
     line_items = get_line_items_for_order(order['id'])
     sorted_line_items = sorted(line_items, key=lambda li: li['costPerUnit']['microAmount'])
 
+    placement_ids = [
+      get_placement_by_name(placements[0])['id'],
+      get_placement_by_name(placements[1])['id']
+    ]
+
     # Make sure line items match what we expect
     print('Validating line items...')
     # print(sorted_line_items[0:2])
@@ -118,8 +124,8 @@ class NewPrebidPartnerTests(TestCase):
       self.assertEqual(targ['geoTargeting'], None)
       self.assertEqual(targ['inventoryTargeting']['targetedAdUnits'], [])
       self.assertEqual(targ['inventoryTargeting']['excludedAdUnits'], [])
-      # TODO: fetch and verify placement IDs
-      # self.assertEqual(targ['inventoryTargeting']['targetedPlacementIds'], [])
+      self.assertEqual(targ['inventoryTargeting']['targetedPlacementIds'],
+        placement_ids)
 
       # TODO
       # Check that custom targeting keys and values are correct
