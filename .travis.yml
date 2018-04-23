@@ -15,7 +15,7 @@ jobs:
     - stage: "Integration Tests"
       script:
         - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in key.json.enc -out key.json -d && python -m unittest discover -p "integration_test_*"; fi'
-        - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; echo "This is a pull request. Not running integration tests."; fi'
+        - 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then echo "This is a pull request. Not running integration tests."; fi'
       python: "2.7"
 env:
   global:
