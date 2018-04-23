@@ -59,7 +59,6 @@ def get_custom_targeting_by_key_name(key_name):
     response = custom_targeting_service.getCustomTargetingValuesByStatement(
         statement.ToStatement())
     if 'results' in response and len(response['results']) > 0:
-      # vals.append(response['results'][0])
       vals = vals + response['results']
       statement.offset += statement.limit
     else:
