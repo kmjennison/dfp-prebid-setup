@@ -16,7 +16,7 @@ jobs:
       script:
         - >
           if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-          openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in tests_integration/googleads.yaml.enc -out tests_integration/googleads.yaml -d
+          openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in tests_integration/googleads.yaml.enc -out tests_integration/googleads.yaml -d &&
           openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in tests_integration/key.json.enc -out tests_integration/key.json -d &&
           python -m unittest discover -p "integration_test_*"
           ; fi
