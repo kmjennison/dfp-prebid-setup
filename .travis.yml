@@ -6,11 +6,13 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
-script:
-  - python -m unittest discover tests
-  # TODO: on non-PRs and master branch, run test against
-  # real DFP
-  # - python -m unittest discover -p "integration_test_*"
+jobs:
+  include:
+    - stage: unit-test
+      script: python -m unittest discover tests
+    - stage: integration-test
+      script: echo "Integration test goes here!"
+      python: "2.7"
 env:
   global:
     - DISABLE_LOGGING=true
