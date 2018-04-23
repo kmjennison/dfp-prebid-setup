@@ -6,5 +6,4 @@ import settings
 
 def get_client():
   print('Settings module file path:')
-  print(settings.GOOGLEADS_YAML_FILE)
   return dfp.DfpClient.LoadFromStorage(settings.GOOGLEADS_YAML_FILE)

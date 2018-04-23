@@ -20,8 +20,8 @@ jobs:
         # https://docs.travis-ci.com/user/encrypting-files/#Encrypting-multiple-files
         - >
           if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-          openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in tests_integration/secret-files.tar.enc -out tests_integration/secret-files.tar -d &&
-          tar xvf tests_integration/secret-files.tar  &&
+          openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in secret-files.tar.enc -out secret-files.tar -d &&
+          tar xvf secret-files.tar  &&
           python -m unittest discover -p "integration_test_*"
           ; fi
         - >
