@@ -8,6 +8,27 @@ install:
   - pip install -r requirements.txt
 script:
   - python -m unittest discover tests
+# https://docs.travis-ci.com/user/build-stages/
+jobs:
+  include:
+    # On master, run integration tests against a test DFP account.
+    - stage: "Integration Tests"
+      if: branch = master
+      script:
+        # We have multiple encrypted files:
+        # https://docs.travis-ci.com/user/encrypting-files/#Encrypting-multiple-files
+        - >
+          if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+          openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in secret-files.tar.enc -out secret-files.tar -d &&
+          tar xvf secret-files.tar &&
+          python -m unittest discover -p "integration_test_*"
+          ; fi
+        - >
+          if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+          echo "This is a pull request. Not running integration tests."
+          ; fi
+      python: "2.7"
 env:
   global:
     - DISABLE_LOGGING=true
+    - secure: "P7keusaTWJVhOFK7EcXQFPkq8hxeKb2V7hQNzkqrmeTLheNVQM4UgTmwrz39tUO4JJ3wmmvZgBwuembQ5Rpwl2Spq3IB0drBSCbC+f7ARtbsgapqbasOfHuXR9/itu8Ha4RJ3fHF+wpt67M6uazMoaoamdHJSypaCXNrCfBSlWUawd3oK1se+zy9jyfm0fK6fdIVg6jWALn88KK6bWyZu9br7CfEIhUJ4sli6auVVU95TIABM4FKLeypOfWkzG8c63+BjKPnXBgNXIkgPa2hq1w4SsqfJEa71D+/0avXxPUHoVBTUJ8maY1BcI+vmhSMzrniqzIcu4B0n0HFc7zbrVZRJzIF9PgS7jh2g52lEJGW1AbyuB6GfNmviW3CfRGkcqUXd0XQVEEbHzEGdbrQDE0+DYt0fW7Y0wyVHQMHdf2aqHDZrCraqROgpq6h1Upx89OYUWRyFw3Qdu0+q94ccGU3ZrdukRBoJjfRbJsb4aOIKRKi6qLWFg2VmkaNEqYCNjisPi7kt+WuYEf/Y4vJN9fjOJBn2WXhRqG9SgQx2rEygkieJWXp+hkCJFHcZ9rfrj3B2SG3mNNf1UyD0d4J2U/DQTQuVL+Ue4gmTqemHtHvNr5uwM62uNU+BhHNVtzQGRJToUzK0xQkM7VOQiNGOx2Tikt64WaOaZK17YzyZwo="

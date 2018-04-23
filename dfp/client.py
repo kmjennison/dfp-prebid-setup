@@ -1,8 +1,8 @@
 
 from googleads import dfp
 
-from settings import GOOGLEADS_YAML_FILE
+import settings
 
 
 def get_client():
-  return dfp.DfpClient.LoadFromStorage(GOOGLEADS_YAML_FILE)
+  return dfp.DfpClient.LoadFromStorage(settings.GOOGLEADS_YAML_FILE)

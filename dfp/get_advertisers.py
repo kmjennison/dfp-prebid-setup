@@ -38,9 +38,8 @@ def create_advertiser(name):
 
   # Display results.
   for advertiser in advertisers:
-    logger.info(u'Created an advertiser with ID "{id}", name "{name}", and '
-      'type "{type}".'.format(id=advertiser['id'], name=advertiser['name'],
-        type=advertiser['type']))
+    logger.info(u'Created an advertiser with name "{name}" and '
+      'type "{type}".'.format(name=advertiser['name'], type=advertiser['type']))
 
   return advertiser
 
@@ -80,17 +79,15 @@ def get_advertiser_id_by_name(name):
     if getattr(settings, 'DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST', False):
       advertiser = create_advertiser(name)
     else:
-      raise DFPObjectNotFound('No advertiser found  with name {0}'.format(
-        name))
+      raise DFPObjectNotFound('No advertiser found with name {0}'.format(name))
   elif len(response['results']) > 1:
     raise BadSettingException(
       'Multiple advertisers found with name {0}'.format(name))
   else:
     advertiser = response['results'][0]
 
-  logger.info(u'Using existing advertiser with ID "{id}", name "{name}", and '
-    'type "{type}".'.format(id=advertiser['id'], name=advertiser['name'],
-      type=advertiser['type']))
+  logger.info(u'Using existing advertiser with name "{name}" and '
+    'type "{type}".'.format(name=advertiser['name'], type=advertiser['type']))
 
   return advertiser['id']
 
