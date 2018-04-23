@@ -20,6 +20,7 @@ now = datetime.now().isoformat()
 
 this_dir = os.path.dirname(os.path.abspath(__file__))
 googleads_file_path = os.path.join(this_dir, 'googleads.yaml')
+print(googleads_file_path)
 
 # Note: these tests expect that the live DFP network has preexisting
 # trafficker, advertiser, and placements.
@@ -74,6 +75,8 @@ class NewPrebidPartnerTests(TestCase):
     GOOGLEADS_YAML_FILE=googleads_file_path)
   @patch('tasks.add_new_prebid_partner.input', return_value='y')
   def test_new_partner(self, mock_input):
+    print(settings.GOOGLEADS_YAML_FILE)
+
     # Add new bidder partner
     print('Creating new bidder partner...')
     tasks.add_new_prebid_partner.main()
