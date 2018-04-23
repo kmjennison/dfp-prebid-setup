@@ -10,8 +10,10 @@ script:
   - python -m unittest discover tests
 jobs:
   include:
-    - stage: "Integration Test"
-      script: echo "Integration test goes here!"
+    # If this is not a PR, decrypt the test account credentials
+    # and run integration tests against the test DFP account.
+    - stage: "Integration Tests"
+      script: 'if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in key.json.enc -out key.json -d && python -m unittest discover -p "integration_test_*" else echo "This is a pull request. Not running integration tests."; fi'
       python: "2.7"
 env:
   global:
