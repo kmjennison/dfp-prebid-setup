@@ -44,14 +44,12 @@ def get_user_id_by_email(email_address):
     no_user_found = True
 
   if no_user_found:
-    raise DFPObjectNotFound('No DFP user found with email address {0}'.format(
-      email_address))
+    raise DFPObjectNotFound('No DFP user found with given email address.')
 
   # Only get the first user in case there are multiple matches.
   user = response['results'][0]
 
-  logger.info(u'Found user with email "{email}" and name {name}.'.format(
-    email=user['email'], name=user['name']))
+  logger.info(u'Found user with the given email address.')
 
   return user['id']
 

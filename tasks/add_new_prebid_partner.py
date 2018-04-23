@@ -321,7 +321,6 @@ def main():
     Going to create {name_start_format}{num_line_items}{format_end} new line items.
       {name_start_format}Order{format_end}: {value_start_format}{order_name}{format_end}
       {name_start_format}Advertiser{format_end}: {value_start_format}{advertiser}{format_end}
-      {name_start_format}Owner{format_end}: {value_start_format}{user_email}{format_end}
 
     Line items will have targeting:
       {name_start_format}hb_pb{format_end} = {value_start_format}{prices_summary}{format_end}
