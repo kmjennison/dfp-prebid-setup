@@ -6,11 +6,11 @@ python:
   - "3.6"
 install:
   - pip install -r requirements.txt
+script:
+  - python -m unittest discover tests
 jobs:
   include:
-    - stage: unit-test
-      script: python -m unittest discover tests
-    - stage: integration-test
+    - stage: "Integration Test"
       script: echo "Integration test goes here!"
       python: "2.7"
 env:
