@@ -18,6 +18,9 @@ from tests_integration.helpers.get_placement_by_name import get_placement_by_nam
 
 now = datetime.now().isoformat()
 
+this_dir = os.path.dirname(os.path.abspath(__file__))
+googleads_file_path = os.path.join(this_dir, 'googleads.yaml')
+
 # Note: these tests expect that the live DFP network has preexisting
 # trafficker, advertiser, and placements.
 email = os.environ['INTEGRATION_TEST_TRAFFICKER_EMAIL']
@@ -67,7 +70,8 @@ class NewPrebidPartnerTests(TestCase):
     PREBID_BIDDER_CODE=bidder_code,
     PREBID_PRICE_BUCKETS=price_buckets,
     DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False,
-    DFP_USE_EXISTING_ORDER_IF_EXISTS=False)
+    DFP_USE_EXISTING_ORDER_IF_EXISTS=False,
+    GOOGLEADS_YAML_FILE=googleads_file_path)
   @patch('tasks.add_new_prebid_partner.input', return_value='y')
   def test_new_partner(self, mock_input):
     # Add new bidder partner
