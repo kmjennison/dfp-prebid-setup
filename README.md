@@ -39,7 +39,6 @@ _You will need credentials to access your DFP account programmatically. This sum
 5. In `googleads.yaml`, set the required fields:
    * `application_name` is the name of the application you used to get your Google developer credentials
    * `network_code` is your DFP network number; e.g., for `https://www.google.com/dfp/12398712#delivery`, the network code is `12398712`.
-   * `service_account_email` is the account email for the Google developer credentials
 
 ### Verifying Setup
 Let's try it out! From the top level directory, run
