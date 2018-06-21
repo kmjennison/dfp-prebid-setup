@@ -37,7 +37,7 @@ _You will need credentials to access your DFP account programmatically. This sum
    * Rename the Google credentials key you previously downloaded (`[something].json`) to `key.json` and move it to the root of this repository
 4. Make a copy of `googleads.example.yaml` and name it `googleads.yaml`.
 5. In `googleads.yaml`, set the required fields:
-   * `application_name` is the name of the application you used to get your Google developer credentials
+   * `application_name` is the name of the Google project you created when creating the service account credentials. It should appear in the top-left of the [credentials page](https://console.developers.google.com/apis/credentials).
    * `network_code` is your DFP network number; e.g., for `https://www.google.com/dfp/12398712#delivery`, the network code is `12398712`.
 
 ### Verifying Setup
