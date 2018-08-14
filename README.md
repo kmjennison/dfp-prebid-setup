@@ -1,28 +1,30 @@
 [![Build Status](https://travis-ci.org/kmjennison/dfp-prebid-setup.svg?branch=master)](https://travis-ci.org/kmjennison/dfp-prebid-setup)
 
-# DFP Setup Tool for Prebid
-An automated DFP line item generator for [Prebid.js](http://prebid.org/)
+# Setup Tool for Prebid and GAM (previously DFP)
+An automated line item generator for [Prebid.js](http://prebid.org/) and Google Ad Manager (previously DFP)
 
 ## Overview
-When setting up Prebid, your ad ops team often has to create [hundreds of line items](http://prebid.org/adops.html) in Doubleclick.
+When setting up Prebid, your ad ops team often has to create [hundreds of line items](http://prebid.org/adops.html) in Google Ad Manager (GAM).
 
 This tool automates setup for new header bidding partners. You define the advertiser, placements, and Prebid settings; then, it creates an order with one line item per price level, attaches creatives, and sets placement and Prebid key-value targeting.
 
 While this tool covers typical use cases, it might not fit your needs. Check out the [limitations](#limitations) before you dive in.
 
+_Note: Doubleclick for Publishers (DFP) was recently renamed to Google Ad Manager (GAM), so this repository may refer to GAM as DFP._
+
 ## Getting Started
 
 ### Creating Google Credentials
-_You will need credentials to access your DFP account programmatically. This summarizes steps from [DFP docs](https://developers.google.com/doubleclick-publishers/docs/authentication) and the DFP Python libary [auth guide](https://github.com/googleads/googleads-python-lib)._
+_You will need credentials to access your GAM account programmatically. This summarizes steps from [GAM docs](https://developers.google.com/ad-manager/docs/authentication) and the Google Ads Python libary [auth guide](https://github.com/googleads/googleads-python-lib)._
 
-1. If you haven't yet, sign up for a [DFP account](https://www.doubleclickbygoogle.com/solutions/revenue-management/dfp/).
+1. If you haven't yet, sign up for a [GAM account](https://admanager.google.com/).
 2. Create Google developer credentials
    * Go to the [Google Developers Console Credentials page](https://console.developers.google.com/apis/credentials).
    * On the **Credentials** page, select **Create credentials**, then select **Service account key**.
    * Select **New service account**, and select JSON key type. You can leave the role blank.
    * Click **Create** to download a file containing a `.json` private key.
-3. Enable API access to DFP
-   * Sign into your [DFP account](https://www.google.com/dfp/). You must have admin rights.
+3. Enable API access to GAM
+   * Sign into your [GAM account](https://admanager.google.com/). You must have admin rights.
    * In the **Admin** section, select **Global settings**
    * Ensure that **API access** is enabled.
    * Click the **Add a service account user** button.
@@ -38,14 +40,14 @@ _You will need credentials to access your DFP account programmatically. This sum
 4. Make a copy of `googleads.example.yaml` and name it `googleads.yaml`.
 5. In `googleads.yaml`, set the required fields:
    * `application_name` is the name of the Google project you created when creating the service account credentials. It should appear in the top-left of the [credentials page](https://console.developers.google.com/apis/credentials).
-   * `network_code` is your DFP network number; e.g., for `https://www.google.com/dfp/12398712#delivery`, the network code is `12398712`.
+   * `network_code` is your GAM network number; e.g., for `https://admanager.google.com/12398712#delivery`, the network code is `12398712`.
 
 ### Verifying Setup
 Let's try it out! From the top level directory, run
 
 `python -m dfp.get_orders`
 
-and you should see all of the orders in your DFP account.
+and you should see all of the orders in your GAM account.
 
 ## Creating Line Items
 
@@ -53,10 +55,10 @@ Modify the following settings in `settings.py`:
 
 Setting | Description | Type
 ------------ | ------------- | -------------
-`DFP_ORDER_NAME` | What you want to call your new DFP order | string
-`DFP_USER_EMAIL_ADDRESS` | The email of the DFP user who will be the trafficker for the created order | string
-`DFP_ADVERTISER_NAME` | The name of the DFP advertiser for the created order | string
-`DFP_TARGETED_PLACEMENT_NAMES` | The names of DFP placements the line items should target | array of strings
+`DFP_ORDER_NAME` | What you want to call your new GAM order | string
+`DFP_USER_EMAIL_ADDRESS` | The email of the GAM user who will be the trafficker for the created order | string
+`DFP_ADVERTISER_NAME` | The name of the GAM advertiser for the created order | string
+`DFP_TARGETED_PLACEMENT_NAMES` | The names of GAM placements the line items should target | array of strings
 `DFP_PLACEMENT_SIZES` | The creative sizes for the targeted placements | array of objects (e.g., `[{'width': '728', 'height': '90'}]`)
 `PREBID_BIDDER_CODE` | The value of [`hb_bidder`](http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.bidderSettings) for this partner | string
 `PREBID_PRICE_BUCKETS` | The [price granularity](http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity); used to set `hb_pb` for each line item | object
@@ -65,9 +67,9 @@ Then, from the root of the repository, run:
 
 `python -m tasks.add_new_prebid_partner`
 
-You should be all set! Review your order, line items, and creatives to make sure they are correct. Then, approve the order in DFP.
+You should be all set! Review your order, line items, and creatives to make sure they are correct. Then, approve the order in GAM.
 
-*Note: DFP might show a "Needs creatives" warning on the order for ~15 minutes after order creation. Typically, the warning is incorrect and will disappear on its own.*
+*Note: GAM might show a "Needs creatives" warning on the order for ~15 minutes after order creation. Typically, the warning is incorrect and will disappear on its own.*
 
 ## Additional Settings
 
@@ -75,9 +77,9 @@ In most cases, you won't need to modify these settings.
 
 Setting | Description | Default
 ------------ | ------------- | -------------
-`DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST` | Whether we should create the advertiser with `DFP_ADVERTISER_NAME` in DFP if it does not exist | `False`
+`DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST` | Whether we should create the advertiser with `DFP_ADVERTISER_NAME` in GAM if it does not exist | `False`
 `DFP_USE_EXISTING_ORDER_IF_EXISTS` | Whether we should modify an existing order if one already exists with name `DFP_ORDER_NAME` | `False`
-`DFP_NUM_CREATIVES_PER_LINE_ITEM` | The number of duplicate creatives to attach to each line item. Due to [DFP limitations](https://support.google.com/dfp_sb/answer/82245?hl=en), this should be equal to or greater than the number of ad units you serve on a given page. | the length of setting `DFP_TARGETED_PLACEMENT_NAMES`
+`DFP_NUM_CREATIVES_PER_LINE_ITEM` | The number of duplicate creatives to attach to each line item. Due to GAM limitations, this should be equal to or greater than the number of ad units you serve on a given page. | the length of setting `DFP_TARGETED_PLACEMENT_NAMES`
 `DFP_CURRENCY_CODE` | The currency to use in line items. | `'USD'`
 
 ## Limitations
