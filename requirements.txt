@@ -4,3 +4,12 @@ googleads==11.0.0
 mock==2.0.0
 pycryptodome==3.6.6
 PyYAML==3.12
+flake8==3.2.1
+flake8-comprehensions==1.2.1
+flake8-coding==1.3.0
+flake8-tidy-imports==1.0.3
+isort==4.2.5
+mccabe==0.5.2
+pycodestyle==2.2.0
+pyflakes==1.3.0
+yamllint==1.6.0
