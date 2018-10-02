@@ -1,4 +1,5 @@
 node_modules
+.*swp
 .env
 key.p12
 key.pem

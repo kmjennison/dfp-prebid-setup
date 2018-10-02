@@ -1,0 +1,29 @@
+# http://editorconfig.org
+
+root = true
+
+[*]
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+insert_final_newline = true
+charset = utf-8
+end_of_line = lf
+
+[*.html]
+indent_size = 2
+
+[*.{js,jsx}]
+indent_size = 2
+
+[*.css]
+indent_size = 2
+
+[*.php]
+indent_size = 2
+
+[*.yml]
+indent_size = 2
+
+[Vagrantfile]
+indent_size = 2
