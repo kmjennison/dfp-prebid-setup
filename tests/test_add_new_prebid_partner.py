@@ -15,6 +15,7 @@ email = 'fakeuser@example.com'
 advertiser = 'My Advertiser'
 order = 'My Cool Order'
 placements = ['My Site Leaderboard', 'Another Placement']
+ad_units = ['Leaderboard Ad Unit', 'Another Ad Unit']
 sizes = [
   {
     'width': '300',
@@ -39,6 +40,7 @@ prices = get_prices_array(price_buckets)
   DFP_ADVERTISER_NAME=advertiser,
   DFP_ORDER_NAME=order,
   DFP_TARGETED_PLACEMENT_NAMES=placements,
+  DFP_TARGETED_AD_UNIT_NAMES=ad_units,
   DFP_PLACEMENT_SIZES = sizes,
   PREBID_BIDDER_CODE=bidder_code,
   PREBID_PRICE_BUCKETS=price_buckets,
@@ -70,11 +72,12 @@ class AddNewPrebidPartnerTests(TestCase):
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
 
-  def test_missing_placement_setting(self, mock_dfp_client):
+  def test_missing_placement_and_ad_units_setting(self, mock_dfp_client):
     """
     It throws an exception with a missing setting.
     """
     settings.DFP_TARGETED_PLACEMENT_NAMES = None
+    settings.DFP_TARGETED_AD_UNIT_NAMES = None
     with self.assertRaises(MissingSettingException):
       tasks.add_new_prebid_partner.main()
 
@@ -96,7 +99,7 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     tasks.add_new_prebid_partner.main()
     args, kwargs = mock_setup_partners.call_args
-    self.assertEqual(args[8], 'EUR')
+    self.assertEqual(args[9], 'EUR')
 
   def test_price_bucket_validity_missing_key(self, mock_dfp_client):
     """
@@ -181,7 +184,7 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     tasks.add_new_prebid_partner.main()
     args, kwargs = mock_setup_partners.call_args
-    num_creatives = args[7]
+    num_creatives = args[8]
     self.assertEqual(num_creatives, 5)
 
   @patch('settings.DFP_NUM_CREATIVES_PER_LINE_ITEM', None, create=True)
@@ -195,7 +198,7 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     tasks.add_new_prebid_partner.main()
     args, kwargs = mock_setup_partners.call_args
-    num_creatives = args[7]
+    num_creatives = args[8]
     self.assertEqual(num_creatives, len(placements))
 
   @patch('tasks.add_new_prebid_partner.create_line_item_configs')
@@ -224,17 +227,10 @@ class AddNewPrebidPartnerTests(TestCase):
       return_value=246810)
     mock_create_orders.create_order = MagicMock(return_value=1357913)
 
-    tasks.add_new_prebid_partner.setup_partner(
-      user_email=email,
-      advertiser_name=advertiser,
-      order_name=order,
-      placements=placements,
-      bidder_code=bidder_code,
-      sizes=sizes,
-      prices=prices,
-      num_creatives=2,
-      currency_code='USD',
-    )
+    tasks.add_new_prebid_partner.setup_partner(user_email=email, advertiser_name=advertiser, order_name=order,
+                                               placements=placements, ad_units=[], sizes=sizes,
+                                               bidder_code=bidder_code, prices=prices, num_creatives=2,
+                                               currency_code='USD')
 
     mock_get_users.get_user_id_by_email.assert_called_once_with(email)
     mock_get_placements.get_placement_ids_by_name.assert_called_once_with(
@@ -254,21 +250,13 @@ class AddNewPrebidPartnerTests(TestCase):
     It creates the expected line item configs.
     """
 
-    configs = tasks.add_new_prebid_partner.create_line_item_configs(
-      prices=[100000, 200000, 300000],
-      order_id=1234567,
-      placement_ids=[9876543, 1234567],
-      bidder_code='iamabiddr',
-      sizes=[{
-        'width': '728',
-        'height': '90'
-      }],
-      hb_bidder_key_id=999999,
-      hb_pb_key_id=888888,
-      currency_code='HUF',
-      HBBidderValueGetter=MagicMock(return_value=3434343434),
-      HBPBValueGetter=MagicMock(return_value=5656565656),
-    )
+    configs = tasks.add_new_prebid_partner.create_line_item_configs(prices=[100000, 200000, 300000], order_id=1234567,
+                                                                    placement_ids=[9876543, 1234567], ad_unit_ids=None,
+                                                                    bidder_code='iamabiddr', sizes=[{
+            'width': '728',
+            'height': '90'
+        }], hb_bidder_key_id=999999, hb_pb_key_id=888888, currency_code='HUF', HBBidderValueGetter=MagicMock(
+            return_value=3434343434), HBPBValueGetter=MagicMock(return_value=5656565656))
 
     self.assertEqual(len(configs), 3)
 
