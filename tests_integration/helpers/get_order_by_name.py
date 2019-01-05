@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 from dfp.client import get_client
 
@@ -20,9 +20,9 @@ def get_order_by_name(order_name):
   print('Getting order with order name {0}...'.format(order_name))
 
   client = get_client()
-  order_service = client.GetService('OrderService', version='v201802')
+  order_service = client.GetService('OrderService', version='v201811')
 
-  statement = (dfp.StatementBuilder()
+  statement = (ad_manager.StatementBuilder()
     .Where('name = :name')
     .WithBindVariable('name', order_name))
   response = order_service.getOrdersByStatement(statement.ToStatement())

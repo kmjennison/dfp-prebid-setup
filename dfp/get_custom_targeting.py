@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 from dfp.client import get_client
 
@@ -21,7 +21,7 @@ def get_key_id_by_name(name):
 
   dfp_client = get_client()
   custom_targeting_service = dfp_client.GetService('CustomTargetingService',
-    version='v201802')
+    version='v201811')
 
   # Get a key by name.
   query = ('WHERE name = :name')
@@ -32,7 +32,7 @@ def get_key_id_by_name(name):
       'value': name
     }
   }]
-  targeting_key_statement = dfp.FilterStatement(query, values)
+  targeting_key_statement = ad_manager.FilterStatement(query, values)
 
   response = custom_targeting_service.getCustomTargetingKeysByStatement(
       targeting_key_statement.ToStatement())
@@ -57,7 +57,7 @@ def get_targeting_by_key_name(name):
 
   dfp_client = get_client()
   custom_targeting_service = dfp_client.GetService('CustomTargetingService',
-    version='v201802')
+    version='v201811')
 
   # Get a key by name.
   query = ('WHERE name = :name')
@@ -68,7 +68,7 @@ def get_targeting_by_key_name(name):
       'value': name
     }
   }]
-  targeting_key_statement = dfp.FilterStatement(query, values)
+  targeting_key_statement = ad_manager.FilterStatement(query, values)
 
   response = custom_targeting_service.getCustomTargetingKeysByStatement(
       targeting_key_statement.ToStatement())
@@ -80,7 +80,7 @@ def get_targeting_by_key_name(name):
     key_values = []
 
     query = "WHERE status = 'ACTIVE' AND customTargetingKeyId IN (%s)" % str(key['id'])
-    statement = dfp.FilterStatement(query)
+    statement = ad_manager.FilterStatement(query)
 
     response = custom_targeting_service.getCustomTargetingValuesByStatement(
         statement.ToStatement())
@@ -92,7 +92,7 @@ def get_targeting_by_key_name(name):
           'displayName': custom_val['displayName'],
           'customTargetingKeyId': custom_val['customTargetingKeyId']
         })
-      statement.offset += dfp.SUGGESTED_PAGE_LIMIT
+      statement.offset += ad_manager.SUGGESTED_PAGE_LIMIT
       response = custom_targeting_service.getCustomTargetingValuesByStatement(
         statement.ToStatement())
 

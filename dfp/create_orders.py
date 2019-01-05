@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 import settings
 import dfp.get_orders
@@ -65,7 +65,7 @@ def create_order(order_name, advertiser_id, trafficker_id):
       create_order_config(name=order_name, advertiser_id=advertiser_id,
         trafficker_id=trafficker_id)
     ]
-    order_service = dfp_client.GetService('OrderService', version='v201802')
+    order_service = dfp_client.GetService('OrderService', version='v201811')
     orders = order_service.createOrders(orders)
 
     order = orders[0]

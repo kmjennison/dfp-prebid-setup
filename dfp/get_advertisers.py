@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 import settings
 from dfp.client import get_client
@@ -25,7 +25,7 @@ def create_advertiser(name):
     an integer: the advertiser's DFP ID
   """
   dfp_client = get_client()
-  company_service = dfp_client.GetService('CompanyService', version='v201802')
+  company_service = dfp_client.GetService('CompanyService', version='v201811')
 
   advertisers_config = [
     {
@@ -53,7 +53,7 @@ def get_advertiser_id_by_name(name):
     an integer: the advertiser's DFP ID
   """
   dfp_client = get_client()
-  company_service = dfp_client.GetService('CompanyService', version='v201802')
+  company_service = dfp_client.GetService('CompanyService', version='v201811')
 
   # Filter by name.
   query = 'WHERE name = :name'
@@ -64,7 +64,7 @@ def get_advertiser_id_by_name(name):
            'value': name
        }},
   ]
-  statement = dfp.FilterStatement(query, values)
+  statement = ad_manager.FilterStatement(query, values)
 
   response = company_service.getCompaniesByStatement(statement.ToStatement())
 

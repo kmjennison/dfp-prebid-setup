@@ -1,6 +1,6 @@
 
 # From: https://github.com/googleads/googleads-python-lib/blob/master/googleads.yaml
-dfp:
+ad_manager:
   #############################################################################
   # Required Fields                                                           #
   #############################################################################

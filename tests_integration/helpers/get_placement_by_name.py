@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 from dfp.client import get_client
 
@@ -18,9 +18,9 @@ def get_placement_by_name(placement_name):
 
   client = get_client()
   placement_service = client.GetService('PlacementService',
-    version='v201802')
+    version='v201811')
 
-  statement = (dfp.StatementBuilder()
+  statement = (ad_manager.StatementBuilder()
     .Where('name = :name')
     .WithBindVariable('name', placement_name))
   response = placement_service.getPlacementsByStatement(

@@ -7,7 +7,7 @@ import dfp.create_line_items
 from dfp.exceptions import BadSettingException, MissingSettingException
 
 
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class DFPCreateLineItemsTests(TestCase):
 
   def test_create_line_items_call(self, mock_dfp_client):

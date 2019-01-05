@@ -1,6 +1,6 @@
 
 import logging
-from googleads import dfp
+from googleads import ad_manager
 
 from dfp.client import get_client
 
@@ -19,7 +19,7 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
   """
   dfp_client = get_client()
   lica_service = dfp_client.GetService(
-    'LineItemCreativeAssociationService', version='v201802')
+    'LineItemCreativeAssociationService', version='v201811')
 
   sizes = []
 

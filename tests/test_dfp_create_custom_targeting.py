@@ -5,7 +5,7 @@ from mock import MagicMock, Mock, patch
 import dfp.create_custom_targeting
 
 
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class DFPCreateCustomTargetingTests(TestCase):
 
   def test_create_targeting_key(self, mock_dfp_client):

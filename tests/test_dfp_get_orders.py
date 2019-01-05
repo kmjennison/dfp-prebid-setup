@@ -6,7 +6,7 @@ from mock import MagicMock, Mock, patch
 import dfp.get_orders
 
 
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class DFPServiceTests(TestCase):
 
   def test_get_all_orders(self, mock_dfp_client):

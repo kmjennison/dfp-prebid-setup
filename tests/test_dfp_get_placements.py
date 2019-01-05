@@ -10,7 +10,7 @@ from dfp.exceptions import (
 )
 
 
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class DFPGetPlacementsTests(TestCase):
 
   def test_get_placement_by_name_call(self, mock_dfp_client):
