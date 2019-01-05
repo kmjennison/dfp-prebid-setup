@@ -7,7 +7,7 @@ import settings
 import dfp.associate_line_items_and_creatives
 
 
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class DFPCreateLICAsTests(TestCase):
 
   def test_association(self, mock_dfp_client):

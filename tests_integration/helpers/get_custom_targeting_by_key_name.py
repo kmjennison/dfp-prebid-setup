@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 from dfp.client import get_client
 
@@ -18,9 +18,9 @@ def get_key_by_name(key_name):
 
   client = get_client()
   custom_targeting_service = client.GetService('CustomTargetingService',
-    version='v201802')
+    version='v201811')
 
-  statement = (dfp.StatementBuilder()
+  statement = (ad_manager.StatementBuilder()
     .Where('name = :name')
     .WithBindVariable('name', key_name))
   response = custom_targeting_service.getCustomTargetingKeysByStatement(
@@ -46,9 +46,9 @@ def get_custom_targeting_by_key_name(key_name):
 
   client = get_client()
   custom_targeting_service = client.GetService('CustomTargetingService',
-    version='v201802')
+    version='v201811')
 
-  statement = (dfp.StatementBuilder()
+  statement = (ad_manager.StatementBuilder()
     .Where('customTargetingKeyId = :customTargetingKeyId')
     .WithBindVariable('customTargetingKeyId', key_id))
   response = custom_targeting_service.getCustomTargetingValuesByStatement(

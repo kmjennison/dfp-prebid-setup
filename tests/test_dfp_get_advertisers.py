@@ -1,7 +1,7 @@
 
 from unittest import TestCase
 
-from googleads import dfp
+from googleads import ad_manager
 from mock import MagicMock, Mock, patch
 
 import settings
@@ -13,7 +13,7 @@ from dfp.exceptions import (
 )
 
 
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class DFPGetAdvertisersTests(TestCase):
 
   def test_get_advertiser_call(self, mock_dfp_client):

@@ -43,7 +43,7 @@ prices = get_prices_array(price_buckets)
   PREBID_BIDDER_CODE=bidder_code,
   PREBID_PRICE_BUCKETS=price_buckets,
   DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST=False)
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class AddNewPrebidPartnerTests(TestCase):
 
   def test_missing_email_setting(self, mock_dfp_client):

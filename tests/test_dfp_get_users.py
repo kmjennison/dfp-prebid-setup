@@ -1,7 +1,7 @@
 
 from unittest import TestCase
 
-from googleads import dfp
+from googleads import ad_manager
 from mock import MagicMock, Mock, patch
 
 import settings
@@ -9,7 +9,7 @@ import dfp.get_users
 from dfp.exceptions import DFPObjectNotFound, MissingSettingException
 
 
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class DFPGetUsersTests(TestCase):
 
   def test_get_user_call(self, mock_dfp_client):

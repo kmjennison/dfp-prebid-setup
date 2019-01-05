@@ -7,7 +7,7 @@ import dfp.create_orders
 from dfp.exceptions import BadSettingException, MissingSettingException
 
 
-@patch('googleads.dfp.DfpClient.LoadFromStorage')
+@patch('googleads.ad_manager.AdManagerClient.LoadFromStorage')
 class DFPCreateOrderTests(TestCase):
 
   @patch('dfp.get_orders.get_order_by_name')

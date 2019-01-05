@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 import settings
 from dfp.client import get_client
@@ -21,7 +21,7 @@ def get_user_id_by_email(email_address):
     an integer: the user's DFP ID
   """
   dfp_client = get_client()
-  user_service = dfp_client.GetService('UserService', version='v201802')
+  user_service = dfp_client.GetService('UserService', version='v201811')
 
   # Filter by email address.
   query = 'WHERE email = :email'
@@ -32,7 +32,7 @@ def get_user_id_by_email(email_address):
            'value': email_address
        }},
   ]
-  statement = dfp.FilterStatement(query, values)
+  statement = ad_manager.FilterStatement(query, values)
 
   response = user_service.getUsersByStatement(statement.ToStatement())
 

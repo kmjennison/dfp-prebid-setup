@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 from dfp.client import get_client
 
@@ -17,8 +17,8 @@ def get_line_items_for_order(order_id):
   """
   print('Getting line items for order ID {0}...'.format(order_id))
   client = get_client()
-  line_item_service = client.GetService('LineItemService', version='v201802')
-  statement = (dfp.StatementBuilder()
+  line_item_service = client.GetService('LineItemService', version='v201811')
+  statement = (ad_manager.StatementBuilder()
     .Where('OrderId = :order_id')
     .WithBindVariable('order_id', order_id))
 

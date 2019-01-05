@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 from dfp.client import get_client
 # from tests_integration.helpers.get_order_by_name import get_order_by_name
@@ -17,9 +17,9 @@ def archive_order_by_name(order_name):
     None
   """
   client = get_client()
-  order_service = client.GetService('OrderService', version='v201802')
+  order_service = client.GetService('OrderService', version='v201811')
 
-  statement = (dfp.StatementBuilder()
+  statement = (ad_manager.StatementBuilder()
     .Where('name = :name')
     .WithBindVariable('name', order_name))
   response = order_service.performOrderAction(
