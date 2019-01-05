@@ -3,4 +3,4 @@ future==0.17.1
 googleads==11.0.0
 mock==2.0.0
 pycryptodome==3.7.2
-PyYAML==3.12
+PyYAML==4.2b4
