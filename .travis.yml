@@ -16,12 +16,12 @@ jobs:
       if: branch = master
       script:
         # We have multiple encrypted files:
-        # https://docs.travis-ci.com/user/encrypting-files/#Encrypting-multiple-files
+        # https://docs.travis-ci.com/user/encrypting-files/#encrypting-multiple-files
         # These are the key.json and googleads.yaml for the DFP network
         # we use for integration tests.
         - >
           if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
-          openssl aes-256-cbc -K $encrypted_763705f75361_key -iv $encrypted_763705f75361_iv -in secret-files.tar.enc -out secret-files.tar -d &&
+          openssl aes-256-cbc -K $encrypted_0ac55241a467_key -iv $encrypted_0ac55241a467_iv -in secret-files.tar.enc -out secret-files.tar -d &&
           tar xvf secret-files.tar &&
           python -m unittest discover -p "integration_test_*"
           ; fi
