@@ -18,7 +18,7 @@ DFP_USER_EMAIL_ADDRESS = None
 # The exact name of the DFP advertiser for the created order
 DFP_ADVERTISER_NAME = None
 
-# Names of placements the line items should target.
+# Names of placements the line items should target. Has priority over ad units.
 DFP_TARGETED_PLACEMENT_NAMES = []
 
 # Sizes of placements. These are used to set line item and creative sizes.
@@ -32,6 +32,10 @@ DFP_PLACEMENT_SIZES = [
     'height': '90'
   },
 ]
+
+# If no placement should be used, for example for a run of network. If True, 
+# DFP_TARGETED_PLACEMENT_NAMES still need to be set to an empty array.
+DFP_ALLOW_NO_INVENTORY_TARGETING = False
 
 # Whether we should create the advertiser in DFP if it does not exist.
 # If False, the program will exit rather than create an advertiser.
@@ -58,11 +62,22 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 # The currency to use in DFP when setting line item CPMs. Defaults to 'USD'.
 # DFP_CURRENCY_CODE = 'USD'
 
+# Optional
+# Determine if line items and creative should be associated in batch.
+# Useful to avoid timeouts if many of them have to be created.
+# DFP_ASSOCIATIONS_BATCH = 50
+
 #########################################################################
 # PREBID SETTINGS
 #########################################################################
 
 PREBID_BIDDER_CODE = None
+
+# Whether DFP targeting keys should be created following Bidders' Params structure.
+# This is used when it's required to send all bids to the ad server.
+# See: http://prebid.org/dev-docs/bidders.html
+# And: http://prebid.org/adops/send-all-bids-adops.html
+PREBID_BIDDER_PARAMS = False
 
 # Price buckets. This should match your Prebid settings for the partner. See:
 # http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity

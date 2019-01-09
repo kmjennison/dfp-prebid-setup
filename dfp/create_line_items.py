@@ -3,6 +3,7 @@ from googleads import ad_manager
 
 from dfp.client import get_client
 
+import settings
 
 def create_line_items(line_items):
   """
@@ -25,7 +26,7 @@ def create_line_items(line_items):
 
 def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
   sizes, hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id,
-  currency_code='USD'):
+  currency_code='USD', root_ad_unit_id=None):
   """
   Creates a line item config object.
 
@@ -56,12 +57,17 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
   # https://github.com/googleads/googleads-python-lib/blob/master/examples/dfp/v201802/line_item_service/target_custom_criteria.py
   # create custom criterias
 
-  hb_bidder_criteria = {
-    'xsi_type': 'CustomCriteria',
-    'keyId': hb_bidder_key_id,
-    'valueIds': [hb_bidder_value_id],
-    'operator': 'IS'
+  inventory = {
+    'targetedPlacementIds': placement_ids
   }
+
+  if not root_ad_unit_id is None:
+    inventory = {
+      'targetedAdUnits': [{
+        'adUnitId': root_ad_unit_id,
+        'includeDescendants': 'true'
+      }]
+    }
 
   hb_pb_criteria = {
     'xsi_type': 'CustomCriteria',
@@ -70,13 +76,24 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
     'operator': 'IS'
   }
 
-  # The custom criteria will resemble:
-  # (hb_bidder_criteria.key == hb_bidder_criteria.value AND
-  #    hb_pb_criteria.key == hb_pb_criteria.value)
+  children = [hb_pb_criteria]
+
+  bidder_params = getattr(settings, 'PREBID_BIDDER_PARAMS', None)
+
+  if not bidder_params is True:
+    hb_bidder_criteria = {
+      'xsi_type': 'CustomCriteria',
+      'keyId': hb_bidder_key_id,
+      'valueIds': [hb_bidder_value_id],
+      'operator': 'IS'
+    }
+
+    children.append(hb_bidder_criteria)
+
   top_set = {
     'xsi_type': 'CustomCriteriaSet',
     'logicalOperator': 'AND',
-    'children': [hb_bidder_criteria, hb_pb_criteria]
+    'children': children
   }
 
   # https://developers.google.com/doubleclick-publishers/docs/reference/v201802/LineItemService.LineItem
@@ -85,9 +102,7 @@ def create_line_item_config(name, order_id, placement_ids, cpm_micro_amount,
     'orderId': order_id,
     # https://developers.google.com/doubleclick-publishers/docs/reference/v201802/LineItemService.Targeting
     'targeting': {
-      'inventoryTargeting': {
-        'targetedPlacementIds': placement_ids
-      },
+      'inventoryTargeting': inventory,
       'customTargeting': top_set,
     },
     'startDateTimeType': 'IMMEDIATELY',
