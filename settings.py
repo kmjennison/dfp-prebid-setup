@@ -66,14 +66,27 @@ PREBID_BIDDER_CODE = None
 
 # Price buckets. This should match your Prebid settings for the partner. See:
 # http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity
-# FIXME: this should be an array of buckets. See:
 # https://github.com/prebid/Prebid.js/blob/8fed3d7aaa814e67ca3efc103d7d306cab8c692c/src/cpmBucketManager.js
-PREBID_PRICE_BUCKETS = {
-  'precision': 2,
-  'min' : 0,
-  'max' : 20,
-  'increment': 0.10,
-}
+PREBID_PRICE_BUCKETS = [
+	{
+	  'precision': 2,
+	  'min' : 0,
+	  'max' : 1,
+	  'increment': 0.01,
+	},
+	{
+	  'precision': 2,
+	  'min' : 1.10,
+	  'max' : 5.00,
+	  'increment': 0.10,
+	},
+	{
+	  'precision': 2,
+	  'min' : 5.50,
+	  'max' : 10,
+	  'increment': 0.50,
+	},
+]
 
 #########################################################################
 

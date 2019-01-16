@@ -186,7 +186,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
     price_str = num_to_str(micro_amount_to_num(price))
 
     # Autogenerate the line item name.
-    line_item_name = u'{bidder_code}: HB ${price}'.format(
+    line_item_name = u'{bidder_code}: HB {price}'.format(
       bidder_code=bidder_code,
       price=price_str
     )
@@ -211,7 +211,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
 
   return line_items_config
 
-def check_price_buckets_validity(price_buckets):
+def check_price_buckets_validity(price_bucketlist):
   """
   Validate that the price_buckets object contains all required keys and the
   values are the expected types.
@@ -221,31 +221,31 @@ def check_price_buckets_validity(price_buckets):
   Returns:
     None
   """
-
-  try:
-    pb_precision = price_buckets['precision']
-    pb_min = price_buckets['min']
-    pb_max = price_buckets['max']
-    pb_increment = price_buckets['increment']
-  except KeyError:
-    raise BadSettingException('The setting "PREBID_PRICE_BUCKETS" '
-      'must contain keys "precision", "min", "max", and "increment".')
+  for price_buckets in price_bucketlist:
+    try:
+      pb_precision = price_buckets['precision']
+      pb_min = price_buckets['min']
+      pb_max = price_buckets['max']
+      pb_increment = price_buckets['increment']
+    except KeyError:
+      raise BadSettingException('The setting "PREBID_PRICE_BUCKETS" '
+        'must contain keys "precision", "min", "max", and "increment".')
   
-  if not (isinstance(pb_precision, int) or isinstance(pb_precision, float)):
-    raise BadSettingException('The "precision" key in "PREBID_PRICE_BUCKETS" '
-      'must be a number.')
+    if not (isinstance(pb_precision, int) or isinstance(pb_precision, float)):
+      raise BadSettingException('The "precision" key in "PREBID_PRICE_BUCKETS" '
+        'must be a number.')
 
-  if not (isinstance(pb_min, int) or isinstance(pb_min, float)):
-    raise BadSettingException('The "min" key in "PREBID_PRICE_BUCKETS" '
-      'must be a number.')
+    if not (isinstance(pb_min, int) or isinstance(pb_min, float)):
+      raise BadSettingException('The "min" key in "PREBID_PRICE_BUCKETS" '
+        'must be a number.')
 
-  if not (isinstance(pb_max, int) or isinstance(pb_max, float)):
-    raise BadSettingException('The "max" key in "PREBID_PRICE_BUCKETS" '
-      'must be a number.')
+    if not (isinstance(pb_max, int) or isinstance(pb_max, float)):
+      raise BadSettingException('The "max" key in "PREBID_PRICE_BUCKETS" '
+        'must be a number.')
 
-  if not (isinstance(pb_increment, int) or isinstance(pb_increment, float)):
-    raise BadSettingException('The "increment" key in "PREBID_PRICE_BUCKETS" '
-      'must be a number.')
+    if not (isinstance(pb_increment, int) or isinstance(pb_increment, float)):
+      raise BadSettingException('The "increment" key in "PREBID_PRICE_BUCKETS" '
+        'must be a number.')
 
 class color:
    PURPLE = '\033[95m'
@@ -312,8 +312,7 @@ def main():
   check_price_buckets_validity(price_buckets)
 
   prices = get_prices_array(price_buckets)
-  prices_summary = get_prices_summary_string(prices,
-    price_buckets['precision'])
+  prices_summary = get_prices_summary_string(prices)
 
   logger.info(
     u"""
