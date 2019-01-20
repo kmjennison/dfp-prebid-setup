@@ -6,7 +6,7 @@ An automated line item generator for [Prebid.js](http://prebid.org/) and Google 
 ## Overview
 When setting up Prebid, your ad ops team often has to create [hundreds of line items](http://prebid.org/adops.html) in Google Ad Manager (GAM).
 
-This tool automates setup for new header bidding partners. You define the advertiser, placements, and Prebid settings; then, it creates an order with one line item per price level, attaches creatives, and sets placement and Prebid key-value targeting.
+This tool automates setup for new header bidding partners. You define the advertiser, placements or ad units, and Prebid settings; then, it creates an order with one line item per price level, attaches creatives, sets placement and/or ad units, and Prebid key-value targeting.
 
 While this tool covers typical use cases, it might not fit your needs. Check out the [limitations](#limitations) before you dive in.
 
@@ -58,6 +58,7 @@ Setting | Description | Type
 `DFP_ORDER_NAME` | What you want to call your new GAM order | string
 `DFP_USER_EMAIL_ADDRESS` | The email of the GAM user who will be the trafficker for the created order | string
 `DFP_ADVERTISER_NAME` | The name of the GAM advertiser for the created order | string
+`DFP_TARGETED_AD_UNIT_NAMES` | The names of GAM ad units the line items should target | array of strings
 `DFP_TARGETED_PLACEMENT_NAMES` | The names of GAM placements the line items should target | array of strings
 `DFP_PLACEMENT_SIZES` | The creative sizes for the targeted placements | array of objects (e.g., `[{'width': '728', 'height': '90'}]`)
 `PREBID_BIDDER_CODE` | The value of [`hb_bidder`](http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.bidderSettings) for this partner | string
@@ -85,7 +86,7 @@ Setting | Description | Default
 ## Limitations
 
 * Currently, the names of the bidder code targeting key (`hb_bidder`) and price bucket targeting key (`hb_pb`) are not customizable. The `hb_bidder` targeting key is currently required (see [#18](../../issues/18))
-* This tool does not support additional line item targeting beyond placement, `hb_bidder`, and `hb_pb` values. Placement targeting is currently required (see [#16](../../issues/16)), and targeting by ad unit isn't supported (see [#17](../../issues/17))
+* This tool does not support additional line item targeting beyond placement, ad units, `hb_bidder`, and `hb_pb` values. 
 * The price bucketing setting `PREBID_PRICE_BUCKETS` only allows for uniform bucketing. For example, you can create $0.01 buckets from $0 - $20, but you cannot specify $0.01 buckets from $0 - $5 and $0.50 buckets from $5 - $20. Using entirely $0.01 buckets will still work for the custom buckets—you'll just have more line items than you need.
 * This tool does not modify existing orders or line items, it only creates them. If you need to make a change to an order, it's easiest to archive the existing order and recreate it.
 
