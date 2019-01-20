@@ -2,7 +2,7 @@
 
 import logging
 
-from googleads import dfp
+from googleads import ad_manager
 
 import settings
 from dfp.client import get_client
@@ -37,7 +37,7 @@ def get_ad_unit_by_name(ad_unit_name):
            'value': ad_unit_name
        }},
   ]
-  statement = dfp.FilterStatement(query, values)
+  statement = ad_manager.FilterStatement(query, values)
   response = ad_unit_service.getAdUnitsByStatement(
     statement.ToStatement())
 
