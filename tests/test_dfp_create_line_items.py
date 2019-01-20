@@ -20,7 +20,7 @@ class DFPCreateLineItemsTests(TestCase):
     line_items_config = [
       dfp.create_line_items.create_line_item_config(name='My Line Item', order_id=1234567,
                                                     placement_ids=['one-placement', 'another-placement'],
-                                                    ad_unit_ids=None, cpm_micro_amount=10000000, sizes=[],
+                                                    ad_unit_ids=['ad-unit', 'anoher-ad-unit'], cpm_micro_amount=10000000, sizes=[],
                                                     hb_bidder_key_id=999999, hb_pb_key_id=888888,
                                                     hb_bidder_value_id=222222, hb_pb_value_id=111111)
     ]
@@ -40,7 +40,7 @@ class DFPCreateLineItemsTests(TestCase):
     self.assertEqual(
       dfp.create_line_items.create_line_item_config(name='A Fake Line Item', order_id=1234567,
                                                     placement_ids=['one-placement', 'another-placement-id'],
-                                                    ad_unit_ids=None, cpm_micro_amount=24000000, sizes=[{
+                                                    ad_unit_ids=['ad-unit', 'anoher-ad-unit'], cpm_micro_amount=24000000, sizes=[{
           'width': '728',
           'height': '90',
         }], hb_bidder_key_id=999999, hb_pb_key_id=888888, hb_bidder_value_id=222222, hb_pb_value_id=111111),
@@ -49,6 +49,7 @@ class DFPCreateLineItemsTests(TestCase):
         'startDateTimeType': 'IMMEDIATELY',
         'targeting': {
           'inventoryTargeting': {
+            'targetedAdUnits': [{'adUnitId': 'ad-unit'}, {'adUnitId': 'anoher-ad-unit'}],
             'targetedPlacementIds': ['one-placement', 'another-placement-id']
           },
           'customTargeting': {
@@ -94,7 +95,7 @@ class DFPCreateLineItemsTests(TestCase):
     self.assertEqual(
       dfp.create_line_items.create_line_item_config(name='Cool Line Item', order_id=22334455,
                                                     placement_ids=['one-placement', 'another-placement-id'],
-                                                    ad_unit_ids=None, cpm_micro_amount=40000000, sizes=[{
+                                                    ad_unit_ids=['ad-unit', 'anoher-ad-unit'], cpm_micro_amount=40000000, sizes=[{
           'width': '728',
           'height': '90',
         }], hb_bidder_key_id=999999, hb_pb_key_id=888888, hb_bidder_value_id=222222, hb_pb_value_id=111111,
@@ -104,6 +105,7 @@ class DFPCreateLineItemsTests(TestCase):
         'startDateTimeType': 'IMMEDIATELY',
         'targeting': {
           'inventoryTargeting': {
+            'targetedAdUnits': [{'adUnitId': 'ad-unit'}, {'adUnitId': 'anoher-ad-unit'}],
             'targetedPlacementIds': ['one-placement', 'another-placement-id']
           },
           'customTargeting': {
