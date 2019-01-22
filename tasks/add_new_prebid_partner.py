@@ -15,6 +15,7 @@ import dfp.create_custom_targeting
 import dfp.create_creatives
 import dfp.create_line_items
 import dfp.create_orders
+import dfp.get_ad_units
 import dfp.get_advertisers
 import dfp.get_custom_targeting
 import dfp.get_placements
@@ -48,8 +49,8 @@ else:
 logger = logging.getLogger(__name__)
 
 
-def setup_partner(user_email, advertiser_name, order_name, placements,
-    sizes, bidder_code, prices, num_creatives, currency_code):
+def setup_partner(user_email, advertiser_name, order_name, placements, ad_units, sizes, bidder_code, prices,
+                  num_creatives, currency_code):
   """
   Call all necessary DFP tasks for a new Prebid partner setup.
   """
@@ -59,6 +60,9 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
 
   # Get the placement IDs.
   placement_ids = dfp.get_placements.get_placement_ids_by_name(placements)
+
+  # Get the ad unit IDs.
+  ad_unit_ids = dfp.get_ad_units.get_ad_unit_ids_by_name(ad_units)
 
   # Get (or potentially create) the advertiser.
   advertiser_id = dfp.get_advertisers.get_advertiser_id_by_name(
@@ -81,9 +85,9 @@ def setup_partner(user_email, advertiser_name, order_name, placements,
   HBPBValueGetter = DFPValueIdGetter('hb_pb')
 
   # Create line items.
-  line_items_config = create_line_item_configs(prices, order_id,
-    placement_ids, bidder_code, sizes, hb_bidder_key_id, hb_pb_key_id,
-    currency_code, HBBidderValueGetter, HBPBValueGetter)
+  line_items_config = create_line_item_configs(prices, order_id, placement_ids, ad_unit_ids, bidder_code, sizes,
+                                               hb_bidder_key_id, hb_pb_key_id, currency_code, HBBidderValueGetter,
+                                               HBPBValueGetter)
   logger.info("Creating line items...")
   line_item_ids = dfp.create_line_items.create_line_items(line_items_config)
 
@@ -157,9 +161,8 @@ def get_or_create_dfp_targeting_key(name):
     key_id = dfp.create_custom_targeting.create_targeting_key(name)
   return key_id
 
-def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
-  sizes, hb_bidder_key_id, hb_pb_key_id, currency_code, HBBidderValueGetter,
-  HBPBValueGetter):
+def create_line_item_configs(prices, order_id, placement_ids, ad_unit_ids, bidder_code, sizes, hb_bidder_key_id,
+                             hb_pb_key_id, currency_code, HBBidderValueGetter, HBPBValueGetter):
   """
   Create a line item config for each price bucket.
 
@@ -167,6 +170,7 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
     prices (array)
     order_id (int)
     placement_ids (arr)
+    ad_unit_ids (arr)
     bidder_code (str)
     hb_bidder_key_id (int)
     hb_pb_key_id (int)
@@ -194,18 +198,12 @@ def create_line_item_configs(prices, order_id, placement_ids, bidder_code,
     # The DFP targeting value ID for this `hb_pb` price value.
     hb_pb_value_id = HBPBValueGetter.get_value_id(price_str)
 
-    config = dfp.create_line_items.create_line_item_config(
-      name=line_item_name,
-      order_id=order_id,
-      placement_ids=placement_ids,
-      cpm_micro_amount=price,
-      sizes=sizes,
-      hb_bidder_key_id=hb_bidder_key_id,
-      hb_pb_key_id=hb_pb_key_id,
-      hb_bidder_value_id=hb_bidder_value_id,
-      hb_pb_value_id=hb_pb_value_id,
-      currency_code=currency_code,
-    )
+    config = dfp.create_line_items.create_line_item_config(name=line_item_name, order_id=order_id,
+                                                           placement_ids=placement_ids, ad_unit_ids=ad_unit_ids,
+                                                           cpm_micro_amount=price, sizes=sizes,
+                                                           hb_bidder_key_id=hb_bidder_key_id, hb_pb_key_id=hb_pb_key_id,
+                                                           hb_bidder_value_id=hb_bidder_value_id,
+                                                           hb_pb_value_id=hb_pb_value_id, currency_code=currency_code)
 
     line_items_config.append(config)
 
@@ -278,11 +276,13 @@ def main():
     raise MissingSettingException('DFP_ORDER_NAME')
 
   placements = getattr(settings, 'DFP_TARGETED_PLACEMENT_NAMES', None)
-  if placements is None:
-    raise MissingSettingException('DFP_TARGETED_PLACEMENT_NAMES')
-  elif len(placements) < 1:
-    raise BadSettingException('The setting "DFP_TARGETED_PLACEMENT_NAMES" '
-      'must contain at least one DFP placement ID.')
+  ad_units = getattr(settings, 'DFP_TARGETED_AD_UNIT_NAMES', None)
+
+  if ad_units is None and placements is None:
+    raise MissingSettingException('DFP_TARGETED_PLACEMENT_NAMES or DFP_TARGETED_AD_UNIT_NAMES')
+  elif (placements is None or len(placements) < 1) and (ad_units is None or len(ad_units) < 1):
+    raise BadSettingException('The setting "DFP_TARGETED_PLACEMENT_NAMES" or "DFP_TARGETED_AD_UNIT_NAMES" '
+      'must contain at least one DFP placement or ad unit.')
 
   sizes = getattr(settings, 'DFP_PLACEMENT_SIZES', None)
   if sizes is None:
@@ -326,6 +326,7 @@ def main():
       {name_start_format}hb_pb{format_end} = {value_start_format}{prices_summary}{format_end}
       {name_start_format}hb_bidder{format_end} = {value_start_format}{bidder_code}{format_end}
       {name_start_format}placements{format_end} = {value_start_format}{placements}{format_end}
+      {name_start_format}ad units{format_end} = {value_start_format}{ad_units}{format_end}
 
     """.format(
       num_line_items = len(prices),
@@ -335,6 +336,7 @@ def main():
       prices_summary=prices_summary,
       bidder_code=bidder_code,
       placements=placements,
+      ad_units=ad_units,
       sizes=sizes,
       name_start_format=color.BOLD,
       format_end=color.END,
@@ -347,17 +349,7 @@ def main():
     logger.info('Exiting.')
     return
 
-  setup_partner(
-    user_email,
-    advertiser_name,
-    order_name,
-    placements,
-    sizes,
-    bidder_code,
-    prices,
-    num_creatives,
-    currency_code,
-  )
+  setup_partner(user_email, advertiser_name, order_name, placements, ad_units, sizes, bidder_code, prices, num_creatives, currency_code)
 
 if __name__ == '__main__':
   main()
