@@ -85,6 +85,7 @@ Setting | Description | Default
 
 ## Limitations
 
+* This tool does not currently support run-of-network line items (see [#16](../../issues/16)). You must target line items to placements, ad units, or both.
 * Currently, the names of the bidder code targeting key (`hb_bidder`) and price bucket targeting key (`hb_pb`) are not customizable. The `hb_bidder` targeting key is currently required (see [#18](../../issues/18))
 * This tool does not support additional line item targeting beyond placement, ad units, `hb_bidder`, and `hb_pb` values. 
 * The price bucketing setting `PREBID_PRICE_BUCKETS` only allows for uniform bucketing. For example, you can create $0.01 buckets from $0 - $20, but you cannot specify $0.01 buckets from $0 - $5 and $0.50 buckets from $5 - $20. Using entirely $0.01 buckets will still work for the custom buckets—you'll just have more line items than you need.
