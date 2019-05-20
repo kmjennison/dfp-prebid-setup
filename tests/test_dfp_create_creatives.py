@@ -50,7 +50,7 @@ class DFPCreateCreativesTests(TestCase):
       ),
       {
         'advertiserId': 1234567,
-        'isSafeFrameCompatible': False,
+        'isSafeFrameCompatible': True,
         'name': 'My Creative',
         'size': {
           'height': '1',
