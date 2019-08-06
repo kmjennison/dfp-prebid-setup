@@ -29,7 +29,7 @@ _You will need credentials to access your GAM account programmatically. This sum
    * Ensure that **API access** is enabled.
    * Click the **Add a service account user** button.
      * Use the service account email for the Google developer credentials you created above.
-     * Set the role to "Trafficker".
+     * Set the role to "Administrator".
      * Click **Save**.
 
 ### Setting Up
