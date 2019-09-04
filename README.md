@@ -82,6 +82,7 @@ Setting | Description | Default
 `DFP_USE_EXISTING_ORDER_IF_EXISTS` | Whether we should modify an existing order if one already exists with name `DFP_ORDER_NAME` | `False`
 `DFP_NUM_CREATIVES_PER_LINE_ITEM` | The number of duplicate creatives to attach to each line item. Due to GAM limitations, this should be equal to or greater than the number of ad units you serve on a given page. | the length of setting `DFP_TARGETED_PLACEMENT_NAMES`
 `DFP_CURRENCY_CODE` | The currency to use in line items. | `'USD'`
+`DFP_LINE_ITEM_FORMAT` | The format for line item name. | `u'{bidder_code}: HB ${price}'`
 
 ## Limitations
 
