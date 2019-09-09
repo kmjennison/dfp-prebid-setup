@@ -14,6 +14,11 @@ _Note: Doubleclick for Publishers (DFP) was recently renamed to Google Ad Manage
 
 ## Getting Started
 
+### Requirements
+* Python version >= 3.6 and a basic knowledge of Python
+* Access to create a service account in the Google Developers Console
+* Admin access to your Google Ad Manager account
+
 ### Creating Google Credentials
 _You will need credentials to access your GAM account programmatically. This summarizes steps from [GAM docs](https://developers.google.com/ad-manager/docs/authentication) and the Google Ads Python libary [auth guide](https://github.com/googleads/googleads-python-lib)._
 
@@ -34,7 +39,9 @@ _You will need credentials to access your GAM account programmatically. This sum
 
 ### Setting Up
 1. Clone this repository.
-2. Run `pip install -r requirements.txt`.
+2. Install Python dependencies
+   * Run `pip install -r requirements.txt`
+   * **Important:** Python version 3.6 or higher is required.
 3. Rename key
    * Rename the Google credentials key you previously downloaded (`[something].json`) to `key.json` and move it to the root of this repository
 4. Make a copy of `googleads.example.yaml` and name it `googleads.yaml`.
@@ -82,7 +89,7 @@ Setting | Description | Default
 `DFP_USE_EXISTING_ORDER_IF_EXISTS` | Whether we should modify an existing order if one already exists with name `DFP_ORDER_NAME` | `False`
 `DFP_NUM_CREATIVES_PER_LINE_ITEM` | The number of duplicate creatives to attach to each line item. Due to GAM limitations, this should be equal to or greater than the number of ad units you serve on a given page. | the length of setting `DFP_TARGETED_PLACEMENT_NAMES`
 `DFP_CURRENCY_CODE` | The currency to use in line items. | `'USD'`
-`DFP_LINE_ITEM_FORMAT` | The format for line item name. | `u'{bidder_code}: HB ${price}'`
+`DFP_LINE_ITEM_FORMAT` | The format for the line item names. | `u'{bidder_code}: HB ${price}'`
 
 ## Limitations
 
