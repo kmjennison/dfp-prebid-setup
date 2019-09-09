@@ -95,8 +95,8 @@ Setting | Description | Default
 
 * This tool does not currently support run-of-network line items (see [#16](../../issues/16)). You must target line items to placements, ad units, or both.
 * Currently, the names of the bidder code targeting key (`hb_bidder`) and price bucket targeting key (`hb_pb`) are not customizable. The `hb_bidder` targeting key is currently required (see [#18](../../issues/18))
-* This tool does not support additional line item targeting beyond placement, ad units, `hb_bidder`, and `hb_pb` values. 
-* The price bucketing setting `PREBID_PRICE_BUCKETS` only allows for uniform bucketing. For example, you can create $0.01 buckets from $0 - $20, but you cannot specify $0.01 buckets from $0 - $5 and $0.50 buckets from $5 - $20. Using entirely $0.01 buckets will still work for the custom buckets—you'll just have more line items than you need.
+* This tool does not support additional line item targeting beyond placement, ad units, `hb_bidder`, and `hb_pb` values. It does not yet support setting other options on the line item such as the "Allow same advertiser exception" (see [#59](../../issues/59))
+* The price bucketing setting `PREBID_PRICE_BUCKETS` only allows for uniform bucketing (see [#27](../../issues/27)). For example, you can create $0.01 buckets from $0 - $20, but you cannot specify $0.01 buckets from $0 - $5 and $0.50 buckets from $5 - $20. Using entirely $0.01 buckets will still work for the custom buckets—you'll just have more line items than you need.
 * This tool does not modify existing orders or line items, it only creates them. If you need to make a change to an order, it's easiest to archive the existing order and recreate it.
 
 Please consider [contributing](CONTRIBUTING.md) to make the tool more flexible.
