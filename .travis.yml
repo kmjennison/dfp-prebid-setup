@@ -11,9 +11,9 @@ script:
 # https://docs.travis-ci.com/user/build-stages/
 jobs:
   include:
-    # On master, run integration tests against a test DFP account.
+    # Run integration tests against a test DFP account.
     - stage: "Integration Tests"
-      if: branch = master
+      if: fork = false
       script:
         # We have multiple encrypted files:
         # https://docs.travis-ci.com/user/encrypting-files/#encrypting-multiple-files
