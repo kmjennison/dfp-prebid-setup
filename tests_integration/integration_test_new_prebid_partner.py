@@ -105,9 +105,9 @@ class NewPrebidPartnerTests(TestCase):
     hb_bidder_key = get_key_by_name('hb_bidder')
     hb_pb_key = get_key_by_name('hb_pb')
     hb_bidder_vals = get_custom_targeting_by_key_name('hb_bidder')
-    expected_bidder_val = filter(
+    expected_bidder_val = next(filter(
       lambda hb_bidders: hb_bidders['name'] == bidder_code,
-      hb_bidder_vals).next()
+      hb_bidder_vals))
     hb_pb_vals = get_custom_targeting_by_key_name('hb_pb')
     sorted_hb_pb_vals = sorted(hb_pb_vals, key=lambda pb: float(pb['name']))
     num_line_items = 201
@@ -160,12 +160,12 @@ class NewPrebidPartnerTests(TestCase):
       # The first statement with an "AND" operator.
       custom_targ_logic = targ['customTargeting']['children'][0]['children']
       self.assertEqual(len(custom_targ_logic), 2)
-      custom_targ_hb_bidder = filter(
+      custom_targ_hb_bidder = next(filter(
         lambda ct: ct['keyId'] == hb_bidder_key['id'],
-        custom_targ_logic).next()
-      custom_targ_hb_pb = filter(
+        custom_targ_logic))
+      custom_targ_hb_pb = next(filter(
         lambda ct: ct['keyId'] == hb_pb_key['id'],
-        custom_targ_logic).next()
+        custom_targ_logic))
 
       # All line items should be targeted to the same hb_bidder value
       self.assertEqual(custom_targ_hb_bidder['operator'], 'IS')
