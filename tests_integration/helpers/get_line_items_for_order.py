@@ -17,7 +17,7 @@ def get_line_items_for_order(order_id):
   """
   print('Getting line items for order ID {0}...'.format(order_id))
   client = get_client()
-  line_item_service = client.GetService('LineItemService', version='v201811')
+  line_item_service = client.GetService('LineItemService', version='v201908')
   statement = (ad_manager.StatementBuilder()
     .Where('OrderId = :order_id')
     .WithBindVariable('order_id', order_id))

@@ -21,7 +21,7 @@ def get_key_id_by_name(name):
 
   dfp_client = get_client()
   custom_targeting_service = dfp_client.GetService('CustomTargetingService',
-    version='v201811')
+    version='v201908')
 
   # Get a key by name.
   query = ('WHERE name = :name')
@@ -57,7 +57,7 @@ def get_targeting_by_key_name(name):
 
   dfp_client = get_client()
   custom_targeting_service = dfp_client.GetService('CustomTargetingService',
-    version='v201811')
+    version='v201908')
 
   # Get a key by name.
   query = ('WHERE name = :name')

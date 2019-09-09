@@ -17,7 +17,7 @@ def archive_order_by_name(order_name):
     None
   """
   client = get_client()
-  order_service = client.GetService('OrderService', version='v201811')
+  order_service = client.GetService('OrderService', version='v201908')
 
   statement = (ad_manager.StatementBuilder()
     .Where('name = :name')

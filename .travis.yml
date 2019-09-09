@@ -2,8 +2,8 @@ language: python
 sudo: false
 cache: pip
 python:
-  - "2.7"
   - "3.6"
+  - "3.7"
 install:
   - pip install -r requirements.txt
 script:
@@ -11,9 +11,9 @@ script:
 # https://docs.travis-ci.com/user/build-stages/
 jobs:
   include:
-    # On master, run integration tests against a test DFP account.
+    # Run integration tests against a test DFP account.
     - stage: "Integration Tests"
-      if: branch = master
+      if: fork = false
       script:
         # We have multiple encrypted files:
         # https://docs.travis-ci.com/user/encrypting-files/#encrypting-multiple-files
@@ -29,7 +29,8 @@ jobs:
           if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
           echo "This is a pull request. Not running integration tests."
           ; fi
-      python: "2.7"
+      # The googleads Python library requires Python version >= 3.6.
+      python: "3.6"
 env:
   global:
     - DISABLE_LOGGING=true
