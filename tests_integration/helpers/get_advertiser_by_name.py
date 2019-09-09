@@ -18,7 +18,7 @@ def get_advertiser_by_name(advertiser_name):
 
   client = get_client()
   company_service = client.GetService('CompanyService',
-    version='v201811')
+    version='v201908')
 
   statement = (ad_manager.StatementBuilder()
     .Where('name = :name')

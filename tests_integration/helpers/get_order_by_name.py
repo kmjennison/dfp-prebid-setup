@@ -20,7 +20,7 @@ def get_order_by_name(order_name):
   print('Getting order with order name {0}...'.format(order_name))
 
   client = get_client()
-  order_service = client.GetService('OrderService', version='v201811')
+  order_service = client.GetService('OrderService', version='v201908')
 
   statement = (ad_manager.StatementBuilder()
     .Where('name = :name')

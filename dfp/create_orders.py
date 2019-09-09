@@ -65,7 +65,7 @@ def create_order(order_name, advertiser_id, trafficker_id):
       create_order_config(name=order_name, advertiser_id=advertiser_id,
         trafficker_id=trafficker_id)
     ]
-    order_service = dfp_client.GetService('OrderService', version='v201811')
+    order_service = dfp_client.GetService('OrderService', version='v201908')
     orders = order_service.createOrders(orders)
 
     order = orders[0]
