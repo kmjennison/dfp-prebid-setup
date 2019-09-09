@@ -107,7 +107,7 @@ class NewPrebidPartnerTests(TestCase):
     hb_bidder_vals = get_custom_targeting_by_key_name('hb_bidder')
     expected_bidder_val = filter(
       lambda hb_bidders: hb_bidders['name'] == bidder_code,
-      hb_bidder_vals)[0]
+      hb_bidder_vals).next()
     hb_pb_vals = get_custom_targeting_by_key_name('hb_pb')
     sorted_hb_pb_vals = sorted(hb_pb_vals, key=lambda pb: float(pb['name']))
     num_line_items = 201
@@ -162,10 +162,10 @@ class NewPrebidPartnerTests(TestCase):
       self.assertEqual(len(custom_targ_logic), 2)
       custom_targ_hb_bidder = filter(
         lambda ct: ct['keyId'] == hb_bidder_key['id'],
-        custom_targ_logic)[0]
+        custom_targ_logic).next()
       custom_targ_hb_pb = filter(
         lambda ct: ct['keyId'] == hb_pb_key['id'],
-        custom_targ_logic)[0]
+        custom_targ_logic).next()
 
       # All line items should be targeted to the same hb_bidder value
       self.assertEqual(custom_targ_hb_bidder['operator'], 'IS')
