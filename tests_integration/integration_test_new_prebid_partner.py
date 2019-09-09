@@ -111,7 +111,7 @@ class NewPrebidPartnerTests(TestCase):
     hb_pb_vals = get_custom_targeting_by_key_name('hb_pb')
     sorted_hb_pb_vals = sorted(hb_pb_vals, key=lambda pb: float(pb['name']))
     num_line_items = 201
-    cpm_micro_amouts = map(lambda x: x * (10**5), range(num_line_items))
+    cpm_micro_amouts = list(map(lambda x: x * (10**5), range(num_line_items)))
     self.assertEqual(len(sorted_line_items), num_line_items)
 
     # Check each line item
