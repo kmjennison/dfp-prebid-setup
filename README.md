@@ -94,3 +94,7 @@ Setting | Description | Default
 
 Please consider [contributing](CONTRIBUTING.md) to make the tool more flexible.
 
+## Contributors
+Thanks to these people for making this tool better 🤗:
+
+[@couhie](https://github.com/couhie), [@dlackty](https://github.com/dlackty), [@pbrisson](https://github.com/pbrisson), [@jsonUK](https://github.com/jsonUK)
