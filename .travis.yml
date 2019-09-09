@@ -2,7 +2,6 @@ language: python
 sudo: false
 cache: pip
 python:
-  - "2.7"
   - "3.6"
 install:
   - pip install -r requirements.txt
@@ -29,7 +28,8 @@ jobs:
           if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
           echo "This is a pull request. Not running integration tests."
           ; fi
-      python: "2.7"
+      # The googleads Python library requires Python version >= 3.6.
+      python: "3.6"
 env:
   global:
     - DISABLE_LOGGING=true
