@@ -21,6 +21,9 @@ DFP_ADVERTISER_NAME = None
 # Names of placements the line items should target.
 DFP_TARGETED_PLACEMENT_NAMES = []
 
+# Names of ad units the line items should target.
+DFP_TARGETED_AD_UNIT_NAMES = []
+
 # Sizes of placements. These are used to set line item and creative sizes.
 DFP_PLACEMENT_SIZES = [
   {
@@ -57,6 +60,11 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 # Optional
 # The currency to use in DFP when setting line item CPMs. Defaults to 'USD'.
 # DFP_CURRENCY_CODE = 'USD'
+
+# Optional
+# The format for line item name. Defaults to u'{bidder_code}: HB ${price}'.
+# This should be specified in python's format syntax.
+# DFP_LINE_ITEM_FORMAT = u'{bidder_code}: HB ${price:0>5}'
 
 #########################################################################
 # PREBID SETTINGS
