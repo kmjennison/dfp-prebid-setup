@@ -50,7 +50,7 @@ logger = logging.getLogger(__name__)
 
 
 def setup_partner(user_email, advertiser_name, order_name, placements, ad_units, sizes, bidder_code, prices,
-                  num_creatives, currency_code):
+                  num_creatives, currency_code, line_item_format):
   """
   Call all necessary DFP tasks for a new Prebid partner setup.
   """
@@ -86,8 +86,8 @@ def setup_partner(user_email, advertiser_name, order_name, placements, ad_units,
 
   # Create line items.
   line_items_config = create_line_item_configs(prices, order_id, placement_ids, ad_unit_ids, bidder_code, sizes,
-                                               hb_bidder_key_id, hb_pb_key_id, currency_code, HBBidderValueGetter,
-                                               HBPBValueGetter)
+                                               hb_bidder_key_id, hb_pb_key_id, currency_code, line_item_format,
+                                               HBBidderValueGetter, HBPBValueGetter)
   logger.info("Creating line items...")
   line_item_ids = dfp.create_line_items.create_line_items(line_items_config)
 
@@ -162,7 +162,7 @@ def get_or_create_dfp_targeting_key(name):
   return key_id
 
 def create_line_item_configs(prices, order_id, placement_ids, ad_unit_ids, bidder_code, sizes, hb_bidder_key_id,
-                             hb_pb_key_id, currency_code, HBBidderValueGetter, HBPBValueGetter):
+                             hb_pb_key_id, currency_code, line_item_format, HBBidderValueGetter, HBPBValueGetter):
   """
   Create a line item config for each price bucket.
 
@@ -175,6 +175,7 @@ def create_line_item_configs(prices, order_id, placement_ids, ad_unit_ids, bidde
     hb_bidder_key_id (int)
     hb_pb_key_id (int)
     currency_code (str)
+    line_item_format (str)
     HBBidderValueGetter (DFPValueIdGetter)
     HBPBValueGetter (DFPValueIdGetter)
   Returns:
@@ -190,7 +191,7 @@ def create_line_item_configs(prices, order_id, placement_ids, ad_unit_ids, bidde
     price_str = num_to_str(micro_amount_to_num(price))
 
     # Autogenerate the line item name.
-    line_item_name = u'{bidder_code}: HB ${price}'.format(
+    line_item_name = line_item_format.format(
       bidder_code=bidder_code,
       price=price_str
     )
@@ -293,6 +294,8 @@ def main():
 
   currency_code = getattr(settings, 'DFP_CURRENCY_CODE', 'USD')
 
+  line_item_format = getattr(settings, 'DFP_LINE_ITEM_FORMAT', u'{bidder_code}: HB ${price}')
+
   # How many creatives to attach to each line item. We need at least one
   # creative per ad unit on a page. See:
   # https://github.com/kmjennison/dfp-prebid-setup/issues/13
@@ -349,7 +352,7 @@ def main():
     logger.info('Exiting.')
     return
 
-  setup_partner(user_email, advertiser_name, order_name, placements, ad_units, sizes, bidder_code, prices, num_creatives, currency_code)
+  setup_partner(user_email, advertiser_name, order_name, placements, ad_units, sizes, bidder_code, prices, num_creatives, currency_code, line_item_format)
 
 if __name__ == '__main__':
   main()

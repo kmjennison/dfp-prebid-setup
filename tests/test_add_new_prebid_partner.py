@@ -101,6 +101,18 @@ class AddNewPrebidPartnerTests(TestCase):
     args, kwargs = mock_setup_partners.call_args
     self.assertEqual(args[9], 'EUR')
 
+  @patch('settings.DFP_LINE_ITEM_FORMAT', u'{bidder_code}: HB ${price:0>5}', create=True)
+  @patch('tasks.add_new_prebid_partner.setup_partner')
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_custom_line_item_format(self, mock_input, mock_setup_partners,
+    mock_dfp_client):
+    """
+    Ensure we use the line item format setting if it exists.
+    """
+    tasks.add_new_prebid_partner.main()
+    args, kwargs = mock_setup_partners.call_args
+    self.assertEqual(args[10], u'{bidder_code}: HB ${price:0>5}')
+
   def test_price_bucket_validity_missing_key(self, mock_dfp_client):
     """
     It throws an exception of the price bucket setting
@@ -230,7 +242,7 @@ class AddNewPrebidPartnerTests(TestCase):
     tasks.add_new_prebid_partner.setup_partner(user_email=email, advertiser_name=advertiser, order_name=order,
                                                placements=placements, ad_units=[], sizes=sizes,
                                                bidder_code=bidder_code, prices=prices, num_creatives=2,
-                                               currency_code='USD')
+                                               currency_code='USD', line_item_format=u'{bidder_code}: HB ${price:0>5}')
 
     mock_get_users.get_user_id_by_email.assert_called_once_with(email)
     mock_get_placements.get_placement_ids_by_name.assert_called_once_with(
@@ -255,19 +267,20 @@ class AddNewPrebidPartnerTests(TestCase):
                                                                     bidder_code='iamabiddr', sizes=[{
             'width': '728',
             'height': '90'
-        }], hb_bidder_key_id=999999, hb_pb_key_id=888888, currency_code='HUF', HBBidderValueGetter=MagicMock(
+        }], hb_bidder_key_id=999999, hb_pb_key_id=888888, currency_code='HUF',
+        line_item_format=u'{bidder_code}: HB ${price:0>5}', HBBidderValueGetter=MagicMock(
             return_value=3434343434), HBPBValueGetter=MagicMock(return_value=5656565656))
 
     self.assertEqual(len(configs), 3)
 
-    self.assertEqual(configs[0]['name'], 'iamabiddr: HB $0.10')
+    self.assertEqual(configs[0]['name'], 'iamabiddr: HB $00.10')
     self.assertEqual(
       configs[0]['targeting']['inventoryTargeting']['targetedPlacementIds'],
       [9876543, 1234567]
     )
     self.assertEqual(configs[0]['costPerUnit']['microAmount'], 100000)
 
-    self.assertEqual(configs[2]['name'], 'iamabiddr: HB $0.30')
+    self.assertEqual(configs[2]['name'], 'iamabiddr: HB $00.30')
     self.assertEqual(
       configs[2]['targeting']['inventoryTargeting']['targetedPlacementIds'],
       [9876543, 1234567]
