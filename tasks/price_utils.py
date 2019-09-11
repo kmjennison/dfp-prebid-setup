@@ -51,15 +51,8 @@ def get_prices_array(price_bucket):
       int(round(price_bucket['min'] * 10**6, precision)) to 
       int(round(price_bucket['max'] * 10**6, precision))
   """
-
-  # Arbitrary max CPM to prevent large user errors.
-  cpm_max_allowed = 500.00
-  end_cpm = (
-    price_bucket['max'] if 
-    price_bucket['max'] < cpm_max_allowed else 
-    cpm_max_allowed)
-
   start_cpm = price_bucket['min'] if price_bucket['min'] >=0 else 0.00
+  end_cpm =  price_bucket['max']
   increment = price_bucket['increment']
   precision = price_bucket['precision']
 
