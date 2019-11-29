@@ -211,7 +211,7 @@ class AddNewPrebidPartnerTests(TestCase):
     tasks.add_new_prebid_partner.main()
     args, kwargs = mock_setup_partners.call_args
     num_creatives = args[8]
-    self.assertEqual(num_creatives, len(placements))
+    self.assertEqual(num_creatives, len(placements) + len(ad_units))
 
   @patch('tasks.add_new_prebid_partner.create_line_item_configs')
   @patch('tasks.add_new_prebid_partner.DFPValueIdGetter')
