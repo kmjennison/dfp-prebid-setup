@@ -202,16 +202,46 @@ class AddNewPrebidPartnerTests(TestCase):
   @patch('settings.DFP_NUM_CREATIVES_PER_LINE_ITEM', None, create=True)
   @patch('tasks.add_new_prebid_partner.setup_partner')
   @patch('tasks.add_new_prebid_partner.input', return_value='y')
-  def test_num_duplicate_creatives_no_settings(self, mock_input, 
+  def test_num_duplicate_creatives_no_settings_from_placements_and_ad_units(self, mock_input,
     mock_setup_partners, mock_dfp_client):
     """
-    Make sure we use the default number of creatives per line item if the
-    setting does not exist.
+    Make sure we consider placement and ad units as default number of creatives
+    per line item if the setting does not exist.
     """
     tasks.add_new_prebid_partner.main()
     args, kwargs = mock_setup_partners.call_args
     num_creatives = args[8]
+    self.assertEqual(num_creatives, len(placements) + len(ad_units))
+
+  @patch('settings.DFP_NUM_CREATIVES_PER_LINE_ITEM', None, create=True)
+  @patch('tasks.add_new_prebid_partner.setup_partner')
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_num_duplicate_creatives_no_settings_from_placements(self, mock_input,
+                                               mock_setup_partners, mock_dfp_client):
+    """
+    Make sure we use placements as the default number of creatives per line item
+    if the setting does not exist.
+    """
+    settings.DFP_TARGETED_AD_UNIT_NAMES = []
+    tasks.add_new_prebid_partner.main()
+    args, kwargs = mock_setup_partners.call_args
+    num_creatives = args[8]
     self.assertEqual(num_creatives, len(placements))
+
+  @patch('settings.DFP_NUM_CREATIVES_PER_LINE_ITEM', None, create=True)
+  @patch('tasks.add_new_prebid_partner.setup_partner')
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_num_duplicate_creatives_no_settings_from_ad_units(self, mock_input,
+                                               mock_setup_partners, mock_dfp_client):
+    """
+    Make sure we use ad units as the default number of creatives per line item
+    if the setting does not exist.
+    """
+    settings.DFP_TARGETED_PLACEMENT_NAMES = []
+    tasks.add_new_prebid_partner.main()
+    args, kwargs = mock_setup_partners.call_args
+    num_creatives = args[8]
+    self.assertEqual(num_creatives, len(ad_units))
 
   @patch('tasks.add_new_prebid_partner.create_line_item_configs')
   @patch('tasks.add_new_prebid_partner.DFPValueIdGetter')

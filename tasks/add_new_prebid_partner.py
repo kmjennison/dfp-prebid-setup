@@ -152,7 +152,7 @@ def get_or_create_dfp_targeting_key(name):
   Get or create a custom targeting key by name.
 
   Args:
-    name (str)  
+    name (str)
   Returns:
     an integer: the ID of the targeting key
   """
@@ -229,7 +229,7 @@ def check_price_buckets_validity(price_buckets):
   except KeyError:
     raise BadSettingException('The setting "PREBID_PRICE_BUCKETS" '
       'must contain keys "precision", "min", "max", and "increment".')
-  
+
   if not (isinstance(pb_precision, int) or isinstance(pb_precision, float)):
     raise BadSettingException('The "precision" key in "PREBID_PRICE_BUCKETS" '
       'must be a number.')
@@ -267,7 +267,7 @@ def main():
   user_email = getattr(settings, 'DFP_USER_EMAIL_ADDRESS', None)
   if user_email is None:
     raise MissingSettingException('DFP_USER_EMAIL_ADDRESS')
-   
+
   advertiser_name = getattr(settings, 'DFP_ADVERTISER_NAME', None)
   if advertiser_name is None:
     raise MissingSettingException('DFP_ADVERTISER_NAME')
@@ -301,7 +301,7 @@ def main():
   # https://github.com/kmjennison/dfp-prebid-setup/issues/13
   num_creatives = (
     getattr(settings, 'DFP_NUM_CREATIVES_PER_LINE_ITEM', None) or
-    len(placements)
+    len(placements) + len(ad_units)
   )
 
   bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
