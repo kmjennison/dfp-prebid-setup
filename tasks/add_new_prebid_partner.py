@@ -305,7 +305,14 @@ def main():
 
   currency_code = getattr(settings, 'DFP_CURRENCY_CODE', 'USD')
 
-  line_item_format = getattr(settings, 'DFP_LINE_ITEM_FORMAT', u'{bidder_code}: HB ${price}')
+  bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
+
+  if bidder_code is not None:
+    default_line_item_format = u'{bidder_code}: HB ${price}'
+  else:
+    default_line_item_format = u'HB ${price}'
+
+  line_item_format = getattr(settings, 'DFP_LINE_ITEM_FORMAT', default_line_item_format)
 
   # How many creatives to attach to each line item. We need at least one
   # creative per ad unit on a page. See:
@@ -314,8 +321,6 @@ def main():
     getattr(settings, 'DFP_NUM_CREATIVES_PER_LINE_ITEM', None) or
     len(placements) + len(ad_units)
   )
-
-  bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
 
   price_buckets = getattr(settings, 'PREBID_PRICE_BUCKETS', None)
   if price_buckets is None:

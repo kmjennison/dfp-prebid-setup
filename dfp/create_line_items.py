@@ -56,13 +56,6 @@ def create_line_item_config(name, order_id, placement_ids, ad_unit_ids, cpm_micr
   # https://github.com/googleads/googleads-python-lib/blob/master/examples/dfp/v201802/line_item_service/target_custom_criteria.py
   # create custom criterias
 
-  hb_bidder_criteria = {
-    'xsi_type': 'CustomCriteria',
-    'keyId': hb_bidder_key_id,
-    'valueIds': [hb_bidder_value_id],
-    'operator': 'IS'
-  }
-
   hb_pb_criteria = {
     'xsi_type': 'CustomCriteria',
     'keyId': hb_pb_key_id,

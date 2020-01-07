@@ -74,7 +74,7 @@ def build_creative_name(bidder_code, order_name, creative_num):
     Returns:
       a string
     """
-    if bidder_code is None:
+    if bidder_code is not None:
       bidder_code_format = '{bidder_code}: HB {order_name}, #{num}'
     else:
       bidder_code_format = 'HB {order_name}, #{num}'
