@@ -77,11 +77,19 @@ def setup_partner(user_email, advertiser_name, order_name, placements, ad_units,
   creative_ids = dfp.create_creatives.create_creatives(creative_configs)
 
   # Get DFP key IDs for line item targeting.
-  hb_bidder_key_id = get_or_create_dfp_targeting_key('hb_bidder')
+  if bidder_code is not None: 
+    hb_bidder_key_id = get_or_create_dfp_targeting_key('hb_bidder')
+  else:
+    hb_bidder_key_id = None
+  
   hb_pb_key_id = get_or_create_dfp_targeting_key('hb_pb')
 
   # Instantiate DFP targeting value ID getters for the targeting keys.
-  HBBidderValueGetter = DFPValueIdGetter('hb_bidder')
+  if bidder_code is not None:
+    HBBidderValueGetter = DFPValueIdGetter('hb_bidder')
+  else:
+    HBBidderValueGetter = None
+  
   HBPBValueGetter = DFPValueIdGetter('hb_pb')
 
   # Create line items.
@@ -183,7 +191,10 @@ def create_line_item_configs(prices, order_id, placement_ids, ad_unit_ids, bidde
   """
 
   # The DFP targeting value ID for this `hb_bidder` code.
-  hb_bidder_value_id = HBBidderValueGetter.get_value_id(bidder_code)
+  if HBBidderValueGetter is not None:
+    hb_bidder_value_id = HBBidderValueGetter.get_value_id(bidder_code)
+  else:
+    hb_bidder_value_id = None
 
   line_items_config = []
   for price in prices:
@@ -305,8 +316,6 @@ def main():
   )
 
   bidder_code = getattr(settings, 'PREBID_BIDDER_CODE', None)
-  if bidder_code is None:
-    raise MissingSettingException('PREBID_BIDDER_CODE')
 
   price_buckets = getattr(settings, 'PREBID_PRICE_BUCKETS', None)
   if price_buckets is None:
