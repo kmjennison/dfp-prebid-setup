@@ -31,7 +31,7 @@ def create_creatives(creatives):
     logger.info(u'Created creative with name "{name}".'.format(name=creative['name']))
   return created_creative_ids
 
-def create_creative_config(name, advertiser_id):
+def create_creative_config(name, advertiser_id, bidder_code):
   """
   Creates a creative config object.
 
@@ -46,6 +46,7 @@ def create_creative_config(name, advertiser_id):
     'creative_snippet.html')
   with open(snippet_file_path, 'r') as snippet_file:
       snippet = snippet_file.read()
+      snippet = snippet.replace('_BIDDERCODE', '_' + bidder_code)
 
   # https://developers.google.com/doubleclick-publishers/docs/reference/v201802/CreativeService.Creative
   config = {
@@ -95,6 +96,7 @@ def create_duplicate_creative_configs(bidder_code, order_name, advertiser_id,
     config = create_creative_config(
       name=build_creative_name(bidder_code, order_name, creative_num),
       advertiser_id=advertiser_id,
+      bidder_code=bidder_code
     )
     creative_configs.append(config)
   return creative_configs

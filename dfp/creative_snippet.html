@@ -3,7 +3,14 @@
   var ucTagData = {};
   ucTagData.adServerDomain = "";
   ucTagData.pubUrl = "%%PATTERN:url%%";
-  ucTagData.targetingMap = %%PATTERN:TARGETINGMAP%%;
+  ucTagData.adId = "%%PATTERN:hb_adid_BIDDERCODE%%";
+  ucTagData.cacheHost = "%%PATTERN:hb_cache_host_BIDDERCODE%%";
+  ucTagData.cachePath = "%%PATTERN:hb_cache_path_BIDDERCODE%%";
+  ucTagData.uuid = "%%PATTERN:hb_cache_id_BIDDERCODE%%";
+  ucTagData.mediaType = "%%PATTERN:hb_format_BIDDERCODE%%";
+  ucTagData.env = "%%PATTERN:hb_env%%";
+  ucTagData.size = "%%PATTERN:hb_size_BIDDERCODE%%";
+  ucTagData.hbPb = "%%PATTERN:hb_pb_BIDDERCODE%%";
 
   try {
     ucTag.renderAd(document, ucTagData);
