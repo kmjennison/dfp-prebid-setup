@@ -48,7 +48,7 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
     batch = lica_service.createLineItemCreativeAssociations(batch)
 
     if batch:
-      logger.info(
-      u'Created {0} line items of {1} <> for creative associations.'.format(i+batchsize, len(licas)))
+      current_total = i+batchsize if i+batchsize < len(licas) else len(licas)
+      logger.info('Created {0} line items of {1} <> for creative associations.'.format(current_total, len(licas)))
     else:
-      logger.info(u'No line item <> creative associations created.')
+      logger.info('No line item <> creative associations created.')
