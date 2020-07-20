@@ -21,6 +21,8 @@ class DFPCreateCreativesTests(TestCase):
       dfp.create_creatives.create_creative_config(
         name='My Creative',
         advertiser_id=1234567,
+        video_ad_type=False,
+        redirect_url='',
       )
     ]
 
@@ -47,6 +49,8 @@ class DFPCreateCreativesTests(TestCase):
       dfp.create_creatives.create_creative_config(
         name='My Creative',
         advertiser_id=1234567,
+        video_ad_type=False,
+        redirect_url='',
       ),
       {
         'advertiserId': 1234567,
@@ -58,6 +62,26 @@ class DFPCreateCreativesTests(TestCase):
         },
         'snippet': snippet,
         'xsi_type': 'ThirdPartyCreative'
+       }
+    )
+
+    self.assertEqual(
+      dfp.create_creatives.create_creative_config(
+        name='crea',
+        advertiser_id=42,
+        video_ad_type=True,
+        redirect_url='redirectme',
+      ),
+      {
+        'advertiserId': 42,
+        'duration': 1000,
+        'name': 'crea',
+        'size': {
+          'height': '480',
+          'width': '640'
+        },
+        'vastXmlUrl': 'redirectme',
+        'xsi_type': 'VastRedirectCreative',
        }
     )
 

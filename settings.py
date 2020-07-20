@@ -36,17 +36,25 @@ DFP_PLACEMENT_SIZES = [
   },
 ]
 
+# If DFP_VIDEO_AD_TYPE is set to False, traditional ad units will be created.
+# If it is set to True, video ad units and creatives will be created instead.
+# When creating video ad units, you also need to fill the DFP_VAST_REDIRECT_URL value.
+DFP_VIDEO_AD_TYPE = False
+
+# Redirect URL for video creatives.
+DFP_VAST_REDIRECT_URL = ''
+
 # Whether we should create the advertiser in DFP if it does not exist.
 # If False, the program will exit rather than create an advertiser.
 DFP_CREATE_ADVERTISER_IF_DOES_NOT_EXIST = False
 
-# If settings.DFP_ORDER_NAME is the same as an existing order, add the created 
+# If settings.DFP_ORDER_NAME is the same as an existing order, add the created
 # line items to that order. If False, the program will exit rather than
 # modify an existing order.
 DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 
 # Optional
-# Each line item should have at least as many creatives as the number of 
+# Each line item should have at least as many creatives as the number of
 # ad units you serve on a single page because DFP specifies:
 #   "Each of a line item's assigned creatives can only serve once per page,
 #    so if you want the same creative to appear more than once per page,

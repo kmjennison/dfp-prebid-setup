@@ -24,7 +24,7 @@ def create_line_items(line_items):
   return created_line_item_ids
 
 def create_line_item_config(name, order_id, placement_ids, ad_unit_ids, cpm_micro_amount, sizes, hb_bidder_key_id,
-                            hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id, currency_code='USD'):
+                            hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id, currency_code='USD', video_ad_type=False):
   """
   Creates a line item config object.
 
@@ -40,6 +40,7 @@ def create_line_item_config(name, order_id, placement_ids, ad_unit_ids, cpm_micr
     hb_bidder_key_id (int): the DFP ID of the `hb_bidder` targeting key
     hb_pb_key_id (int): the DFP ID of the `hb_pb` targeting key
     currency_code (str): the currency code (e.g. 'USD' or 'EUR')
+    video_ad_type (bool): create video type line items
   Returns:
     an object: the line item config
   """
@@ -102,6 +103,11 @@ def create_line_item_config(name, order_id, placement_ids, ad_unit_ids, cpm_micr
     },
     'creativePlaceholders': creative_placeholders,
   }
+  if video_ad_type:
+    line_item_config['environmentType'] = 'VIDEO_PLAYER'
+    # https://developers.google.com/ad-manager/api/reference/v202005/LineItemService.RequestPlatformTargeting
+    line_item_config['targeting']['requestPlatformTargeting'] = { 'targetedRequestPlatforms': [ 'VIDEO_PLAYER' ] },
+
   if placement_ids is not None:
     line_item_config['targeting']['inventoryTargeting']['targetedPlacementIds'] = placement_ids
 

@@ -147,6 +147,64 @@ class DFPCreateLineItemsTests(TestCase):
       }
     )
 
+    # With video ad type
+    self.assertEqual(
+      dfp.create_line_items.create_line_item_config(name='Video Line Item', order_id=42,
+                                                    placement_ids=['video-placement'],
+                                                    ad_unit_ids=['video-ad-unit'], cpm_micro_amount=40000000, sizes=[{
+          'width': '640',
+          'height': '480',
+        }], hb_bidder_key_id=999999, hb_pb_key_id=888888, hb_bidder_value_id=222222, hb_pb_value_id=111111,
+                                                    currency_code='EUR', video_ad_type=True),
+      {
+        'orderId': 42,
+        'startDateTimeType': 'IMMEDIATELY',
+        'targeting': {
+          'inventoryTargeting': {
+            'targetedAdUnits': [{'adUnitId': 'video-ad-unit'}],
+            'targetedPlacementIds': ['video-placement']
+          },
+          'customTargeting': {
+            'children': [
+              {
+                'keyId': 999999,
+                'operator': 'IS',
+                'valueIds': [222222],
+                'xsi_type': 'CustomCriteria'
+              },
+              {
+                'keyId': 888888,
+                'operator': 'IS',
+                'valueIds': [111111],
+                'xsi_type': 'CustomCriteria'
+              }
+            ],
+            'logicalOperator': 'AND',
+            'xsi_type': 'CustomCriteriaSet'
+          },
+          'requestPlatformTargeting': ({'targetedRequestPlatforms': ['VIDEO_PLAYER']},),
+        },
+        'name': 'Video Line Item',
+        'costType': 'CPM',
+        'costPerUnit': {'currencyCode': 'EUR', 'microAmount': 40000000},
+        'creativeRotationType': 'EVEN',
+        'environmentType': 'VIDEO_PLAYER',
+        'lineItemType': 'PRICE_PRIORITY',
+        'unlimitedEndDateTime': True,
+        'primaryGoal': {
+          'goalType': 'NONE'
+        },
+        'creativePlaceholders': [
+          {
+            'size': {
+              'width': '640',
+              'height': '480'
+            }
+          },
+        ],
+      }
+    )
+
   def test_create_line_items_returns_ids(self, mock_dfp_client):
     """
     Ensure it returns the IDs of created line items.
