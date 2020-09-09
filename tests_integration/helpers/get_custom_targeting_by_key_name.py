@@ -18,7 +18,7 @@ def get_key_by_name(key_name):
 
   client = get_client()
   custom_targeting_service = client.GetService('CustomTargetingService',
-    version='v201908')
+    version='v202008')
 
   statement = (ad_manager.StatementBuilder()
     .Where('name = :name')
@@ -46,7 +46,7 @@ def get_custom_targeting_by_key_name(key_name):
 
   client = get_client()
   custom_targeting_service = client.GetService('CustomTargetingService',
-    version='v201908')
+    version='v202008')
 
   statement = (ad_manager.StatementBuilder()
     .Where('customTargetingKeyId = :customTargetingKeyId')

@@ -27,7 +27,7 @@ def get_placement_by_name(placement_name):
 
   dfp_client = get_client()
   placement_service = dfp_client.GetService('PlacementService',
-    version='v201908')
+    version='v202008')
 
   query = 'WHERE name = :name'
   values = [

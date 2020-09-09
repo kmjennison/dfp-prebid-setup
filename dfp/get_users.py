@@ -21,7 +21,7 @@ def get_user_id_by_email(email_address):
     an integer: the user's DFP ID
   """
   dfp_client = get_client()
-  user_service = dfp_client.GetService('UserService', version='v201908')
+  user_service = dfp_client.GetService('UserService', version='v202008')
 
   # Filter by email address.
   query = 'WHERE email = :email'
