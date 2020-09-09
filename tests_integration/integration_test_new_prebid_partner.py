@@ -57,8 +57,8 @@ class NewPrebidPartnerTests(TestCase):
     archive_order_by_name(order_name)
 
     # TODO: delete custom targeting keys and values
-    # https://developers.google.com/doubleclick-publishers/docs/reference/v201908/CustomTargetingService.DeleteCustomTargetingKeys
-    # https://developers.google.com/doubleclick-publishers/docs/reference/v201908/CustomTargetingService.DeleteCustomTargetingValues
+    # https://developers.google.com/doubleclick-publishers/docs/reference/v202008/CustomTargetingService.DeleteCustomTargetingKeys
+    # https://developers.google.com/doubleclick-publishers/docs/reference/v202008/CustomTargetingService.DeleteCustomTargetingValues
 
   @patch.multiple('settings',
     DFP_USER_EMAIL_ADDRESS=email,

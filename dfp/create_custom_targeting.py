@@ -23,7 +23,7 @@ def create_targeting_key(name, display_name=None, key_type='FREEFORM'):
 
   dfp_client = get_client()
   custom_targeting_service = dfp_client.GetService('CustomTargetingService',
-    version='v201908')
+    version='v202008')
 
   if display_name is None:
     display_name = name
@@ -60,7 +60,7 @@ def create_targeting_value(name, key_id):
 
   dfp_client = get_client()
   custom_targeting_service = dfp_client.GetService('CustomTargetingService',
-    version='v201908')
+    version='v202008')
 
   values_config = [
     {

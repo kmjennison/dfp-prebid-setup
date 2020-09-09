@@ -18,7 +18,7 @@ def get_placement_by_name(placement_name):
 
   client = get_client()
   placement_service = client.GetService('PlacementService',
-    version='v201908')
+    version='v202008')
 
   statement = (ad_manager.StatementBuilder()
     .Where('name = :name')
