@@ -80,10 +80,10 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 
 PREBID_BIDDER_CODE = None
 
-# Price buckets. This should match your Prebid settings for the partner. See:
-# http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity
-# FIXME: this should be an array of buckets. See:
-# https://github.com/prebid/Prebid.js/blob/8fed3d7aaa814e67ca3efc103d7d306cab8c692c/src/cpmBucketManager.js
+# Price buckets. This should match your Prebid settings for the partner.
+# Can be an a single bucket, an array of buckerts or string for standard Prebid
+#   price granularities such as 'medium', 'dense' or 'auto'
+# See: http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity
 PREBID_PRICE_BUCKETS = {
   'precision': 2,
   'min' : 0,
