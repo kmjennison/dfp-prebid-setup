@@ -6,6 +6,7 @@ import os
 import sys
 from builtins import input
 from pprint import pprint
+from collections import OrderedDict
 
 from colorama import init
 
@@ -29,6 +30,7 @@ from tasks.price_utils import (
   get_prices_summary_string,
   micro_amount_to_num,
   num_to_str,
+  get_prebid_standard_bucketing
 )
 
 # Colorama for cross-platform support for colored logging.
@@ -317,15 +319,34 @@ def main():
   if bidder_code is None:
     raise MissingSettingException('PREBID_BIDDER_CODE')
 
-  price_buckets = getattr(settings, 'PREBID_PRICE_BUCKETS', None)
-  if price_buckets is None:
-    raise MissingSettingException('PREBID_PRICE_BUCKETS')
+  price_buckets = None
+  price_buckets_config = getattr(settings, 'PREBID_PRICE_BUCKETS', None)
+  if price_buckets_config is None:
+      raise MissingSettingException('PREBID_PRICE_BUCKETS')
+  elif isinstance(price_buckets_config, dict):
+      price_buckets = [ price_buckets_config ]
+  elif isinstance(price_buckets_config, list):
+      price_buckets = price_buckets_config
+  elif isinstance(price_buckets_config, str):
+      price_buckets = get_prebid_standard_bucketing(price_buckets_config)
+      if price_buckets == None:
+           raise BadSettingException('Unknown price bucketing scheme \'{0}\' for PREBID_PRICE_BUCKETS'.format(price_buckets_config))
+  else:
+      raise BadSettingException('The setting "PREBID_PRICE_BUCKETS" '
+        'is an invalid type.')
 
-  check_price_buckets_validity(price_buckets)
+  for pb in price_buckets:
+      check_price_buckets_validity(pb)
 
-  prices = get_prices_array(price_buckets)
+  prices = []
+  for pb in price_buckets:
+      prices.extend(get_prices_array(pb))
+
+  # Remove duplicates price buckets
+  prices = list(OrderedDict.fromkeys(prices))
+
   prices_summary = get_prices_summary_string(prices,
-    price_buckets['precision'])
+    price_buckets[0]['precision'])
 
   logger.info(
     u"""

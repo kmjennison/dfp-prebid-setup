@@ -37,7 +37,7 @@ def num_to_str(num, precision=2):
   Returns:
     a string
   """
-  return '%.{0}f'.format(str(precision)) % num 
+  return '%.{0}f'.format(str(precision)) % num
 
 def get_prices_array(price_bucket):
   """
@@ -48,7 +48,7 @@ def get_prices_array(price_bucket):
     price_bucket (object): the price bucket configuration
   Returns:
     an array of integers: every price bucket cutoff from:
-      int(round(price_bucket['min'] * 10**6, precision)) to 
+      int(round(price_bucket['min'] * 10**6, precision)) to
       int(round(price_bucket['max'] * 10**6, precision))
   """
   start_cpm = price_bucket['min'] if price_bucket['min'] >=0 else 0.00
@@ -65,7 +65,7 @@ def get_prices_array(price_bucket):
   while current_cpm_micro_amount <= end_cpm_micro_amount:
     prices.append(current_cpm_micro_amount)
     current_cpm_micro_amount += increment_micro_amount
-    
+
   return prices
 
 def get_prices_summary_string(prices_array, precision=2):
@@ -94,3 +94,68 @@ def get_prices_summary_string(prices_array, precision=2):
       )
 
   return summary
+
+prebid_bucketing_schemes = {
+    "low": [{
+        'precision': 2,
+        'min' : 0,
+        'max' : 5,
+        'increment': 0.50,
+    }],
+    "medium": [{
+        'precision': 2,
+        'min' : 0,
+        'max' : 20,
+        'increment': 0.10,
+    }],
+    #  High will try to create too many line items at once resulting in an error
+    #"high": [{
+    #    'precision': 2,
+    #    'min' : 0,
+    #    'max' : 20,
+    #    'increment': 0.01,
+    #}],
+    "auto": [
+        {
+        'precision': 2,
+        'min' : 0,
+        'max' : 3,
+        'increment': 0.05,
+        },
+        {
+          'precision': 2,
+          'min' : 3,
+          'max' : 8,
+          'increment': 0.05,
+        },
+        {
+          'precision': 2,
+          'min' : 8,
+          'max' : 20,
+          'increment': 0.50,
+        }],
+    "dense": [{
+        'precision': 2,
+        'min' : 0,
+        'max' : 3,
+        'increment': 0.01
+        },
+        {
+        'precision': 2,
+        'min' : 3,
+        'max' : 8,
+        'increment': 0.05,
+        },
+        {
+        'precision': 2,
+        'min' : 8,
+        'max' : 20,
+        'increment': 0.50,
+        }]
+}
+
+def get_prebid_standard_bucketing(bucketing_scheme):
+    if bucketing_scheme in prebid_bucketing_schemes:
+        return prebid_bucketing_schemes[bucketing_scheme]
+    else:
+        return None
