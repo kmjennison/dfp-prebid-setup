@@ -27,7 +27,7 @@ def get_ad_unit_by_name(ad_unit_name):
 
   dfp_client = get_client()
   ad_unit_service = dfp_client.GetService('InventoryService',
-    version='v202008')
+    version='v202108')
 
   query = 'WHERE name = :name'
   values = [
