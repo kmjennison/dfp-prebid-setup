@@ -80,7 +80,11 @@ def build_creative_name(bidder_code, order_name, creative_num):
     Returns:
       a string
     """
-    return '{bidder_code}: HB {order_name}, #{num}'.format(
+    if bidder_code is not None:
+      bidder_code_format = '{bidder_code}: HB {order_name}, #{num}'
+    else:
+      bidder_code_format = 'HB {order_name}, #{num}'
+    return bidder_code_format.format(
         bidder_code=bidder_code, order_name=order_name, num=creative_num)
 
 def create_duplicate_creative_configs(bidder_code, order_name, advertiser_id,
