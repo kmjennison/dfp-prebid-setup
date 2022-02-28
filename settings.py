@@ -81,7 +81,7 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 PREBID_BIDDER_CODE = None
 
 # Price buckets. This should match your Prebid settings for the partner.
-# Can be an a single bucket, an array of buckets or string for standard Prebid
+# Can be a single bucket, an array of buckets or string for standard Prebid
 #   price granularities such as 'medium', 'dense' or 'auto'
 # See: https://docs.prebid.org/dev-docs/publisher-api-reference/setConfig.html#setConfig-Price-Granularity
 PREBID_PRICE_BUCKETS = {
