@@ -69,7 +69,7 @@ Setting | Description | Type
 `DFP_TARGETED_PLACEMENT_NAMES` | The names of GAM placements the line items should target | array of strings
 `DFP_PLACEMENT_SIZES` | The creative sizes for the targeted placements | array of objects (e.g., `[{'width': '728', 'height': '90'}]`)
 `PREBID_BIDDER_CODE` | The value of [`hb_bidder`](http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.bidderSettings) for this partner | string
-`PREBID_PRICE_BUCKETS` | The [price granularity](http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity); used to set `hb_pb` for each line item | object
+`PREBID_PRICE_BUCKETS` | The [price granularity](https://docs.prebid.org/dev-docs/publisher-api-reference/setConfig.html#setConfig-Price-Granularity); used to set `hb_pb` for each line item.  Can use Prebid standard granularities such as `medium` or `dense`, a single custom CPM bucket object or an array of custom CPM bucket objects | object, arary or string
 `DFP_VIDEO_AD_TYPE` | Set to true to create video ad units and creatives | boolean
 `DFP_VAST_REDIRECT_URL` | The redirect URL to use for video ad creatives (only used if `DFP_VIDEO_AD_TYPE` is set to True) | string
 

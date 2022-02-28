@@ -185,6 +185,75 @@ class AddNewPrebidPartnerTests(TestCase):
     tasks.add_new_prebid_partner.main()
     mock_setup_partners.assert_called_once()
 
+  @patch('tasks.add_new_prebid_partner.setup_partner')
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_prebid_medium_price_bucket_granularity(self, mock_input, mock_setup_partners, mock_dfp_client):
+    """
+    Sets prices buckets correctly based on prebid auto granularity
+    """
+    settings.PREBID_PRICE_BUCKETS="medium"
+
+    tasks.add_new_prebid_partner.main()
+    args, kwargs = mock_setup_partners.call_args
+    self.assertEqual(len(args[7]), 201)
+    self.assertEqual(args[7][100], 10000000)
+    self.assertEqual(args[7][101], 10100000)
+    self.assertEqual(args[7][-1], 20000000)
+
+  @patch('tasks.add_new_prebid_partner.setup_partner')
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_prebid_auto_price_bucket_granularity(self, mock_input, mock_setup_partners, mock_dfp_client):
+    """
+    Sets prices buckets correctly based on prebid auto granularity
+    """
+    settings.PREBID_PRICE_BUCKETS="auto"
+
+    tasks.add_new_prebid_partner.main()
+    args, kwargs = mock_setup_partners.call_args
+    self.assertEqual(len(args[7]), 185)
+    self.assertEqual(args[7][100], 5000000)
+    self.assertEqual(args[7][-1], 20000000)
+
+  @patch('tasks.add_new_prebid_partner.setup_partner')
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_prebid_dense_price_bucket_granularity(self, mock_input, mock_setup_partners, mock_dfp_client):
+    """
+    Sets prices buckets correctly based on prebid dense granularity
+    """
+    settings.PREBID_PRICE_BUCKETS="dense"
+
+    tasks.add_new_prebid_partner.main()
+    args, kwargs = mock_setup_partners.call_args
+    self.assertEqual(len(args[7]), 425)
+    self.assertEqual(args[7][100], 1000000)
+    self.assertEqual(args[7][-1], 20000000)
+
+  @patch('tasks.add_new_prebid_partner.setup_partner')
+  @patch('tasks.add_new_prebid_partner.input', return_value='y')
+  def test_price_bucket_array(self, mock_input, mock_setup_partners, mock_dfp_client):
+    """
+    Sets prices buckets correctly when passing an array of buckets
+    """
+    settings.PREBID_PRICE_BUCKETS=[ {
+      'precision': 2,
+      'min' : 0,
+      'max' : 1,
+      'increment': 0.01,
+    },
+    {
+      'precision': 2,
+      'min' : 1,
+      'max' : 2,
+      'increment': 0.10,
+    }]
+
+    tasks.add_new_prebid_partner.main()
+    args, kwargs = mock_setup_partners.call_args
+    self.assertEqual(len(args[7]), 111)
+    self.assertEqual(args[7][50], 500000)
+    self.assertEqual(args[7][105], 1500000)
+    self.assertEqual(args[7][-1], 2000000)
+
   @patch('settings.DFP_NUM_CREATIVES_PER_LINE_ITEM', 5, create=True)
   @patch('tasks.add_new_prebid_partner.setup_partner')
   @patch('tasks.add_new_prebid_partner.input', return_value='y')
