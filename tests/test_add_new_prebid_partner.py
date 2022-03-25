@@ -189,7 +189,7 @@ class AddNewPrebidPartnerTests(TestCase):
   @patch('tasks.add_new_prebid_partner.input', return_value='y')
   def test_prebid_medium_price_bucket_granularity(self, mock_input, mock_setup_partners, mock_dfp_client):
     """
-    Sets prices buckets correctly based on prebid auto granularity
+    Sets prices buckets correctly based on prebid medium granularity
     """
     settings.PREBID_PRICE_BUCKETS="medium"
 
