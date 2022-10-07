@@ -19,7 +19,7 @@ def make_licas(line_item_ids, creative_ids, size_overrides=[]):
   """
   dfp_client = get_client()
   lica_service = dfp_client.GetService(
-    'LineItemCreativeAssociationService', version='v202108')
+    'LineItemCreativeAssociationService', version='v202208')
 
   sizes = []
 

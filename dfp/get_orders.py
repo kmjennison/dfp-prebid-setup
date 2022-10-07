@@ -22,7 +22,7 @@ def get_order_by_name(order_name):
   """
 
   dfp_client = get_client()
-  order_service = dfp_client.GetService('OrderService', version='v202108')
+  order_service = dfp_client.GetService('OrderService', version='v202208')
 
   # Filter by name.
   query = 'WHERE name = :name'
@@ -60,7 +60,7 @@ def get_all_orders(print_orders=False):
   dfp_client = get_client()
 
   # Initialize appropriate service.
-  order_service = dfp_client.GetService('OrderService', version='v202108')
+  order_service = dfp_client.GetService('OrderService', version='v202208')
 
   # Create a statement to select orders.
   statement = ad_manager.FilterStatement()

@@ -21,7 +21,7 @@ def create_creatives(creatives):
   """
   dfp_client = get_client()
   creative_service = dfp_client.GetService('CreativeService',
-    version='v202108')
+    version='v202208')
   creatives = creative_service.createCreatives(creatives)
 
   # Return IDs of created line items.
