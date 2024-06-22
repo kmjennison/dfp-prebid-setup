@@ -14,7 +14,7 @@ def create_line_items(line_items):
     an array: an array of created line item IDs
   """
   dfp_client = get_client()
-  line_item_service = dfp_client.GetService('LineItemService', version='v202305')
+  line_item_service = dfp_client.GetService('LineItemService', version='v202405')
   line_items = line_item_service.createLineItems(line_items)
 
   # Return IDs of created line items.
