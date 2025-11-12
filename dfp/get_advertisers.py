@@ -25,7 +25,7 @@ def create_advertiser(name):
     an integer: the advertiser's DFP ID
   """
   dfp_client = get_client()
-  company_service = dfp_client.GetService('CompanyService', version='v202405')
+  company_service = dfp_client.GetService('CompanyService', version='v202508')
 
   advertisers_config = [
     {
@@ -53,7 +53,7 @@ def get_advertiser_id_by_name(name):
     an integer: the advertiser's DFP ID
   """
   dfp_client = get_client()
-  company_service = dfp_client.GetService('CompanyService', version='v202405')
+  company_service = dfp_client.GetService('CompanyService', version='v202508')
 
   # Filter by name.
   query = 'WHERE name = :name'
